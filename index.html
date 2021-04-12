@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title> DB-HW2 </title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="script.js"></script>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div id="header" class="col-12">
+                <header>Header</header>
+            </div>
+        </div>
+
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#login">Login</a></li>
+            <li><a data-toggle="tab" href="#register">Register</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div id="login" class="tab-pane fade in active">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="acc-log">Account</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="acc-log" placeholder="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="pwd-log">Password</label>
+                        <div class="col-sm-3">
+                            <input type="password" class="form-control" id="pwd-log" placeholder="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-primary">Login</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div id="register" class="tab-pane fade">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="acc-reg">Account</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="acc-reg" placeholder="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="pwd-reg">Password</label>
+                        <div class="col-sm-3">
+                            <input type="password" class="form-control" id="pwd-reg" placeholder="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="cpwd-reg">Comfirm Password</label>
+                        <div class="col-sm-3">
+                            <input type="password" class="form-control" id="cpwd-reg" placeholder="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="phone-reg">Phone Number</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="phone-reg" placeholder="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-primary">Register</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
