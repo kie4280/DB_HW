@@ -1,7 +1,7 @@
 "use strict";
 
 var patt1 = new RegExp("/^[a-z0-9]+$/", "i");
-var patt2 = new RegExp("/[0-9]+/")
+var patt2 = new RegExp("/[0-9]+/");
 
 $(document).ready(function () {
     for (let i = 1; i <= 4; i++) {
