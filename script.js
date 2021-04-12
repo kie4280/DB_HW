@@ -13,12 +13,6 @@ $(document).ready(function () {
     $("#reg").submit(function (e) {
         e.preventDefault();
 
-        for (let i = 1; i <= 4; i++) {
-            if ($("#reg" + i).val().length == 0) {
-                $("#err" + i).html("*Required!");
-            }
-        }
-
         if (!patt1.test($("#reg2").val())) {
             $("#err2").html("*Invalid format (only upper/lower-case character and number are allowed)");
         }
@@ -26,7 +20,13 @@ $(document).ready(function () {
             $("#err3").html("*Password mismatch");
         }
         if (!patt2.test($("#reg4").val())) {
-            $("#err2").html("*Invalid format (only number are allowed)");
+            $("#err4").html("*Invalid format (only number are allowed)");
+        }
+        
+        for (let i = 1; i <= 4; i++) {
+            if ($("#reg" + i).val().length == 0) {
+                $("#err" + i).html("*Required!");
+            }
         }
     });
 });
