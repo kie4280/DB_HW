@@ -7,8 +7,8 @@ app = Flask(__name__)
 @app.route("/", methods=['GET', 'POST'])
 def home():
     if request.method == 'POST':
-        # return "SUCCESS"
-        return "FAIL"
+        return "SUCCESS"
+        # return "FAIL"
 
     return render_template("index.html")
 

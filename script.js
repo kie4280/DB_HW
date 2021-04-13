@@ -78,22 +78,22 @@ $(document).ready(function () {
 
         if (value.length == 0) {
             $("#err1").html("*Required!");
-        } else {
-            $.post({
-                url: url,
-                data: {
-                    type: "register",
-                    account: value
-                },
-                success: function (data) {
-                    if (data == "SUCCESS" && success) {
-                        $(".nav-tabs a:first").tab("show");
-                        clear(2);
-                    } else {
-                        $("#err1").html("*Account has been registered! QAQ");
-                    }
-                }
-            });
+            return;
         }
+
+        $.post({
+            url: url,
+            data: {
+                type: "register",
+                account: value,
+            }
+        }).done(function (data) {
+            if (data != "SUCCESS") {
+                $("#err1").html("*Account has been registered! QAQ");
+            } else if (success) {
+                $(".nav-tabs a:first").tab("show");
+                clear(2);
+            }
+        });
     });
 });
