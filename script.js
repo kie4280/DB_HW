@@ -1,7 +1,41 @@
 "use strict";
 
-var patt1 = new RegExp("/^[a-z0-9]+$/", "i");
-var patt2 = new RegExp("/[0-9]+/");
+var patt1 = new RegExp("^[a-z0-9]+$", "i");
+var patt2 = new RegExp("^[0-9]+$");
+
+var check = function (i) {
+    let value = $("#reg" + i).val();
+
+    if (value.length == 0) {
+        $("#err" + i).html("*Required!");
+        return false;
+    }
+
+    switch (i) {
+        case 1:
+            break;
+        case 2:
+            if (!patt1.test(value)) {
+                $("#err2").html("*Invalid format (only upper/lower-case character and number are allowed)");
+                return false;
+            }
+            break;
+        case 3:
+            if (value != $("#reg2").val()) {
+                $("#err3").html("*Password mismatch");
+                return false;
+            }
+            break;
+        case 4:
+            if (!patt2.test(value)) {
+                $("#err4").html("*Invalid format (only number are allowed)");
+                return false;
+            }
+            break;
+    }
+
+    return true;
+}
 
 $(document).ready(function () {
     for (let i = 1; i <= 4; i++) {
@@ -13,19 +47,15 @@ $(document).ready(function () {
     $("#reg").submit(function (e) {
         e.preventDefault();
 
-        if (!patt1.test($("#reg2").val())) {
-            $("#err2").html("*Invalid format (only upper/lower-case character and number are allowed)");
-        }
-        if ($("#reg3").val() != $("reg2").val()) {
-            $("#err3").html("*Password mismatch");
-        }
-        if (!patt2.test($("#reg4").val())) {
-            $("#err4").html("*Invalid format (only number are allowed)");
-        }
-        
+        let success = true;
         for (let i = 1; i <= 4; i++) {
-            if ($("#reg" + i).val().length == 0) {
-                $("#err" + i).html("*Required!");
+            success &= check(i);
+        }
+
+        if (success) {
+            $(".nav-tabs a:first").tab("show");
+            for (let i = 1; i <= 4; i++) {
+                $("#reg" + i).val("");
             }
         }
     });
