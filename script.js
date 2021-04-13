@@ -3,7 +3,7 @@
 var patt1 = new RegExp("^[a-z0-9]+$", "i");
 var patt2 = new RegExp("^[0-9]+$");
 
-var check = function (i) {
+var check = function (i, url) {
     let value = $("#reg" + i).val();
 
     if (value.length == 0) {
@@ -13,6 +13,22 @@ var check = function (i) {
 
     switch (i) {
         case 1:
+            let res;
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                async: false,
+                data: { account: value },
+                success: function (data) {
+                    res = data;
+                }
+            });
+
+            if (res != "SUCCESS") {
+                $("#err1").html("*Account has been registered! QAQ");
+                return false;
+            }
             break;
         case 2:
             if (!patt1.test(value)) {
@@ -45,11 +61,11 @@ $(document).ready(function () {
     }
 
     $("#reg").submit(function (e) {
-        e.preventDefault();
-
+        let url = $(this).attr("action");
         let success = true;
+
         for (let i = 1; i <= 4; i++) {
-            success &= check(i);
+            success &= check(i, url);
         }
 
         if (success) {
@@ -58,5 +74,7 @@ $(document).ready(function () {
                 $("#reg" + i).val("");
             }
         }
+
+        e.preventDefault();
     });
 });
