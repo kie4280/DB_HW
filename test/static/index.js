@@ -3,14 +3,13 @@
 var patt1 = new RegExp("^[a-z0-9]+$", "i");
 var patt2 = new RegExp("^[0-9]+$");
 
-var check = function (i) {
+function check(i) {
     let value = $("#reg" + i).val();
 
     if (value.length == 0) {
         $("#err" + i).html("*Required!");
         return false;
     }
-
     switch (i) {
         case 2:
             if (!patt1.test(value)) {
@@ -31,24 +30,50 @@ var check = function (i) {
             }
             break;
     }
-
     return true;
 }
 
-var clear = function (i) {
+function clear(i) {
     switch (i) {
         case 1:
-            for (let j = 1; j <= 2; j++) {
-                $("#log" + j).val("");
-            }
-            break;
-        case 2:
             for (let j = 1; j <= 4; j++) {
                 $("#reg" + j).val("");
                 $("#err" + j).html("");
             }
             break;
+        case 2:
+            for (let j = 1; j <= 2; j++) {
+                $("#log" + j).val("");
+            }
+            break;
     }
+}
+
+function register(event) {
+    event.preventDefault();
+
+    let value = $("#reg1").val();
+    let url = $(this).attr("action");
+    let success = true;
+
+    for (let i = 2; i <= 4; i++) {
+        success &= check(i);
+    }
+    if (value.length == 0) {
+        $("#err1").html("*Required!");
+        return;
+    }
+
+    var posting = $.post(url, { type: "register", account: value });
+
+    posting.done(function (data) {
+        if (data != "SUCCESS") {
+            $("#err1").html("*Account has been registered! QAQ");
+        } else if (success) {
+            $(".nav-tabs a:first").tab("show");
+            clear(2);
+        }
+    });
 }
 
 $(document).ready(function () {
@@ -57,43 +82,10 @@ $(document).ready(function () {
             $("#err" + i).html("");
         });
     }
-
-    $("#tab1").click(function () {
-        clear(2);
-    });
-    $("#tab2").click(function () {
-        clear(1);
-    });
-
-    $("#reg").submit(function (e) {
-        e.preventDefault();
-
-        let url = $(this).attr("action");
-        let value = $("#reg1").val();
-        let success = true;
-
-        for (let i = 2; i <= 4; i++) {
-            success &= check(i);
-        }
-
-        if (value.length == 0) {
-            $("#err1").html("*Required!");
-            return;
-        }
-
-        $.post({
-            url: url,
-            data: {
-                type: "register",
-                account: value,
-            }
-        }).done(function (data) {
-            if (data != "SUCCESS") {
-                $("#err1").html("*Account has been registered! QAQ");
-            } else if (success) {
-                $(".nav-tabs a:first").tab("show");
-                clear(2);
-            }
+    for (let i = 1; i <= 2; i++) {
+        $("tab" + i).click(function () {
+            clear(i);
         });
-    });
+    }
+    $("#reg").submit(register);
 });

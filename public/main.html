@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title> DB </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12" id="header">
+                <header>Header</header>
+            </div>
+        </div>
+
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#home" id="tab1">Home</a></li>
+            <li><a data-toggle="tab" href="#shop" id="tab2">Shop</a></li>
+            <li><a data-toggle="tab" href="#logout" id="tab3">Logout</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane fade in active" id="home">
+                <form class="form-horizontal" action="" id="pro">
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" id="pro1">Profile</label>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-1">Account</label>
+                        <label class="control-label col-sm-1">
+                            <span id="pro2"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-1">Phone</label>
+                        <label class="control-label col-sm-1">
+                            <span id="pro3"></span>
+                        </label>
+                    </div>
+                </form>
+                <form class="form-horizontal" action="" id="sho">
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" id="sho1">Shop List</label>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-1" for="sho2">Shop</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control col-sm-3" id="sho2">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-1" for="sho3">City</label>
+                        <div class="col-sm-3">
+                            <input type="password" class="form-control" id="sho3">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-1" for="sho4">Price</label>
+                        <div class="col-sm-3">
+                            <input type="password" class="form-control" id="sho4">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-1" for="sho5">Amount</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="sho5">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-0 col-sm-12">
+                            <button type="submit" class="btn btn-primary" id="sho6">Search</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="shop"></div>
+            <div class="tab-pane fade" id="logout"></div>
+        </div>
+    </div>
+</body>
+
+</html>
