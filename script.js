@@ -35,12 +35,31 @@ var check = function (i) {
     return true;
 }
 
+var clear = function (i) {
+    switch (i) {
+        case 1:
+            for (let j = 1; j <= 2; j++) {
+                $("#log" + j).val("");
+            }
+            break;
+        case 2:
+            for (let j = 1; j <= 4; j++) {
+                $("#reg" + j).val("");
+                $("#err" + j).html("");
+            }
+            break;
+    }
+}
+
 $(document).ready(function () {
     for (let i = 1; i <= 4; i++) {
         $("#reg" + i).focus(function () {
             $("#err" + i).html("");
         });
     }
+
+    $("#tab1").click(clear(2));
+    $("#tab2").click(clear(1));
 
     $("#reg").submit(function (e) {
         e.preventDefault();
@@ -58,16 +77,14 @@ $(document).ready(function () {
         } else {
             $.post({
                 url: url,
-                data: { 
+                data: {
                     type: "register",
                     account: value
                 },
                 success: function (data) {
-                    if(data == "SUCCESS" && success) {
+                    if (data == "SUCCESS" && success) {
                         $(".nav-tabs a:first").tab("show");
-                        for (let i = 1; i <= 4; i++) {
-                            $("#reg" + i).val("");
-                        }
+                        clear(2);
                     } else {
                         $("#err1").html("*Account has been registered! QAQ");
                     }

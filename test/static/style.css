@@ -1,0 +1,11 @@
+#header{
+    background-color: black;
+}
+header{
+    font-size: 40px;
+    visibility: hidden;
+}
+
+.tab-pane{
+    margin-top: 15px;
+}
