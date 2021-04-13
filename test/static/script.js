@@ -58,8 +58,12 @@ $(document).ready(function () {
         });
     }
 
-    $("#tab1").click(clear(2));
-    $("#tab2").click(clear(1));
+    $("#tab1").click(function () {
+        clear(2);
+    });
+    $("#tab2").click(function () {
+        clear(1);
+    });
 
     $("#reg").submit(function (e) {
         e.preventDefault();
