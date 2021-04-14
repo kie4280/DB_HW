@@ -1,5 +1,6 @@
-import express = require("express");// Create a new express app instanceconst 
+import express = require("express");// Create a new express app instance
 
-var app:express.Application = express();
-app.get("/", function (req, res) { res.send("Hello"); });
+
+const app:express.Application = express();
 app.listen(3000, function () { console.log("App is listening on port 3000!"); });
+app.use(express.static("public"));
