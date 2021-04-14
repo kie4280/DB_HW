@@ -98,8 +98,8 @@ function login(event) {
             window.alert("Login Failed! QAQ");
             clear(2);
         } else {
-            localStorage.setItem("account", account);
-            localStorage.setItem("phone", data);
+            sessionStorage.setItem("account", account);
+            sessionStorage.setItem("phone", data);
             window.location.replace("main.html");
         }
     });

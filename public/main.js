@@ -1,8 +1,8 @@
 "use strict";
 
 function loadProfile() {
-    $("#pro1").html(localStorage.getItem("account"));
-    $("#pro2").html(localStorage.getItem("phone"));
+    $("#pro1").html(sessionStorage.getItem("account"));
+    $("#pro2").html(sessionStorage.getItem("phone"));
 }
 
 $(document).ready(function () {
