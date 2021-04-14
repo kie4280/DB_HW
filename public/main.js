@@ -1,6 +1,6 @@
 "use strict";
 
 $(document).ready(function () {
-    $("#pro2").html("User1");
-    $("#pro3").html("0987654321");
+    $("#pro1").html("User1");
+    $("#pro2").html("0987654321");
 });

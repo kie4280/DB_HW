@@ -22,7 +22,7 @@
         </div>
 
         <div class="row">
-            <ul class="nav nav-tabs">
+            <ul class="nav nav-tabs col-sm-12">
                 <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#home" id="tab1">Home</a></li>
                 <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#shop" id="tab2">Shop</a></li>
                 <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#logout" id="tab3">Logout</a></li>
@@ -33,53 +33,48 @@
             <div class="tab-pane container-fluid active" id="home">
                 <div class="row">
                     <div class="col-sm-6">
-                        <form action="" id="pro">
-                            <div class="form-group row">
-                                <label class="col-sm-4" id="pro1">
-                                    <h4>Profile</h4>
-                                </label>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-2">Account</label>
-                                <label class="col-sm-2">
-                                    <span id="pro2"></span>
-                                </label>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-2">Phone</label>
-                                <label class="col-sm-2">
-                                    <span id="pro3"></span>
-                                </label>
-                            </div>
-                        </form>
+                        <div class="row">
+                            <h4 class="col-sm-6" id="pro0">Profile</h4>
+                        </div>
+                        <div class="row">
+                            <p class="col-sm-2">Account</p>
+                            <p class="col-sm-2">
+                                <span id="pro1"></span>
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-sm-2">Phone</p>
+                            <p class="col-sm-2">
+                                <span id="pro2"></span>
+                            </p>
+                        </div>
+
+                        <div class="row">
+                            <h4 class="col-sm-10" id="sho0">Shop List</h4>
+                        </div>
                         <form action="" id="sho">
                             <div class="form-group row">
-                                <label class="col-sm-4" id="sho1">
-                                    <h4>Shop List</h4>
-                                </label>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-2" for="sho2">Shop</label>
+                                <label class="col-sm-2" for="sho1">Shop</label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" id="sho2">
+                                    <input type="text" class="form-control" id="sho1">
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-2" for="sho3">City</label>
+                                <label class="col-sm-2" for="sho2">City</label>
                                 <div class="col-sm-6">
-                                    <select class="form-control" id="sho3">
+                                    <select class="form-control" id="sho2">
                                         <option selected value="0">All</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-2" for="sho4">Price</label>
+                                <label class="col-sm-2" for="sho3">Price</label>
                                 <div class="col-sm-6">
                                     <div class="input-group">
                                         <div class="input-group-append">
-                                            <input type="text" class="form-control" id="sho4">
+                                            <input type="text" class="form-control" id="sho3">
                                             <span class="input-group-text">~</span>
-                                            <input type="text" class="form-control" id="sho5">
+                                            <input type="text" class="form-control" id="sho4">
                                         </div>
                                     </div>
                                 </div>
@@ -87,21 +82,21 @@
                             <div class="form-group row">
                                 <label class="col-sm-2" for="sho5">Amount</label>
                                 <div class="col-sm-6">
-                                    <select class="form-control" id="sho6">
+                                    <select class="form-control" id="sho5">
                                         <option selected value="0">All</option>
                                         <option value="1">(Sold out) 0</option>
                                         <option value="2">(Rare) 1 ~ 99</option>
-                                        <option value="3">(Sufficient) 100+</option>
+                                        <option value="3">(Adequate) 100+</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <div class="col-sm-2">
-                                    <button type="submit" class="btn btn-primary" id="sho7">Search</button>
+                                    <button type="submit" class="btn btn-primary" id="sho6">Search</button>
                                 </div>
                                 <div class="col-sm-6">
-                                    <input type="checkbox" id="sho9">
-                                    <label for="sho9">Only show the shop I work at</label>
+                                    <input type="checkbox" id="sho7">
+                                    <label for="sho7">Only show the shop I work at</label>
                                 </div>
                             </div>
                         </form>
