@@ -70,8 +70,9 @@ function register(event) {
         if (data != "SUCCESS") {
             $("#err1").html("*Account has been registered! QAQ");
         } else if (success) {
+            window.alert("Register Success!");
             $(".nav-tabs a:first").tab("show");
-            clear(2);
+            clear(1);
         }
     });
 }

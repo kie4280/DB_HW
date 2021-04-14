@@ -11,17 +11,13 @@ header{
 }
 
 /* Index */
-#reg div + label{
-    text-align: left;
+@media screen and (min-width:576px){
+    label{
+        text-align: right!important;
+    }
 }
 
-/* Home */
-#pro label, #sho label{
-    text-align: left;
-}
-#pro1, #sho1{
-    font-size: 24px;
-}
-#pro2, #pro3{
-    font-weight: normal;
+/* Main */
+th{
+    width: 25%;
 }

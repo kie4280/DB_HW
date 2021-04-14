@@ -5,11 +5,12 @@
     <title> DB </title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='index.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="index.js"></script>
 </head>
 
 <body>
@@ -20,73 +21,76 @@
             </div>
         </div>
 
-        <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#login" id="tab1">Login</a></li>
-            <li><a data-toggle="tab" href="#register" id="tab2">Register</a></li>
-        </ul>
+        <div class="row">
+            <ul class="nav nav-tabs">
+                <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#login" id="tab1">Login</a></li>
+                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#register" id="tab2">Register</a></li>
+            </ul>
+        </div>
 
         <div class="tab-content">
-            <div class="tab-pane fade in active" id="login">
-                <form class="form-horizontal" action="" id="log">
-                    <div class="form-group">
-                        <label class="control-label col-sm-2" for="log1">Account</label>
+            <div class="tab-pane container-fluid active" id="login">
+                <form action="" id="log">
+                    <div class="form-group row">
+                        <label class="col-sm-2" for="log1">Account</label>
                         <div class="col-sm-3">
                             <input type="text" class="form-control" id="log1">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-sm-2" for="log2">Password</label>
+                    <div class="form-group row">
+                        <label class="col-sm-2" for="log2">Password</label>
                         <div class="col-sm-3">
-                            <input type="password" class="form-control" id="log2">
+                            <input type="text" class="form-control" id="log2">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
+                    <div class="form-group row">
+                        <div class="offset-sm-2 col-sm-1">
                             <button type="submit" class="btn btn-primary" id="log3">Login</button>
                         </div>
                     </div>
                 </form>
             </div>
-            <div class="tab-pane fade" id="register">
-                <form class="form-horizontal" action="" id="reg">
-                    <div class="form-group">
-                        <label class="control-label col-sm-2" for="reg1">Account</label>
+
+            <div class="tab-pane container-fluid fade" id="register">
+                <form action="" id="reg">
+                    <div class="form-group row">
+                        <label class="col-sm-2" for="reg1">Account</label>
                         <div class="col-sm-3">
-                            <input type="text" class="form-control col-sm-3" id="reg1">
+                            <input type="text" class="form-control" id="reg1">
                         </div>
-                        <label class="control-label col-sm-7">
+                        <div class="col-sm-7">
                             <span class="text-danger" id="err1"></span>
-                        </label>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-sm-2" for="reg2">Password</label>
+                    <div class="form-group row">
+                        <label class="col-sm-2" for="reg2">Password</label>
                         <div class="col-sm-3">
                             <input type="password" class="form-control" id="reg2">
                         </div>
-                        <label class="control-label col-sm-7">
+                        <div class="col-sm-7">
                             <span class="text-danger" id="err2"></span>
-                        </label>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-sm-2" for="reg3">Comfirm Password</label>
+                    <div class="form-group row">
+                        <label class="col-sm-2" for="reg3">Confirm Password</label>
                         <div class="col-sm-3">
                             <input type="password" class="form-control" id="reg3">
                         </div>
-                        <label class="control-label col-sm-7">
+                        <div class="col-sm-7">
                             <span class="text-danger" id="err3"></span>
-                        </label>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-sm-2" for="reg4">Phone Number</label>
+                    <div class="form-group row">
+                        <label class="col-sm-2" for="reg4">Phone</label>
                         <div class="col-sm-3">
                             <input type="text" class="form-control" id="reg4">
                         </div>
-                        <label class="control-label col-sm-7">
+                        <div class="col-sm-7">
                             <span class="text-danger" id="err4"></span>
-                        </label>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
+                    <div class="form-group row">
+                        <div class="offset-sm-2 col-sm-1">
                             <button type="submit" class="btn btn-primary" id="reg5">Register</button>
                         </div>
                     </div>
