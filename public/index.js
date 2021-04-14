@@ -65,8 +65,7 @@ function register(event) {
         return;
     }
 
-    var posting = $.post(url, { 
-        type: "register", 
+    var posting = $.post(url, {
         account: account,
         password: password,
     });
