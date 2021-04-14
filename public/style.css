@@ -9,30 +9,38 @@ header{
 .tab-pane{
     margin-top: 15px;
 }
-form, p{
+form{
     margin-left: 10px;
 }
-label, h4, p{
-    font-weight: bold;
-}
 label{
+    font-weight: bold;
     padding-top: 7px;
-}
-h4{
-    padding: 10px;  
 }
 
 /* Index */
 @media screen and (min-width:576px){
-    #log label, #reg label{
+    #login label, #register label{
         text-align: right!important;
     }
+}
+#register span{
+    font-weight: bold;
+    padding-top: 7px;
 }
 
 /* Main */
 #pro1, #pro2{
     font-weight: normal;
 }
-th{
+#home th{
     width: 25%;
+}
+#home h4{
+    font-weight: bold;
+    padding-top: 18px;
+    padding-bottom: 12px;
+}
+#home p{
+    font-weight: bold;
+    margin-left: 10px;
 }
