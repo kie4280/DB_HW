@@ -1,4 +1,4 @@
-# Desription
+# Description
 This project is built using Typescript
 
 # How to run
