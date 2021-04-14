@@ -52,19 +52,24 @@ function clear(i) {
 function register(event) {
     event.preventDefault();
 
-    let value = $("#reg1").val();
-    let url = $(this).attr("action");
+    let url = $("#reg").attr("action");
+    let account = $("#reg1").val();
+    let password = $("#reg2").val();
     let success = true;
 
     for (let i = 2; i <= 4; i++) {
         success &= check(i);
     }
-    if (value.length == 0) {
+    if (account.length == 0) {
         $("#err1").html("*Required!");
         return;
     }
 
-    var posting = $.post(url, { type: "register", account: value });
+    var posting = $.post(url, { 
+        type: "register", 
+        account: account,
+        password: password,
+    });
 
     posting.done(function (data) {
         if (data != "SUCCESS") {
