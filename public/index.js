@@ -81,6 +81,28 @@ function register(event) {
     });
 }
 
+function login(event) {
+    event.preventDefault();
+
+    let url = $("#log").attr("action");
+    let account = $("#log1").val();
+    let password = $("#log2").val();
+
+    var posting = $.post(url, {
+        account: account,
+        password: password,
+    });
+
+    posting.done(function (data) {
+        if (data != "SUCCESS") {
+            window.alert("Login Failed! QAQ");
+            clear(2);
+        } else {
+            window.location.replace("main.html");
+        }
+    });
+}
+
 $(document).ready(function () {
     for (let i = 1; i <= 4; i++) {
         $("#reg" + i).focus(function () {
@@ -93,4 +115,5 @@ $(document).ready(function () {
         });
     }
     $("#reg").submit(register);
+    $("#log").submit(login);
 });
