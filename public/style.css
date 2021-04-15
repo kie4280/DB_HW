@@ -10,7 +10,7 @@ header{
     margin-top: 15px;
 }
 form{
-    margin-left: 10px;
+    margin-left: 25px;
 }
 label{
     font-weight: bold;
@@ -36,12 +36,13 @@ label:not(.custom-control-label){
     font-weight: bold;
     padding-top: 12px;
     padding-bottom: 12px;
+    margin-left: 15px;
 }
 #home p, #shop p{
     font-weight: bold;
 }
 #home p, #shop1 p{
-    margin-left: 10px;
+    margin-left: 25px;
 }
 #home th{
     width: 25%;
