@@ -31,18 +31,23 @@ label:not(.custom-control-label){
 }
 
 /* Main */
-#pro1, #pro2{
-    font-weight: normal;
+#home h4, #shop h4{
+    font-weight: bold;
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+#home p, #shop p{
+    font-weight: bold;
+}
+#home p, #shop1 p{
+    margin-left: 10px;
 }
 #home th{
     width: 25%;
 }
-#home h4{
-    font-weight: bold;
-    padding-top: 18px;
-    padding-bottom: 12px;
+#shop th:nth-child(1){
+    width: 30%;
 }
-#home p{
-    font-weight: bold;
-    margin-left: 10px;
+#shop th:nth-child(2){
+    width: 70%;
 }

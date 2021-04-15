@@ -20,7 +20,24 @@ function logout() {
 }
 
 $(document).ready(function () {
-    loadProfile();
+    for (let i = 4; i <= 6; i += 2) {
+        $("#mys" + i).click(function () {
+            $("#mys" + (i - 1)).prop('disabled', false).focus();
+        });
+    }
+    for (let i = 3; i <= 5; i += 2) {
+        $("#mys" + i).blur(function () {
+            this.disabled = true;
+        });
+    }
+
+    $("#shop1").hide();
+    $("#shop2").show();
+
+    $("#pro1").html("User1");
+    $("#pro2").html("0987654321");
+
+    // loadProfile();
 
     $("#tab3").click(logout);
 });
