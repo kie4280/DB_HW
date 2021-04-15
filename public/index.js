@@ -116,6 +116,7 @@ $(document).ready(function () {
             clearInput(i);
         });
     }
+    
     $("#reg").submit(register);
     $("#log").submit(login);
 });

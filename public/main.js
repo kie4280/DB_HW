@@ -12,8 +12,7 @@ function logout() {
     let url = "/logout";
     let account = sessionStorage.getItem("account");
 
-    sessionStorage.removeItem("account");
-    sessionStorage.removeItem("phone");
+    sessionStorage.clear();
 
     $.post(url, { account: account });
 
@@ -22,5 +21,6 @@ function logout() {
 
 $(document).ready(function () {
     loadProfile();
+
     $("#tab3").click(logout);
 });
