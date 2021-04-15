@@ -14,6 +14,8 @@ form{
 }
 label{
     font-weight: bold;
+}
+label:not(.custom-control-label){
     padding-top: 7px;
 }
 

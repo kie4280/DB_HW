@@ -3,7 +3,7 @@
 var patt1 = new RegExp("^[a-z0-9]+$", "i");
 var patt2 = new RegExp("^[0-9]+$");
 
-function check(i) {
+function checkInput(i) {
     let value = $("#reg" + i).val();
 
     if (value.length == 0) {
@@ -33,7 +33,7 @@ function check(i) {
     return true;
 }
 
-function clear(i) {
+function clearInput(i) {
     switch (i) {
         case 1:
             for (let j = 1; j <= 4; j++) {
@@ -58,7 +58,7 @@ function register(event) {
     let success = true;
 
     for (let i = 2; i <= 4; i++) {
-        success &= check(i);
+        success &= checkInput(i);
     }
     if (account.length == 0) {
         $("#err1").html("*Required!");
@@ -76,7 +76,7 @@ function register(event) {
         } else if (success) {
             window.alert("Register Success!");
             $(".nav-tabs a:first").tab("show");
-            clear(1);
+            clearInput(1);
         }
     });
 }
@@ -96,7 +96,7 @@ function login(event) {
     posting.done(function (data) {
         if (data != "SUCCESS") {
             window.alert("Login Failed! QAQ");
-            clear(2);
+            clearInput(2);
         } else {
             sessionStorage.setItem("account", account);
             sessionStorage.setItem("phone", data);
@@ -113,7 +113,7 @@ $(document).ready(function () {
     }
     for (let i = 1; i <= 2; i++) {
         $("tab" + i).click(function () {
-            clear(i);
+            clearInput(i);
         });
     }
     $("#reg").submit(register);

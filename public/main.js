@@ -1,12 +1,26 @@
 "use strict";
 
 function loadProfile() {
-    $("#pro1").html(sessionStorage.getItem("account"));
-    $("#pro2").html(sessionStorage.getItem("phone"));
+    let account = sessionStorage.getItem("account");
+    let phone = sessionStorage.getItem("phone");
+
+    $("#pro1").html(account);
+    $("#pro2").html(phone);
+}
+
+function logout() {
+    let url = "/logout";
+    let account = sessionStorage.getItem("account");
+
+    sessionStorage.removeItem("account");
+    sessionStorage.removeItem("phone");
+
+    $.post(url, { account: account });
+
+    window.location.replace("index.html");
 }
 
 $(document).ready(function () {
-    $("#pro1").html("User1");
-    $("#pro2").html("0987654321");
     loadProfile();
+    $("#tab3").click(logout);
 });
