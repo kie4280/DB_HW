@@ -32,6 +32,7 @@ label:not(.custom-control-label){
 
 /* Main */
 #home h4, #shop h4{
+    text-decoration: underline;
     font-weight: bold;
     padding-top: 12px;
     padding-bottom: 12px;
