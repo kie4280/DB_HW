@@ -20,9 +20,9 @@ label:not(.custom-control-label){
 }
 
 /* Index */
-@media screen and (min-width:576px){
-    #login label, #register label{
-        text-align: right!important;
+@media screen and (max-width:576px){
+    #login .text-right, #reg .text-right{
+        text-align: left!important;
     }
 }
 #register span{
@@ -40,8 +40,6 @@ label:not(.custom-control-label){
 }
 #home p, #shop p{
     font-weight: bold;
-}
-#home p, #shop1 p{
     margin-left: 25px;
 }
 #home th{

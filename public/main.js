@@ -31,8 +31,8 @@ $(document).ready(function () {
         });
     }
 
-    $("#shop1").hide();
-    $("#shop2").show();
+    // $("#shop1").hide();
+    // $("#shop2").show();
 
     $("#pro1").html("User1");
     $("#pro2").html("0987654321");
