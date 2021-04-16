@@ -25,10 +25,6 @@ label:not(.custom-control-label){
         text-align: left!important;
     }
 }
-#register span{
-    font-weight: bold;
-    padding-top: 7px;
-}
 
 /* Main */
 #home h4, #shop h4{
