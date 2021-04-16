@@ -38,6 +38,9 @@ label:not(.custom-control-label){
     font-weight: bold;
     margin-left: 25px;
 }
+#home span, #shop span{
+    font-weight: normal;
+}
 #home th{
     width: 25%;
 }

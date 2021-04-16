@@ -98,8 +98,6 @@ function login(event) {
             window.alert("Login Failed! QAQ");
             clearInput(2);
         } else {
-            sessionStorage.setItem("account", account);
-            sessionStorage.setItem("phone", data);
             window.location.replace("main.html");
         }
     });
@@ -116,7 +114,7 @@ $(document).ready(function () {
             clearInput(i);
         });
     }
-    
+
     $("#reg").submit(register);
     $("#log").submit(login);
 });

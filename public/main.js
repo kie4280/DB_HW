@@ -1,22 +1,50 @@
 "use strict";
 
 function loadProfile() {
-    let account = sessionStorage.getItem("account");
-    let phone = sessionStorage.getItem("phone");
+    let url = "/get-info";
+    let type = "profile";
 
-    $("#pro1").html(account);
-    $("#pro2").html(phone);
+    var posting = $.post(url, { type: type });
+
+    posting.done(function (data) {
+        $("#pro1").html(data.account);
+        $("#pro2").html(data.phone);
+    });
 }
 
 function logout() {
     let url = "/logout";
-    let account = sessionStorage.getItem("account");
 
-    sessionStorage.clear();
+    var posting = $.post(url);
 
-    $.post(url, { account: account });
+    posting.done(function (data) {
+        window.location.replace("index.html");
+    });
+}
 
-    window.location.replace("index.html");
+function search(event) {
+    event.preventDefault();
+
+    let url = $("sho").attr("action");
+    let shop = $("sho1").val();
+    let city = $("sho2").val();
+    let min_price = $("sho3").val();
+    let max_price = $("sho4").val();
+    let amount = $("sho5").val();
+    let checked = $('#sho7').prop('checked');
+
+    var posting = $.post(url, {
+        shop: shop,
+        city: city,
+        min_price: min_price,
+        max_price: max_price,
+        amount: amount,
+        checked: checked,
+    });
+
+    posting.done(function (data) {
+        console.log(data);
+    });
 }
 
 $(document).ready(function () {
@@ -31,13 +59,11 @@ $(document).ready(function () {
         });
     }
 
-    // $("#shop1").hide();
-    // $("#shop2").show();
-
     $("#pro1").html("User1");
     $("#pro2").html("0987654321");
 
     // loadProfile();
 
     $("#tab3").click(logout);
+    $("#sho").submit(search);
 });
