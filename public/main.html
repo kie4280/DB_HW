@@ -53,7 +53,7 @@
                             <div class="col-sm-3 col-lg-2">
                                 <label for="sho1">Shop</label>
                             </div>
-                            <div class="col-sm-9 col-lg-7">
+                            <div class="col-sm-9 col-lg-6">
                                 <input type="text" class="form-control" id="sho1">
                             </div>
                         </div>
@@ -61,7 +61,7 @@
                             <div class="col-sm-3 col-lg-2">
                                 <label for="sho2">City</label>
                             </div>
-                            <div class="col-sm-9 col-lg-7">
+                            <div class="col-sm-9 col-lg-6">
                                 <select class="form-control" id="sho2">
                                     <option value="0" selected>All</option>
                                     <option value="1">Taipei</option>
@@ -74,7 +74,7 @@
                             <div class="col-sm-3 col-lg-2">
                                 <label for="sho3">Price</label>
                             </div>
-                            <div class="col-sm-9 col-lg-7">
+                            <div class="col-sm-9 col-lg-6">
                                 <div class="input-group">
                                     <input type="number" class="form-control" id="sho3">
                                     <div class="input-group-append">
@@ -88,7 +88,7 @@
                             <div class="col-sm-3 col-lg-2">
                                 <label for="sho5">Amount</label>
                             </div>
-                            <div class="col-sm-9 col-lg-7">
+                            <div class="col-sm-9 col-lg-6">
                                 <select class="form-control" id="sho5">
                                     <option value="0" selected>All</option>
                                     <option value="1">(Sold out) 0</option>
@@ -145,6 +145,9 @@
                             <div class="col-sm-5 col-lg-3">
                                 <input type="text" class="form-control" id="regs1">
                             </div>
+                            <div class="col">
+                                <label for="regs1"><span class="text-danger" id="regs-err1"></span></label>
+                            </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-2 col-lg-1">
@@ -157,13 +160,19 @@
                                     <option value="3">Tainan</option>
                                 </select>
                             </div>
+                            <div class="col">
+                                <label for="regs2"><span class="text-danger" id="regs-err2"></span></label>
+                            </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-2 col-lg-1">
                                 <label for="regs3">Price</label>
                             </div>
                             <div class="col-sm-5 col-lg-3">
-                                <input type="text" class="form-control" id="regs3">
+                                <input type="number" class="form-control" id="regs3">
+                            </div>
+                            <div class="col">
+                                <label for="regs3"><span class="text-danger" id="regs-err3"></span></label>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -171,7 +180,10 @@
                                 <label for="regs4">Amount</label>
                             </div>
                             <div class="col-sm-5 col-lg-3">
-                                <input type="text" class="form-control" id="regs4">
+                                <input type="number" class="form-control" id="regs4">
+                            </div>
+                            <div class="col">
+                                <label for="regs4"><span class="text-danger" id="regs-err4"></span></label>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -207,9 +219,9 @@
                             <div class="col-sm-3 col-lg-2">
                                 <label for="mys3">Price</label>
                             </div>
-                            <div class="col-sm-9 col-lg-7">
+                            <div class="col-sm-9 col-lg-6">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="mys3" disabled>
+                                    <input type="number" class="form-control" id="mys3" disabled>
                                     <div class="input-group-append">
                                         <button type="button" class="btn btn-primary" id="mys4">Edit</button>
                                     </div>
@@ -220,9 +232,9 @@
                             <div class="col-sm-3 col-lg-2">
                                 <label for="mys5">Amount</label>
                             </div>
-                            <div class="col-sm-9 col-lg-7">
+                            <div class="col-sm-9 col-lg-6">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="mys5" disabled>
+                                    <input type="number" class="form-control" id="mys5" disabled>
                                     <div class="input-group-append">
                                         <button type="button" class="btn btn-primary" id="mys6">Edit</button>
                                     </div>
@@ -233,13 +245,16 @@
                             <div class="col-sm-12">
                                 <label for="mys7">Employee</label>
                             </div>
-                            <div class="col col-lg-9">
+                            <div class="col col-lg-8">
                                 <div class="input-group">
                                     <input type="text" class="form-control" placeholder="Type Account" id="mys7">
                                     <div class="input-group-append">
                                         <button type="button" class="btn btn-primary" id="mys8">Add</button>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col">
+                                <label for="mys7"><span class="text-danger" id="mys-err1"></span></label>
                             </div>
                         </div>
                     </form>
