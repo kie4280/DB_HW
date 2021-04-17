@@ -25,12 +25,12 @@ function logout() {
 function search(event) {
     event.preventDefault();
 
-    let url = $("sho").attr("action");
-    let shop = $("sho1").val();
-    let city = $("sho2").val();
-    let min_price = $("sho3").val();
-    let max_price = $("sho4").val();
-    let amount = $("sho5").val();
+    let url = $("#sho").attr("action");
+    let shop = $("#sho1").val();
+    let city = $("#sho2").val();
+    let min_price = $("#sho3").val();
+    let max_price = $("#sho4").val();
+    let amount = $("#sho5").val();
     let checked = $('#sho7').prop('checked');
 
     var posting = $.post(url, {
