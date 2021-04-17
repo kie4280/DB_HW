@@ -66,7 +66,7 @@ function register(event) {
         return;
     }
 
-    var posting = $.post(url, {
+    let posting = $.post(url, {
         account: account,
         password: password,
     });
@@ -90,7 +90,7 @@ function login(event) {
     let account = $("#log1").val();
     let password = $("#log2").val();
 
-    var posting = $.post(url, {
+    let posting = $.post(url, {
         account: account,
         password: password,
     });

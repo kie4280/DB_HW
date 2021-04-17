@@ -4,7 +4,7 @@ function loadProfile() {
     let url = "/get-info";
     let type = "profile";
 
-    var posting = $.post(url, { type: type });
+    let posting = $.post(url, { type: type });
 
     posting.done(function (data) {
         $("#pro1").html(data.account);
@@ -15,8 +15,8 @@ function loadProfile() {
 function logout() {
     let url = "/logout-user";
 
-    var posting = $.post(url);
-
+    let posting = $.post(url);
+    
     posting.done(function (data) {
         window.location.replace("index.html");
     });
@@ -35,7 +35,7 @@ function search(event) {
     let amount = $("#sho5").val();
     let checked = $('#sho7').prop('checked');
 
-    var posting = $.post(url, {
+    let posting = $.post(url, {
         type: type,
         shop: shop,
         city: city,
