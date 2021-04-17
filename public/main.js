@@ -43,18 +43,20 @@ function search(event) {
     });
 
     posting.done(function (data) {
-        console.log(data);
+        $.each(data, function (k, v) {
+            $("#table1 > tbody").append(`<tr><td>${v.shop}</td><td>${v.city}</td><td>${v.price}</td><td>${v.amount}</td></tr>`);
+        });
     });
 }
 
 $(document).ready(function () {
     for (let i = 4; i <= 6; i += 2) {
-        $("#mys" + i).click(function () {
-            $("#mys" + (i - 1)).prop('disabled', false).focus();
+        $(`#mys${i}`).click(function () {
+            $(`#mys${i - 1}`).prop('disabled', false).focus();
         });
     }
     for (let i = 3; i <= 5; i += 2) {
-        $("#mys" + i).blur(function () {
+        $(`#mys${i}`).blur(function () {
             this.disabled = true;
         });
     }
