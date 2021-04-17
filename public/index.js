@@ -110,7 +110,7 @@ $(document).ready(function () {
         });
     }
     for (let i = 1; i <= 2; i++) {
-        $("tab" + i).click(function () {
+        $("#tab" + i).click(function () {
             clearInput(i);
         });
     }
