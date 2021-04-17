@@ -4,7 +4,7 @@ function loadProfile() {
     let url = "/get-info";
     let type = "profile";
 
-    var posting = $.post(url, { type: type });
+    let posting = $.post(url, { type: type });
 
     posting.done(function (data) {
         $("#pro1").html(data.account);
@@ -13,9 +13,9 @@ function loadProfile() {
 }
 
 function logout() {
-    let url = "/logout";
+    let url = "/logout-user";
 
-    var posting = $.post(url);
+    let posting = $.post(url);
 
     posting.done(function (data) {
         window.location.replace("index.html");
@@ -25,7 +25,9 @@ function logout() {
 function search(event) {
     event.preventDefault();
 
-    let url = $("#sho").attr("action");
+    let url = "/get-info";
+    let type = "shop";
+
     let shop = $("#sho1").val();
     let city = $("#sho2").val();
     let min_price = $("#sho3").val();
@@ -33,7 +35,8 @@ function search(event) {
     let amount = $("#sho5").val();
     let checked = $('#sho7').prop('checked');
 
-    var posting = $.post(url, {
+    let posting = $.post(url, {
+        type: type,
         shop: shop,
         city: city,
         min_price: min_price,
@@ -43,8 +46,11 @@ function search(event) {
     });
 
     posting.done(function (data) {
-        $.each(data, function (k, v) {
-            $("#table1 > tbody").append(`<tr><td>${v.shop}</td><td>${v.city}</td><td>${v.price}</td><td>${v.amount}</td></tr>`);
+        $.each(data, function (k1, v1) {
+            $("#table1 > tbody").append("<tr></tr>");
+            $.each(v1, function (k2, v2) {
+                $("#table1 > tbody tr:last-child").append(`<td>${v2}</td>`);
+            });
         });
     });
 }

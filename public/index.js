@@ -7,25 +7,25 @@ function checkInput(i) {
     let value = $(`#reg${i}`).val();
 
     if (value.length == 0) {
-        $(`#err${i}`).html("*Required!");
+        $(`#reg-err${i}`).html("*Required!");
         return false;
     }
     switch (i) {
         case 2:
             if (!patt1.test(value)) {
-                $("#err2").html("*Invalid format (only upper/lower-case character and number are allowed)");
+                $("#reg-err2").html("*Invalid format (only upper/lower-case character and number are allowed)");
                 return false;
             }
             break;
         case 3:
             if (value != $("#reg2").val()) {
-                $("#err3").html("*Password mismatch");
+                $("#reg-err3").html("*Password mismatch");
                 return false;
             }
             break;
         case 4:
             if (!patt2.test(value)) {
-                $("#err4").html("*Invalid format (only number are allowed)");
+                $("#reg-err4").html("*Invalid format (only number are allowed)");
                 return false;
             }
             break;
@@ -38,7 +38,7 @@ function clearInput(i) {
         case 1:
             for (let j = 1; j <= 4; j++) {
                 $(`#reg${j}`).val("");
-                $(`#err${j}`).html("");
+                $(`#reg-err${j}`).html("");
             }
             break;
         case 2:
@@ -52,7 +52,8 @@ function clearInput(i) {
 function register(event) {
     event.preventDefault();
 
-    let url = $("#reg").attr("action");
+    let url = "/register-user";
+
     let account = $("#reg1").val();
     let password = $("#reg2").val();
     let success = true;
@@ -61,18 +62,18 @@ function register(event) {
         success &= checkInput(i);
     }
     if (account.length == 0) {
-        $("#err1").html("*Required!");
+        $("#reg-err1").html("*Required!");
         return;
     }
 
-    var posting = $.post(url, {
+    let posting = $.post(url, {
         account: account,
         password: password,
     });
 
     posting.done(function (data) {
         if (data != "SUCCESS") {
-            $("#err1").html("*Account has been registered! QAQ");
+            $("#reg-err1").html("*Account has been registered! QAQ");
         } else if (success) {
             window.alert("Register Success!");
             $(".nav-tabs a:first").tab("show");
@@ -84,11 +85,12 @@ function register(event) {
 function login(event) {
     event.preventDefault();
 
-    let url = $("#log").attr("action");
+    let url = "/login-user";
+
     let account = $("#log1").val();
     let password = $("#log2").val();
 
-    var posting = $.post(url, {
+    let posting = $.post(url, {
         account: account,
         password: password,
     });
@@ -106,7 +108,7 @@ function login(event) {
 $(document).ready(function () {
     for (let i = 1; i <= 4; i++) {
         $(`#reg${i}`).focus(function () {
-            $("#err" + i).html("");
+            $("#reg-err" + i).html("");
         });
     }
     for (let i = 1; i <= 2; i++) {
