@@ -4,10 +4,10 @@ var patt1 = new RegExp("^[a-z0-9]+$", "i");
 var patt2 = new RegExp("^[0-9]+$");
 
 function checkInput(i) {
-    let value = $("#reg" + i).val();
+    let value = $(`#reg${i}`).val();
 
     if (value.length == 0) {
-        $("#err" + i).html("*Required!");
+        $(`#err${i}`).html("*Required!");
         return false;
     }
     switch (i) {
@@ -37,13 +37,13 @@ function clearInput(i) {
     switch (i) {
         case 1:
             for (let j = 1; j <= 4; j++) {
-                $("#reg" + j).val("");
-                $("#err" + j).html("");
+                $(`#reg${j}`).val("");
+                $(`#err${j}`).html("");
             }
             break;
         case 2:
             for (let j = 1; j <= 2; j++) {
-                $("#log" + j).val("");
+                $(`#log${j}`).val("");
             }
             break;
     }
@@ -105,12 +105,12 @@ function login(event) {
 
 $(document).ready(function () {
     for (let i = 1; i <= 4; i++) {
-        $("#reg" + i).focus(function () {
+        $(`#reg${i}`).focus(function () {
             $("#err" + i).html("");
         });
     }
     for (let i = 1; i <= 2; i++) {
-        $("#tab" + i).click(function () {
+        $(`#tab${i}`).click(function () {
             clearInput(i);
         });
     }
