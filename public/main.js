@@ -48,7 +48,7 @@ function search(event) {
     posting.done(function (data) {
         $.each(data, function (k1, v1) {
             $("#table1 > tbody").append("<tr></tr>");
-            $.each(v1, function(k2, v2){
+            $.each(v1, function (k2, v2) {
                 $("#table1 > tbody tr:last-child").append(`<td>${v2}</td>`);
             });
         });
