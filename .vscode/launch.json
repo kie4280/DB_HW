@@ -5,6 +5,19 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Launch Database",
+            "program": "${workspaceFolder}/ts-build/database.js",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node",
+            "preLaunchTask": "tsc: build - tsconfig.json",
+            "console": "integratedTerminal"
+        },
+        
+        
+        {
             "type": "pwa-node",
             "request": "launch",
             "name": "Launch Program",
