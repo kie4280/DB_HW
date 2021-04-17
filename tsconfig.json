@@ -6,7 +6,7 @@
         "strictFunctionTypes": true,
         "sourceMap": true,
         "outDir": "ts-build",
-        "sourceRoot": "server"
+        "sourceRoot": "src"
     },
     "exclude": [
         "node_modules",
