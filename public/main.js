@@ -16,7 +16,7 @@ function logout() {
     let url = "/logout-user";
 
     let posting = $.post(url);
-    
+
     posting.done(function (data) {
         window.location.replace("index.html");
     });
@@ -44,10 +44,13 @@ function search(event) {
         amount: amount,
         checked: checked,
     });
-    
+
     posting.done(function (data) {
-        $.each(data, function (k, v) {
-            $("#table1 > tbody").append(`<tr><td>${v.shop}</td><td>${v.city}</td><td>${v.price}</td><td>${v.amount}</td></tr>`);
+        $.each(data, function (k1, v1) {
+            $("#table1 > tbody").append("<tr></tr>");
+            $.each(v1, function(k2, v2){
+                $("#table1 > tbody tr:last-child").append(`<td>${v2}</td>`);
+            });
         });
     });
 }
