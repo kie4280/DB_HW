@@ -52,7 +52,8 @@ function clearInput(i) {
 function register(event) {
     event.preventDefault();
 
-    let url = $("#reg").attr("action");
+    let url = "/register-user";
+
     let account = $("#reg1").val();
     let password = $("#reg2").val();
     let success = true;
@@ -84,7 +85,8 @@ function register(event) {
 function login(event) {
     event.preventDefault();
 
-    let url = $("#log").attr("action");
+    let url = "/login-user";
+
     let account = $("#log1").val();
     let password = $("#log2").val();
 
@@ -92,7 +94,7 @@ function login(event) {
         account: account,
         password: password,
     });
-
+    
     posting.done(function (data) {
         if (data != "SUCCESS") {
             window.alert("Login Failed! QAQ");

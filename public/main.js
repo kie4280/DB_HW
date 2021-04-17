@@ -13,7 +13,7 @@ function loadProfile() {
 }
 
 function logout() {
-    let url = "/logout";
+    let url = "/logout-user";
 
     var posting = $.post(url);
 
@@ -25,7 +25,9 @@ function logout() {
 function search(event) {
     event.preventDefault();
 
-    let url = $("#sho").attr("action");
+    let url = "/get-info";
+    let type = "shop";
+
     let shop = $("#sho1").val();
     let city = $("#sho2").val();
     let min_price = $("#sho3").val();
@@ -34,6 +36,7 @@ function search(event) {
     let checked = $('#sho7').prop('checked');
 
     var posting = $.post(url, {
+        type: type,
         shop: shop,
         city: city,
         min_price: min_price,
@@ -41,7 +44,7 @@ function search(event) {
         amount: amount,
         checked: checked,
     });
-
+    
     posting.done(function (data) {
         $.each(data, function (k, v) {
             $("#table1 > tbody").append(`<tr><td>${v.shop}</td><td>${v.city}</td><td>${v.price}</td><td>${v.amount}</td></tr>`);
