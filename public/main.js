@@ -1,10 +1,34 @@
 "use strict";
 
-function loadProfile() {
-    let url = "/get-info";
-    let type = "profile";
+function checkInput(i) {
+    let value = $(`#regs${i}`).val();
 
-    let posting = $.post(url, { type: type });
+    if (value.length == 0) {
+        $(`#regs-err${i}`).html("*Required!");
+        return false;
+    }
+    if (i == 3 || i == 4) {
+        if (value < 0) {
+            $(`#regs-err${i}`).html("*Input a non-negative number");
+            return false;
+        }
+    }
+    return true;
+}
+
+function clearInput(i) {
+    if (i == 1) {
+        $("#regs").find("input").val("");
+        $("#regs").find("select").val("1");
+    } else {
+        $("#sho").find("input:not([type=checkbox])").val("");
+        $("#sho").find("input[type=checkbox]").prop("checked", false);
+        $("#sho").find("select").val("0");
+    }
+}
+
+function loadProfile() {
+    let posting = $.post("/get-info", { type: "profile" });
 
     posting.done(function (data) {
         $("#pro1").html(data.account);
@@ -13,9 +37,7 @@ function loadProfile() {
 }
 
 function logout() {
-    let url = "/logout-user";
-
-    let posting = $.post(url);
+    let posting = $.post("/logout-user");
 
     posting.done(function (data) {
         window.location.replace("index.html");
@@ -25,30 +47,20 @@ function logout() {
 function search(event) {
     event.preventDefault();
 
-    let url = "/get-info";
-    let type = "shop";
-
-    let shop = $("#sho1").val();
-    let city = $("#sho2").val();
-    let min_price = $("#sho3").val();
-    let max_price = $("#sho4").val();
-    let amount = $("#sho5").val();
-    let checked = $('#sho7').prop('checked');
-
-    let posting = $.post(url, {
-        type: type,
-        shop: shop,
-        city: city,
-        min_price: min_price,
-        max_price: max_price,
-        amount: amount,
-        checked: checked,
+    let posting = $.post("/get-info", {
+        type: "/shop",
+        shop: $("#sho1").val(),
+        city: $("#sho2").val(),
+        min_price: $("#sho3").val(),
+        max_price: $("#sho4").val(),
+        amount: $("#sho5").val(),
+        checked: $('#sho7').prop("checked"),
     });
 
     posting.done(function (data) {
-        $.each(data, function (k1, v1) {
+        $.each(data, (k1, v1) => {
             $("#table1 > tbody").append("<tr></tr>");
-            $.each(v1, function (k2, v2) {
+            $.each(v1, (k2, v2) => {
                 $("#table1 > tbody tr:last-child").append(`<td>${v2}</td>`);
             });
         });
@@ -56,16 +68,16 @@ function search(event) {
 }
 
 $(document).ready(function () {
-    for (let i = 4; i <= 6; i += 2) {
-        $(`#mys${i}`).click(function () {
-            $(`#mys${i - 1}`).prop('disabled', false).focus();
-        });
-    }
     for (let i = 3; i <= 5; i += 2) {
-        $(`#mys${i}`).blur(function () {
-            this.disabled = true;
-        });
+        $(`#mys${i + 1}`).click(_ => $(`#mys${i}`).prop('disabled', false).focus());
+        $(`#mys${i}`).blur(_ => $(`#mys${i}`).prop('disabled', true));
     }
+    for (let i = 1; i <= 4; i++) {
+        $(`#regs${i}`).focus(_ => $(`#regs-err${i}`).html(""));
+    };
+
+    $("#tab1").click(_ => clearInput(1));
+    $("#tab2").click(_ => clearInput(2));
 
     $("#pro1").html("User1");
     $("#pro2").html("0987654321");
