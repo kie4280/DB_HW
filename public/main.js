@@ -21,7 +21,6 @@ function clearInput(i) {
 }
 
 function loadUserInfo() {
-    $("#shop").load("shop2.html", loadShopInfo);
     let posting = $.post("/get-info", { type: "user-info" });
 
     posting.done(function (data) {
@@ -29,9 +28,9 @@ function loadUserInfo() {
         $("#pro2").html(data.phone);
 
         if (data.role == "manager") {
-            $("#shop").load("shop1.html", loadForm);
-        } else {
             $("#shop").load("shop2.html", loadShopInfo);
+        } else {
+            $("#shop").load("shop1.html", loadForm);
         }
     });
 }
