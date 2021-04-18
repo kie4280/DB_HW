@@ -1,6 +1,7 @@
 "use strict";
 
 function checkInput(i) {
+    // 1: shop, 3: min-price, 4: max-price
     let value = $(`#regs${i}`).val();
 
     if (value.length == 0) {
@@ -18,9 +19,15 @@ function checkInput(i) {
 
 function clearInput(i) {
     if (i == 1) {
+        // register shop
         $("#regs").find("input").val("");
         $("#regs").find("select").val("1");
+        $("#regs").find("span").html("");
+        // my shop
+        $("#mys").find("input").val("");
+        $("#mys").find("span").html("");
     } else {
+        // shop list
         $("#sho").find("input:not([type=checkbox])").val("");
         $("#sho").find("input[type=checkbox]").prop("checked", false);
         $("#sho").find("select").val("0");
@@ -68,16 +75,18 @@ function search(event) {
 }
 
 $(document).ready(function () {
+    for (let i = 4; i <= 6; i += 2) {
+        $(`#mys${i}`).click(_ => $(`#mys${i - 1}`).prop('disabled', false).focus());
+    }
     for (let i = 3; i <= 5; i += 2) {
-        $(`#mys${i + 1}`).click(_ => $(`#mys${i}`).prop('disabled', false).focus());
         $(`#mys${i}`).blur(_ => $(`#mys${i}`).prop('disabled', true));
     }
     for (let i = 1; i <= 4; i++) {
         $(`#regs${i}`).focus(_ => $(`#regs-err${i}`).html(""));
-    };
-
-    $("#tab1").click(_ => clearInput(1));
-    $("#tab2").click(_ => clearInput(2));
+    }
+    for (let i = 1; i <= 2; i++) {
+        $(`#tab${i}`).click(_ => clearInput(i));
+    }
 
     $("#pro1").html("User1");
     $("#pro2").html("0987654321");

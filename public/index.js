@@ -4,12 +4,13 @@ var patt1 = new RegExp("^[a-z0-9]+$", "i");
 var patt2 = new RegExp("^[0-9]+$");
 
 function checkInput(i) {
+    //  1: account, 2: password, 3: confirm password, 4: phone
     let value = $(`#reg${i}`).val();
 
     if (value.length == 0) {
         $(`#reg-err${i}`).html("*Required!");
         return false;
-    } 
+    }
     if (i == 2) {
         if (!patt1.test(value)) {
             $("#reg-err2").html("*Invalid format (only upper/lower-case character and number are allowed)");
@@ -31,9 +32,11 @@ function checkInput(i) {
 
 function clearInput(i) {
     if (i == 1) {
+        // register
         $("#reg").find("input").val("");
         $("#reg").find("span").html("");
     } else {
+        // login 
         $("log").find("input").val("");
     }
 }
@@ -88,9 +91,9 @@ $(document).ready(function () {
     for (let i = 1; i <= 4; i++) {
         $(`#reg${i}`).focus(_ => $(`#reg-err${i}`).html(""));
     }
-
-    $("#tab1").click(_ => clearInput(1));
-    $("#tab2").click(_ => clearInput(2));
+    for (let i = 1; i <= 2; i++) {
+        $(`#tab${i}`).click(_ => clearInput(i));
+    }
 
     $("#reg").submit(register);
     $("#log").submit(login);
