@@ -32,11 +32,9 @@ function checkInput(i) {
 
 function clearInput(i) {
     if (i == 1) {
-        // register
         $("#reg").find("input").val("");
         $("#reg").find("span").html("");
     } else {
-        // login 
         $("log").find("input").val("");
     }
 }
@@ -59,7 +57,7 @@ function register(event) {
     });
 
     posting.done(function (data) {
-        if (data != "SUCCESS") {
+        if (!data.status) {
             $("#reg-err1").html("*Account has been registered! QAQ");
         } else if (success) {
             window.alert("Register Success!");
@@ -78,7 +76,7 @@ function login(event) {
     });
 
     posting.done(function (data) {
-        if (data != "SUCCESS") {
+        if (!data.status) {
             window.alert("Login Failed! QAQ");
             clearInput(1);
         } else {
@@ -94,7 +92,7 @@ $(document).ready(function () {
     for (let i = 1; i <= 2; i++) {
         $(`#tab${i}`).click(_ => clearInput(i));
     }
-
+    
     $("#reg").submit(register);
     $("#log").submit(login);
 });

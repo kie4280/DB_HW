@@ -1,7 +1,7 @@
 "use strict";
 
 function checkInput(i) {
-    // 1: shop, 3: min-price, 4: max-price
+    // 1: shop, 3: price, 4: amount
     let value = $(`#regs${i}`).val();
 
     if (value.length == 0) {
@@ -17,29 +17,28 @@ function checkInput(i) {
     return true;
 }
 
-function clearInput(i) {
+function clearInput() {
     if (i == 1) {
-        // register shop
-        $("#regs").find("input").val("");
-        $("#regs").find("select").val("1");
-        $("#regs").find("span").html("");
-        // my shop
-        $("#mys").find("input").val("");
-        $("#mys").find("span").html("");
+        $("#shop").empty();
     } else {
-        // shop list
         $("#sho").find("input:not([type=checkbox])").val("");
         $("#sho").find("input[type=checkbox]").prop("checked", false);
         $("#sho").find("select").val("0");
     }
 }
 
-function loadProfile() {
-    let posting = $.post("/get-info", { type: "profile" });
+function loadUserInfo() {
+    let posting = $.post("/get-info", { type: "user-info" });
 
     posting.done(function (data) {
         $("#pro1").html(data.account);
         $("#pro2").html(data.phone);
+
+        if (data.role == "manager") {
+            $("#shop").load("shop1.html");
+        } else {
+            $("#shop").load("shop2.html", _ => loadShopInfo());
+        }
     });
 }
 
@@ -55,7 +54,7 @@ function search(event) {
     event.preventDefault();
 
     let posting = $.post("/get-info", {
-        type: "/shop",
+        type: "shop-list",
         shop: $("#sho1").val(),
         city: $("#sho2").val(),
         min_price: $("#sho3").val(),
@@ -65,7 +64,7 @@ function search(event) {
     });
 
     posting.done(function (data) {
-        $.each(data, (k1, v1) => {
+        $.each(data.shop, (k1, v1) => {
             $("#table1 > tbody").append("<tr></tr>");
             $.each(v1, (k2, v2) => {
                 $("#table1 > tbody tr:last-child").append(`<td>${v2}</td>`);
@@ -75,12 +74,6 @@ function search(event) {
 }
 
 $(document).ready(function () {
-    for (let i = 4; i <= 6; i += 2) {
-        $(`#mys${i}`).click(_ => $(`#mys${i - 1}`).prop('disabled', false).focus());
-    }
-    for (let i = 3; i <= 5; i += 2) {
-        $(`#mys${i}`).blur(_ => $(`#mys${i}`).prop('disabled', true));
-    }
     for (let i = 1; i <= 4; i++) {
         $(`#regs${i}`).focus(_ => $(`#regs-err${i}`).html(""));
     }
@@ -88,11 +81,8 @@ $(document).ready(function () {
         $(`#tab${i}`).click(_ => clearInput(i));
     }
 
-    $("#pro1").html("User1");
-    $("#pro2").html("0987654321");
-
-    // loadProfile();
-
     $("#tab3").click(logout);
     $("#sho").submit(search);
+
+    loadUserInfo();
 });

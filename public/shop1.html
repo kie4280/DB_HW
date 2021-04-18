@@ -1,0 +1,68 @@
+<!-- content for clerk and normal user -->
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="row">
+            <div class="col-sm-12"><h4>Register Shop</h4></div>
+            <div class="col-sm-12">
+                <p><span>* Since you do not have shops, you can register one to sell masks~</span></p>
+            </div>
+        </div>
+    
+        <form action="/register-shop" method="POST" id="regs">
+            <div class="form-group row">
+                <div class="col-sm-2 col-lg-1">
+                    <label for="regs1">Shop</label>
+                </div>
+                <div class="col-sm-5 col-lg-3">
+                    <input type="text" class="form-control" id="regs1">
+                </div>
+                <div class="col">
+                    <label for="regs1"><span class="text-danger" id="regs-err1"></span></label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-2 col-lg-1">
+                    <label for="regs2">City</label>
+                </div>
+                <div class="col-sm-5 col-lg-3">
+                    <select class="form-control" id="regs2">
+                        <option value="1" selected>Taipei</option>
+                        <option value="2">Hsinchu</option>
+                        <option value="3">Tainan</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label for="regs2"><span class="text-danger" id="regs-err2"></span></label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-2 col-lg-1">
+                    <label for="regs3">Price</label>
+                </div>
+                <div class="col-sm-5 col-lg-3">
+                    <input type="number" class="form-control" id="regs3">
+                </div>
+                <div class="col">
+                    <label for="regs3"><span class="text-danger" id="regs-err3"></span></label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-2 col-lg-1">
+                    <label for="regs4">Amount</label>
+                </div>
+                <div class="col-sm-5 col-lg-3">
+                    <input type="number" class="form-control" id="regs4">
+                </div>
+                <div class="col">
+                    <label for="regs4"><span class="text-danger" id="regs-err4"></span></label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="offset-sm-2 offset-lg-1 col">
+                    <button type="submit" class="btn btn-primary" id="regs5">Register</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

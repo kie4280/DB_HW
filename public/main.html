@@ -122,161 +122,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Dynamic Table Content -->
+                            <!-- dynamic table body -->
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <div class="tab-pane container-fluid fade" id="shop">
-            <div class="row" id="shop1">
-                <div class="col-sm-12">
-                    <div class="row">
-                        <div class="col-sm-12"><h4>Register Shop</h4></div>
-                        <div class="col-sm-12">
-                            <p><span>* Since you do not have shops, you can register one to sell masks~</span></p>
-                        </div>
-                    </div>
-
-                    <form action="/register-shop" method="POST" id="regs">
-                        <div class="form-group row">
-                            <div class="col-sm-2 col-lg-1">
-                                <label for="regs1">Shop</label>
-                            </div>
-                            <div class="col-sm-5 col-lg-3">
-                                <input type="text" class="form-control" id="regs1">
-                            </div>
-                            <div class="col">
-                                <label for="regs1"><span class="text-danger" id="regs-err1"></span></label>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-sm-2 col-lg-1">
-                                <label for="regs2">City</label>
-                            </div>
-                            <div class="col-sm-5 col-lg-3">
-                                <select class="form-control" id="regs2">
-                                    <option value="1" selected>Taipei</option>
-                                    <option value="2">Hsinchu</option>
-                                    <option value="3">Tainan</option>
-                                </select>
-                            </div>
-                            <div class="col">
-                                <label for="regs2"><span class="text-danger" id="regs-err2"></span></label>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-sm-2 col-lg-1">
-                                <label for="regs3">Price</label>
-                            </div>
-                            <div class="col-sm-5 col-lg-3">
-                                <input type="number" class="form-control" id="regs3">
-                            </div>
-                            <div class="col">
-                                <label for="regs3"><span class="text-danger" id="regs-err3"></span></label>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-sm-2 col-lg-1">
-                                <label for="regs4">Amount</label>
-                            </div>
-                            <div class="col-sm-5 col-lg-3">
-                                <input type="number" class="form-control" id="regs4">
-                            </div>
-                            <div class="col">
-                                <label for="regs4"><span class="text-danger" id="regs-err4"></span></label>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="offset-sm-2 offset-lg-1 col">
-                                <button type="submit" class="btn btn-primary" id="regs5">Register</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <div class="row" id="shop2">
-                <div class="col-sm-6">
-                    <div class="row">
-                        <div class="col-sm-12"><h4>My Shop</h4></div>
-
-                        <div class="col-sm-3 col-lg-2"><p>Shop</p></div>
-                        <div class="col-sm-3 col-lg-2">
-                            <p><span id="mys1"></span></p>
-                        </div>
-
-                        <div class="w-100"></div>
-                        <div class="col-sm-3 col-lg-2"><p>City</p></div>
-                        <div class="col-sm-3 col-lg-2">
-                            <p><span id="mys2"></span></p>
-                        </div>
-
-                        <div class="w-100"></div>
-                    </div>
-
-                    <form action="" method="POST" id="mys">
-                        <div class="form-group row">
-                            <div class="col-sm-3 col-lg-2">
-                                <label for="mys3">Price</label>
-                            </div>
-                            <div class="col-sm-9 col-lg-6">
-                                <div class="input-group">
-                                    <input type="number" class="form-control" id="mys3" disabled>
-                                    <div class="input-group-append">
-                                        <button type="button" class="btn btn-primary" id="mys4">Edit</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-sm-3 col-lg-2">
-                                <label for="mys5">Amount</label>
-                            </div>
-                            <div class="col-sm-9 col-lg-6">
-                                <div class="input-group">
-                                    <input type="number" class="form-control" id="mys5" disabled>
-                                    <div class="input-group-append">
-                                        <button type="button" class="btn btn-primary" id="mys6">Edit</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-sm-12">
-                                <label for="mys7">Employee</label>
-                            </div>
-                            <div class="col col-lg-8">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Type Account" id="mys7">
-                                    <div class="input-group-append">
-                                        <button type="button" class="btn btn-primary" id="mys8">Add</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <label for="mys7"><span class="text-danger" id="mys-err1"></span></label>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="col-sm-6">
-                    <table class="table" id="table2">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>Account</th>
-                                <th>Phone</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Dynamic Table Content -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+        <div class="tab-pane container-fluid fade" id="shop"></div>
 
         <div class="tab-pane container-fluid fade" id="logout"></div>
     </div>
@@ -289,6 +142,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script type="text/javascript" src="main.js"></script>
+    <script type="text/javascript" src="shop.js"></script>
 </body>
 
 </html>
