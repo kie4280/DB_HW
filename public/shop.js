@@ -1,13 +1,29 @@
 "use strict";
 
-function loadShopInfo() {
-    for (let i = 4; i <= 6; i += 2) {
-        $(`#mys${i}`).click(_ => $(`#mys${i - 1}`).prop('disabled', false).focus());
-    }
-    for (let i = 3; i <= 5; i += 2) {
-        $(`#mys${i}`).blur(_ => $(`#mys${i}`).prop('disabled', true));
-    }
+function checkInput(i) {
+    // 1: shop, 3: price, 4: amount
+    let value = $(`#regs${i}`).val();
 
+    if (value.length == 0) {
+        $(`#regs-err${i}`).html("*Required!");
+        return false;
+    }
+    if (i == 3 || i == 4) {
+        if (value < 0) {
+            $(`#regs-err${i}`).html("*Input a non-negative number");
+            return false;
+        }
+    }
+    return true;
+}
+
+function loadForm() {
+    for (let i = 1; i <= 4; i++) {
+        $(`#regs${i}`).focus(_ => $(`#regs-err${i}`).html(""));
+    }
+}
+
+function loadShopInfo() {
     let posting = $.post("/get-info", { type: "shop-info" });
 
     posting.done(function (data) {
@@ -24,4 +40,11 @@ function loadShopInfo() {
             $("#table2 > tbody tr:last-child").append(`<td><button type="button" class="btn btn-danger" id="del${k1}">Delete</button></td>`);
         });
     });
+
+    for (let i = 4; i <= 6; i += 2) {
+        $(`#mys${i}`).click(_ => $(`#mys${i - 1}`).prop('disabled', false).focus());
+    }
+    for (let i = 3; i <= 5; i += 2) {
+        $(`#mys${i}`).blur(_ => $(`#mys${i}`).prop('disabled', true));
+    }
 }

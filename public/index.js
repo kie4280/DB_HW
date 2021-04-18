@@ -32,9 +32,11 @@ function checkInput(i) {
 
 function clearInput(i) {
     if (i == 1) {
+        // register
         $("#reg").find("input").val("");
         $("#reg").find("span").html("");
     } else {
+        // login
         $("log").find("input").val("");
     }
 }

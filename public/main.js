@@ -1,26 +1,19 @@
 "use strict";
 
-function checkInput(i) {
-    // 1: shop, 3: price, 4: amount
-    let value = $(`#regs${i}`).val();
-
-    if (value.length == 0) {
-        $(`#regs-err${i}`).html("*Required!");
-        return false;
-    }
-    if (i == 3 || i == 4) {
-        if (value < 0) {
-            $(`#regs-err${i}`).html("*Input a non-negative number");
-            return false;
-        }
-    }
-    return true;
-}
-
-function clearInput() {
+function clearInput(i) {
     if (i == 1) {
-        $("#shop").empty();
+        // register shop
+        if ($("#shop1").length) {
+            $("#regs").find("input").val("");
+            $("#regs").find("select").val("1");
+            $("#regs").find("span").html("");
+        }
+        // my shop
+        if ($("#shop2").length) {
+            $("#mys").find("span").html("");
+        }
     } else {
+        // shop list
         $("#sho").find("input:not([type=checkbox])").val("");
         $("#sho").find("input[type=checkbox]").prop("checked", false);
         $("#sho").find("select").val("0");
@@ -28,6 +21,7 @@ function clearInput() {
 }
 
 function loadUserInfo() {
+    $("#shop").load("shop2.html", loadShopInfo);
     let posting = $.post("/get-info", { type: "user-info" });
 
     posting.done(function (data) {
@@ -35,9 +29,9 @@ function loadUserInfo() {
         $("#pro2").html(data.phone);
 
         if (data.role == "manager") {
-            $("#shop").load("shop1.html");
+            $("#shop").load("shop1.html", loadForm);
         } else {
-            $("#shop").load("shop2.html", _ => loadShopInfo());
+            $("#shop").load("shop2.html", loadShopInfo);
         }
     });
 }
@@ -64,6 +58,7 @@ function search(event) {
     });
 
     posting.done(function (data) {
+        $("#table1 > tbody").empty();
         $.each(data.shop, (k1, v1) => {
             $("#table1 > tbody").append("<tr></tr>");
             $.each(v1, (k2, v2) => {
@@ -74,9 +69,6 @@ function search(event) {
 }
 
 $(document).ready(function () {
-    for (let i = 1; i <= 4; i++) {
-        $(`#regs${i}`).focus(_ => $(`#regs-err${i}`).html(""));
-    }
     for (let i = 1; i <= 2; i++) {
         $(`#tab${i}`).click(_ => clearInput(i));
     }
