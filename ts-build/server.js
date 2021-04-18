@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express"); // Create a new express app instance
+const database_1 = require("./database");
 const app = express();
 app.listen(3000, function () { console.log("App is listening on port 3000"); });
 app.use(express.static("public"));
@@ -17,4 +18,6 @@ app.get("*", function (req, res) {
 app.post("*", function (req, res) {
     res.status(404).send("Not found!");
 });
+let db = new database_1.Database();
+db.addUser("sdf", "sdf");
 //# sourceMappingURL=server.js.map

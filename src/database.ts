@@ -1,93 +1,87 @@
-import * as sql3 from "sqlite3"
+import * as sql from "mysql"
 
-const DB_FILE: string = "test.db";
 
 export class Database {
-    database: sql3.Database;
-    constructor() {
-        this.database = new sql3.Database(DB_FILE);
-    }
+  database: sql.Connection;
+  constructor() {
+    this.database = sql.createConnection({
+      host: 'localhost',
+      user: 'mask',
+      password: 'mask',
+      database: 'maskDB'
+    });
+    this.database.connect();
+    this.createTables();
+  }
 
 
 
-    public createTables(): void {
-        this.database.all("SELECT * FROM sqlite_master where type == 'table' and name == 'User'", (err: Error, row: any[]) => {
-            if (err != null) {
-                console.log(err);
-                return;
-            }
-            console.log(row.length);
-            if (row.length == 0) {
-                this.database.run(
-                    `CREATE TABLE User(
-                        UID int NOT NULL AUTO_INCREMENT
-                        account varchar(20) NOT NULL
-                        password char(256) NOT NULL
-                        name varchar(20)
-                        PRIMARY KEY (UID)
-                    );`
-                );
-            }
-        });
-        this.database.all("SELECT * FROM sqlite_master where type == 'table' and name == 'Shop'", (err: Error, row: any[]) => {
-            if (err != null) {
-                console.log(err);
-                return;
-            }
-            console.log(row.length);
-            if (row.length == 0) {
-                this.database.run(
-                    `CREATE TABLE Shop(
-                        SID int NOT NULL AUTO_INCREMENT
-                        name varchar(30) NOT NULL
-                        mask_amount int NOT NULL
-                        mask_price int NOT NULL
-                        PRIMARY KEY (SID)
-                    );`
-                );
-            }
-        });
-        this.database.all("SELECT * FROM sqlite_master where type == 'table' and name == 'Order'", (err: Error, row: any[]) => {
-            if (err != null) {
-                console.log(err);
-                return;
-            }
-            console.log(row.length);
-            if (row.length == 0) {
-                this.database.run(
-                    `CREATE TABLE Order(
-                        OID int NOT NULL AUTO_INCREMENT
-                        status char(1) NOT NULL check in ('c', 'p', 'f')
-                        create_time datetime NOT NULL
-                        finish_time datetime NOT NULL
-                        PRIMARY KEY (OID)
-                    );`
-                );
-            }
-        });
-        this.database.all("SELECT * FROM sqlite_master where type == 'table' and name == 'Role'", (err: Error, row: any[]) => {
-            if (err != null) {
-                console.log(err);
-                return;
-            }
-            console.log(row.length);
-            if (row.length == 0) {
-                this.database.run(
-                    `CREATE TABLE Role(
-                        UID int NOT NULL
-                        SID int NOT NULL
-                        role char(1) NOT NULL check in ('c', 'm')
-                        PRIMARY KEY (UID, SID, role)
-                        FOREIGN KEY (UID) REFERENCES User(UID)
-                        FOREIGN KEY (SID) REFERENCES Shop(SID)
-                    );`
-                );
-            }
-        });
-    }
+  private createTables(): void {
+
+
+    this.database.query(
+      `CREATE TABLE IF NOT EXISTS User(
+          UID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+          account varchar(20) NOT NULL UNIQUE,
+          password char(64) NOT NULL,
+          name varchar(20)
+       );`
+      , (err, results, fields) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        console.log(results);
+
+      });
+
+
+
+    this.database.query(
+      `CREATE TABLE IF NOT EXISTS Shop(
+          SID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+          name varchar(30) NOT NULL UNIQUE,
+          mask_amount int NOT NULL,
+          mask_price int NOT NULL
+      );`
+    );
+
+
+    // status 'c': canceled, 'p': pending, 'f': finished
+    this.database.query(
+      `CREATE TABLE IF NOT EXISTS \`Order\` (
+          OID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+          status char(1) NOT NULL check (status in ('c', 'p', 'f')),
+          create_time datetime NOT NULL,
+          finish_time datetime NOT NULL
+      );`
+    );
+
+
+    // role 'c': clerk, 'm': manager
+    this.database.query(
+      `CREATE TABLE IF NOT EXISTS Role(
+          UID INTEGER NOT NULL,
+          SID INTEGER NOT NULL,
+          role char(1) NOT NULL check (role in ('c', 'm')),
+          PRIMARY KEY(UID, SID, role),
+          FOREIGN KEY(UID) REFERENCES User(UID),
+          FOREIGN KEY(SID) REFERENCES Shop(SID)
+      );`
+    );
+
+  }
+
+  public addUser(account: string, password: string, name?: string): boolean {
+    let aa = new Promise((resolve, reject) => {
+
+    });
+
+    return false;
+  }
 }
 
 
-var db = new Database();
-db.createTables();
+let db = new Database();
+
 
