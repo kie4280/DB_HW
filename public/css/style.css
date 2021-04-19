@@ -43,6 +43,10 @@
   margin-left: 25px;
 }
 
+#main span {
+  font-weight: normal;
+}
+
 #main #home th {
   width: 25%;
 }

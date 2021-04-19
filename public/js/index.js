@@ -44,10 +44,10 @@ function register(event) {
     event.preventDefault();
 
     let success = true;
-
     for (let i = 2; i <= 4; i++) {
         success &= checkInput(i);
     }
+    
     if (!checkInput(1)) { return; }
 
     let posting = $.post("/register-user", {

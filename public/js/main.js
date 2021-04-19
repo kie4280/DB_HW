@@ -26,9 +26,9 @@ function loadUserInfo() {
         $("#pro2").html(data.phone);
 
         if (data.role != "manager") {
-            $("#shop").load(`${components_path}/shop-form.html`, loadShopForm);
+            $("#shop").load("shop-form.html", loadShopForm);
         } else {
-            $("#shop").load(`${components_path}/shop-info.html`, loadShopInfo);
+            $("#shop").load("shop-info.html", loadShopInfo);
         }
     });
 }
