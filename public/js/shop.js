@@ -63,12 +63,10 @@ function loadShopInfo() {
         $("#mys3").val(data.price);
         $("#mys5").val(data.amount);
 
-        $.each(data.clerk, (k1, v1) => {
-            $("#table2 > tbody").append(`<tr id="clerk${k1}"></tr>`);
-            $.each(v1, (k2, v2) => {
-                $("#table2 > tbody tr:last-child").append(`<td>${v2}</td>`);
-            });
-            $("#table2 > tbody tr:last-child").append(`<td><button type="button" class="btn btn-danger" id="del${k1}">Delete</button></td>`);
+        $.each(data.clerk, (k, v) => {
+            $("#table2 > tbody").append(`<tr id="clerk${k}"></tr>`);
+            $("#table2 > tbody tr:last-child").append(`<td>${v.account}</td><td>${v.phone}</td>`);
+            $("#table2 > tbody tr:last-child").append(`<td><button type="button" class="btn btn-danger" id="del${k}">Delete</button></td>`);
         });
     });
 

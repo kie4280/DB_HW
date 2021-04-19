@@ -57,10 +57,8 @@ function search(event) {
     posting.done(function (data) {
         $("#table1 > tbody").empty();
         $.each(data.shop, (k1, v1) => {
-            $("#table1 > tbody").append("<tr></tr>");
-            $.each(v1, (k2, v2) => {
-                $("#table1 > tbody tr:last-child").append(`<td>${v2}</td>`);
-            });
+            $("#table1 > tbody").append(`<tr id=shop${k}></tr>`);
+            $("#table1 > tbody tr:last-child").append(`<td>${v.shop}</td><td>${v.city}</td><td>${v.price}</td><td>${v.amount}</td>`);
         });
     });
 }
