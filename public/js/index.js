@@ -4,7 +4,7 @@ var patt1 = new RegExp("^[a-z0-9]+$", "i");
 var patt2 = new RegExp("^[0-9]+$");
 
 function checkInput(i) {
-    //  1: account, 2: password, 3: confirm password, 4: phone
+    // 1: account, 2: password, 3: confirm password, 4: phone
     let value = $(`#reg${i}`).val();
 
     if (value.length == 0) {
@@ -31,12 +31,11 @@ function checkInput(i) {
 }
 
 function clearInput(i) {
+    // 1: register, 2: login
     if (i == 1) {
-        // register
         $("#reg").find("input").val("");
         $("#reg").find("span").html("");
     } else {
-        // login
         $("log").find("input").val("");
     }
 }
@@ -45,7 +44,7 @@ function register(event) {
     event.preventDefault();
 
     let success = true;
-
+    
     for (let i = 2; i <= 4; i++) {
         success &= checkInput(i);
     }
@@ -94,7 +93,7 @@ $(document).ready(function () {
     for (let i = 1; i <= 2; i++) {
         $(`#tab${i}`).click(_ => clearInput(i));
     }
-    
+
     $("#reg").submit(register);
     $("#log").submit(login);
 });

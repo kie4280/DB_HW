@@ -17,10 +17,41 @@ function checkInput(i) {
     return true;
 }
 
-function loadForm() {
+function register(event) {
+    event.preventDefault();
+
+    let success = true;
+    
+    for (let i = 3; i <= 4; i++) {
+        success &= checkInput(i);
+    }
+    if (!checkInput(1)) {
+        return;
+    }
+
+    let posting = $.post("/register-shop", {
+        shop: $("#regs1").val(),
+        city: $("#regs2").val(),
+        price: $("#regs3").val(),
+        amount: $("#regs4").val(),
+    });
+
+    posting.done(function (data) {
+        if (!data.status) {
+            $("#regs-err1").html("*Shop name has been used! QAQ");
+        } else if (success) {
+            window.alert("Register Success!");
+            $("#shop").empty().load("shop-info.html", loadShopInfo);
+        }
+    });
+}
+
+function loadShopForm() {
     for (let i = 1; i <= 4; i++) {
         $(`#regs${i}`).focus(_ => $(`#regs-err${i}`).html(""));
     }
+
+    $("#regs").submit(register);
 }
 
 function loadShopInfo() {

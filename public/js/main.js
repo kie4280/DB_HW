@@ -1,19 +1,17 @@
 "use strict";
 
 function clearInput(i) {
+    // 1: register shop / my shop, 2: shop list
     if (i == 1) {
-        // register shop
-        if ($("#shop1").length) {
+        if ($("#shop-form").length) {
             $("#regs").find("input").val("");
             $("#regs").find("select").val("1");
             $("#regs").find("span").html("");
         }
-        // my shop
-        if ($("#shop2").length) {
+        if ($("#shop-info").length) {
             $("#mys").find("span").html("");
         }
     } else {
-        // shop list
         $("#sho").find("input:not([type=checkbox])").val("");
         $("#sho").find("input[type=checkbox]").prop("checked", false);
         $("#sho").find("select").val("0");
@@ -27,10 +25,10 @@ function loadUserInfo() {
         $("#pro1").html(data.account);
         $("#pro2").html(data.phone);
 
-        if (data.role == "manager") {
-            $("#shop").load("shop2.html", loadShopInfo);
+        if (data.role != "manager") {
+            $("#shop").load("shop-form.html", loadShopForm);
         } else {
-            $("#shop").load("shop1.html", loadForm);
+            $("#shop").load("shop-info.html", loadShopInfo);
         }
     });
 }
