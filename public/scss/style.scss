@@ -1,0 +1,65 @@
+#header{
+    background-color: black;
+
+    header{
+        font-size: 40px;
+        visibility: hidden;
+    }
+}
+
+#main, #index{
+    .tab-pane{
+        margin-top: 15px;
+    }
+    form{
+        margin-left: 25px;
+    }
+    label{
+        font-weight: bold;
+        padding-top: 7px;
+
+        >span{
+            font-weight: bold;
+        }
+    }
+}
+
+#index{
+    @media screen and (max-width:576px){
+        .text-right{
+            text-align: left!important;
+        }
+    } 
+}
+
+#main{
+    h4{
+        text-decoration: underline;
+        font-weight: bold;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        margin-left: 15px;
+    }
+    p{
+        font-weight: bold;
+        margin-left: 25px;
+    }
+
+    #home{
+        th{
+            width: 25%;
+        }
+    }
+    
+    #shop{
+        th{
+            :nth-child(1), 
+            :nth-child(3){
+                width: 25%;
+            }
+            :nth-child(2){
+                width: 50%;
+            }
+        }
+    }
+}

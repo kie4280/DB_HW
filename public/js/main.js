@@ -26,9 +26,9 @@ function loadUserInfo() {
         $("#pro2").html(data.phone);
 
         if (data.role != "manager") {
-            $("#shop").load("shop-form.html", loadShopForm);
+            $("#shop").load(`${components_path}/shop-form.html`, loadShopForm);
         } else {
-            $("#shop").load("shop-info.html", loadShopInfo);
+            $("#shop").load(`${components_path}/shop-info.html`, loadShopInfo);
         }
     });
 }
@@ -56,7 +56,7 @@ function search(event) {
 
     posting.done(function (data) {
         $("#table1 > tbody").empty();
-        $.each(data.shop, (k1, v1) => {
+        $.each(data.shop, (k, v) => {
             $("#table1 > tbody").append(`<tr id=shop${k}></tr>`);
             $("#table1 > tbody tr:last-child").append(`<td>${v.shop}</td><td>${v.city}</td><td>${v.price}</td><td>${v.amount}</td>`);
         });

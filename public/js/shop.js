@@ -1,5 +1,7 @@
 "use strict";
 
+const components_path = "./components"
+
 function checkInput(i) {
     // 1: shop, 3: price, 4: amount
     let value = $(`#regs${i}`).val();
@@ -21,13 +23,11 @@ function register(event) {
     event.preventDefault();
 
     let success = true;
-    
+
     for (let i = 3; i <= 4; i++) {
         success &= checkInput(i);
     }
-    if (!checkInput(1)) {
-        return;
-    }
+    if (!checkInput(1)) { return; }
 
     let posting = $.post("/register-shop", {
         shop: $("#regs1").val(),
@@ -41,7 +41,7 @@ function register(event) {
             $("#regs-err1").html("*Shop name has been used! QAQ");
         } else if (success) {
             window.alert("Register Success!");
-            $("#shop").empty().load("shop-info.html", loadShopInfo);
+            $("#shop").empty().load(`${components_path}/shop-info.html`, loadShopInfo);
         }
     });
 }

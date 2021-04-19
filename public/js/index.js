@@ -1,7 +1,7 @@
 "use strict";
 
-var patt1 = new RegExp("^[a-z0-9]+$", "i");
-var patt2 = new RegExp("^[0-9]+$");
+const patt1 = new RegExp("^[a-z0-9]+$", "i");
+const patt2 = new RegExp("^[0-9]+$");
 
 function checkInput(i) {
     // 1: account, 2: password, 3: confirm password, 4: phone
@@ -44,13 +44,11 @@ function register(event) {
     event.preventDefault();
 
     let success = true;
-    
+
     for (let i = 2; i <= 4; i++) {
         success &= checkInput(i);
     }
-    if (!checkInput(1)) {
-        return;
-    }
+    if (!checkInput(1)) { return; }
 
     let posting = $.post("/register-user", {
         account: $("#reg1").val(),

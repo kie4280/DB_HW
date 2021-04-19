@@ -1,0 +1,58 @@
+#header {
+  background-color: black;
+}
+
+#header header {
+  font-size: 40px;
+  visibility: hidden;
+}
+
+#main .tab-pane, #index .tab-pane {
+  margin-top: 15px;
+}
+
+#main form, #index form {
+  margin-left: 25px;
+}
+
+#main label, #index label {
+  font-weight: bold;
+  padding-top: 7px;
+}
+
+#main label > span, #index label > span {
+  font-weight: bold;
+}
+
+@media screen and (max-width: 576px) {
+  #index .text-right {
+    text-align: left !important;
+  }
+}
+
+#main h4 {
+  text-decoration: underline;
+  font-weight: bold;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  margin-left: 15px;
+}
+
+#main p {
+  font-weight: bold;
+  margin-left: 25px;
+}
+
+#main #home th {
+  width: 25%;
+}
+
+#main #shop th :nth-child(1),
+#main #shop th :nth-child(3) {
+  width: 25%;
+}
+
+#main #shop th :nth-child(2) {
+  width: 50%;
+}
+/*# sourceMappingURL=style.css.map */

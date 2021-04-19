@@ -1,8 +1,0 @@
-/* Index */
-@import url(base.css);
-
-@media screen and (max-width:576px){
-    .text-right{
-        text-align: left!important;
-    }
-}
