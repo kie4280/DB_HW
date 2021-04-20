@@ -14,7 +14,7 @@ class Database {
         this.createTables();
     }
     createTables() {
-        this.database.query(`CREATE TABLE IF NOT EXISTS User(
+        this.database.query(`CREATE TABLE IF NOT EXISTS user(
           UID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
           account varchar(20) NOT NULL UNIQUE,
           password char(64) NOT NULL,
@@ -26,35 +26,53 @@ class Database {
             }
             console.log(results);
         });
-        this.database.query(`CREATE TABLE IF NOT EXISTS Shop(
+        this.database.query(`CREATE TABLE IF NOT EXISTS shop(
           SID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
           name varchar(30) NOT NULL UNIQUE,
           mask_amount int NOT NULL,
           mask_price int NOT NULL
       );`);
         // status 'c': canceled, 'p': pending, 'f': finished
-        this.database.query(`CREATE TABLE IF NOT EXISTS \`Order\` (
-                        OID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
-                        status char(1) NOT NULL check (status in ('c', 'p', 'f')),
-                        create_time datetime NOT NULL,
-                        finish_time datetime NOT NULL
-                    );`);
+        this.database.query(`CREATE TABLE IF NOT EXISTS \`order\` (
+          OID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+          status char(1) NOT NULL check (status in ('c', 'p', 'f')),
+          create_time datetime NOT NULL,
+          finish_time datetime NOT NULL
+      );`);
         // role 'c': clerk, 'm': manager
-        this.database.query(`CREATE TABLE IF NOT EXISTS Role(
-                        UID INTEGER NOT NULL,
-                        SID INTEGER NOT NULL,
-                        role char(1) NOT NULL check (role in ('c', 'm')),
-                        PRIMARY KEY(UID, SID, role),
-                        FOREIGN KEY(UID) REFERENCES User(UID),
-                        FOREIGN KEY(SID) REFERENCES Shop(SID)
-                    );`);
+        this.database.query(`CREATE TABLE IF NOT EXISTS role(
+          UID INTEGER NOT NULL,
+          SID INTEGER NOT NULL,
+          role char(1) NOT NULL check (role in ('c', 'm')),
+          PRIMARY KEY(UID, SID, role),
+          FOREIGN KEY(UID) REFERENCES user(UID),
+          FOREIGN KEY(SID) REFERENCES shop(SID)
+      );`);
     }
-    addUser(account, password, name) {
+    async addUser(account, password, name) {
         let aa = new Promise((resolve, reject) => {
+            let q = this.database.query("INSERT INTO user VALUES (0, ?, ?, ?)", [account, password, name], (err, results, fiels) => {
+                if (err) {
+                    // reject(err);
+                    console.log(err.message);
+                    resolve(false);
+                }
+                else {
+                    resolve(results.affectedRows > 0);
+                }
+            });
         });
-        return false;
+        return aa;
+    }
+    close() {
+        this.database.end();
     }
 }
 exports.Database = Database;
 let db = new Database();
+let add = db.addUser("13sf", "sdf", "sdffs");
+add.then((success) => {
+    console.log(add);
+    db.close();
+});
 //# sourceMappingURL=database.js.map

@@ -12,24 +12,24 @@
                 "<node_internals>/**"
             ],
             "type": "pwa-node",
-            "preLaunchTask": "tsc: build - tsconfig.json",
-            "console": "integratedTerminal"
+            "console": "integratedTerminal",
+            
         },
         
         
         {
             "type": "pwa-node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Launch Server",
             "skipFiles": [
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}/ts-build/server.js",
-            "preLaunchTask": "tsc: build - tsconfig.json",
             "outFiles": [
                 "${workspaceFolder}/ts-build/**/*.js"
             ],
-            "console": "integratedTerminal"
+            "console": "integratedTerminal",
+            
         }
     ]
 }

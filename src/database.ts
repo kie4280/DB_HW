@@ -1,3 +1,4 @@
+import e = require("express");
 import * as sql from "mysql"
 
 
@@ -20,7 +21,7 @@ export class Database {
 
 
     this.database.query(
-      `CREATE TABLE IF NOT EXISTS User(
+      `CREATE TABLE IF NOT EXISTS user(
           UID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
           account varchar(20) NOT NULL UNIQUE,
           password char(64) NOT NULL,
@@ -38,7 +39,7 @@ export class Database {
 
 
     this.database.query(
-      `CREATE TABLE IF NOT EXISTS Shop(
+      `CREATE TABLE IF NOT EXISTS shop(
           SID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
           name varchar(30) NOT NULL UNIQUE,
           mask_amount int NOT NULL,
@@ -49,7 +50,7 @@ export class Database {
 
     // status 'c': canceled, 'p': pending, 'f': finished
     this.database.query(
-      `CREATE TABLE IF NOT EXISTS \`Order\` (
+      `CREATE TABLE IF NOT EXISTS \`order\` (
           OID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
           status char(1) NOT NULL check (status in ('c', 'p', 'f')),
           create_time datetime NOT NULL,
@@ -60,28 +61,51 @@ export class Database {
 
     // role 'c': clerk, 'm': manager
     this.database.query(
-      `CREATE TABLE IF NOT EXISTS Role(
+      `CREATE TABLE IF NOT EXISTS role(
           UID INTEGER NOT NULL,
           SID INTEGER NOT NULL,
           role char(1) NOT NULL check (role in ('c', 'm')),
           PRIMARY KEY(UID, SID, role),
-          FOREIGN KEY(UID) REFERENCES User(UID),
-          FOREIGN KEY(SID) REFERENCES Shop(SID)
+          FOREIGN KEY(UID) REFERENCES user(UID),
+          FOREIGN KEY(SID) REFERENCES shop(SID)
       );`
     );
 
   }
 
-  public addUser(account: string, password: string, name?: string): boolean {
-    let aa = new Promise((resolve, reject) => {
+  public async addUser(account: string, password: string, name: string): Promise<boolean> {
+    let aa = new Promise<boolean>((resolve, reject) => {
+      let q = this.database.query(
+        "INSERT INTO user VALUES (0, ?, ?, ?)", [account, password, name],
+        (err, results, fiels) => {
+          if (err) {
 
+            // reject(err);
+            console.log(err.message)
+            resolve(false);
+          } else {
+            resolve(results.affectedRows > 0);
+          }
+        });
     });
 
-    return false;
+
+
+    return aa;
+  }
+
+  public close() {
+    this.database.end();
   }
 }
 
 
 let db = new Database();
+let add = db.addUser("13sf", "sdf", "sdffs");
+add.then((success) => {
+  console.log(add);
+  db.close()
+})
+
 
 
