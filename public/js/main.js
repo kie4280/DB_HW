@@ -35,7 +35,9 @@ function logout() {
     let posting = $.post("/logout-user");
 
     posting.done(function (data) {
-        window.location.replace("index.html");
+        if (data.status) {
+            window.location.replace("index.html");
+        }
     });
 }
 
