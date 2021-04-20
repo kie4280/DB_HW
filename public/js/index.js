@@ -47,13 +47,10 @@ function register(event) {
     for (let i = 2; i <= 4; i++) {
         success &= checkInput(i);
     }
-    
     if (!checkInput(1)) { return; }
 
-    let posting = $.post("/register-user", {
-        account: $("#reg1").val(),
-        password: $("#reg2").val(),
-    });
+    let data = $("#reg").serialize();
+    let posting = $.post("/register-user", data);
 
     posting.done(function (data) {
         if (!data.status) {
@@ -69,10 +66,8 @@ function register(event) {
 function login(event) {
     event.preventDefault();
 
-    let posting = $.post("/login-user", {
-        account: $("#log1").val(),
-        password: $("#log2").val(),
-    });
+    let data = $("#log").serialize();
+    let posting = $.post("/login-user", data);
 
     posting.done(function (data) {
         if (!data.status) {

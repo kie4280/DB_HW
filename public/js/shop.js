@@ -24,15 +24,10 @@ function register(event) {
     for (let i = 3; i <= 4; i++) {
         success &= checkInput(i);
     }
-    
     if (!checkInput(1)) { return; }
 
-    let posting = $.post("/register-shop", {
-        shop: $("#regs1").val(),
-        city: $("#regs2").val(),
-        price: $("#regs3").val(),
-        amount: $("#regs4").val(),
-    });
+    let data = $("#regs").serialize();
+    let posting = $.post("/register-shop", data);
 
     posting.done(function (data) {
         if (!data.status) {
@@ -62,9 +57,9 @@ function loadShopInfo() {
         $("#mys5").val(data.amount);
 
         $.each(data.clerk, (k, v) => {
-            $("#table2 > tbody").append(`<tr id="clerk${k}"></tr>`);
-            $("#table2 > tbody tr:last-child").append(`<td>${v.account}</td><td>${v.phone}</td>`);
-            $("#table2 > tbody tr:last-child").append(`<td><button type="button" class="btn btn-danger" id="del${k}">Delete</button></td>`);
+            let row = `<td>${v.account}</td><td>${v.phone}</td>`;
+            let btn = `<td><button type="button" class="btn btn-danger" id="del${k}">Delete</button></td>`;
+            $("#table2 > tbody").append(`<tr id="clerk${k}">${row}${btn}</tr>`);
         });
     });
 

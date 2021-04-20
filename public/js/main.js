@@ -3,14 +3,12 @@
 function clearInput(i) {
     // 1: register shop / my shop, 2: shop list
     if (i == 1) {
-        if ($("#shop-form").length) {
-            $("#regs").find("input").val("");
-            $("#regs").find("select").val("1");
-            $("#regs").find("span").html("");
-        }
-        if ($("#shop-info").length) {
-            $("#mys").find("span").html("");
-        }
+        $("#regs").find("input").val("");
+        $("#regs").find("select").val("1");
+        $("#regs").find("span").html("");
+
+        $("#mys").find("input:not([disabled])").val("");
+        $("#mys").find("span").html("");
     } else {
         $("#sho").find("input:not([type=checkbox])").val("");
         $("#sho").find("input[type=checkbox]").prop("checked", false);
@@ -44,21 +42,14 @@ function logout() {
 function search(event) {
     event.preventDefault();
 
-    let posting = $.post("/get-info", {
-        type: "shop-list",
-        shop: $("#sho1").val(),
-        city: $("#sho2").val(),
-        min_price: $("#sho3").val(),
-        max_price: $("#sho4").val(),
-        amount: $("#sho5").val(),
-        checked: $('#sho7').prop("checked"),
-    });
+    let data = $("#sho").serialize() + "&type=search-shop";
+    let posting = $.post("/get-info", data);
 
     posting.done(function (data) {
         $("#table1 > tbody").empty();
         $.each(data.shop, (k, v) => {
-            $("#table1 > tbody").append(`<tr id=shop${k}></tr>`);
-            $("#table1 > tbody tr:last-child").append(`<td>${v.shop}</td><td>${v.city}</td><td>${v.price}</td><td>${v.amount}</td>`);
+            let row = `<td>${v.shop}</td><td>${v.city}</td><td>${v.price}</td><td>${v.amount}</td>`;
+            $("#table1 > tbody").append(`<tr id=shop${k}>${row}</tr>`);
         });
     });
 }

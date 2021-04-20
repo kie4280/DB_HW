@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./scss/style.css">
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 
 <body>
@@ -37,14 +37,14 @@
                         <div class="col-sm-3 col-lg-2">
                             <p><span id="pro1"></span></p>
                         </div>
-
                         <div class="w-100"></div>
+
                         <div class="col-sm-3 col-lg-2"><p>Phone</p></div>
                         <div class="col-sm-3 col-lg-2">
                             <p><span id="pro2"></span></p>
                         </div>
-
                         <div class="w-100"></div>
+                        
                         <div class="col-sm-12"><h4>Shop List</h4></div>
                     </div>
 
@@ -54,7 +54,7 @@
                                 <label for="sho1">Shop</label>
                             </div>
                             <div class="col-sm-9 col-lg-6">
-                                <input type="text" class="form-control" id="sho1">
+                                <input type="text" class="form-control" name="shop" id="sho1">
                             </div>
                         </div>
                         <div class="form-group row">
@@ -62,7 +62,7 @@
                                 <label for="sho2">City</label>
                             </div>
                             <div class="col-sm-9 col-lg-6">
-                                <select class="form-control" id="sho2">
+                                <select class="form-control" name="city" id="sho2">
                                     <option value="0" selected>All</option>
                                     <option value="1">Taipei</option>
                                     <option value="2">Hsinchu</option>
@@ -76,11 +76,11 @@
                             </div>
                             <div class="col-sm-9 col-lg-6">
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="sho3">
+                                    <input type="number" class="form-control" name="min-price" id="sho3">
                                     <div class="input-group-append">
                                         <span class="input-group-text">~</span>
                                     </div>
-                                    <input type="number" class="form-control" id="sho4">
+                                    <input type="number" class="form-control" name="max-price" id="sho4">
                                 </div>
                             </div>
                         </div>
@@ -89,7 +89,7 @@
                                 <label for="sho5">Amount</label>
                             </div>
                             <div class="col-sm-9 col-lg-6">
-                                <select class="form-control" id="sho5">
+                                <select class="form-control" name="amount" id="sho5">
                                     <option value="0" selected>All</option>
                                     <option value="1">(Sold out) 0</option>
                                     <option value="2">(Rare) 1 ~ 99</option>
@@ -103,7 +103,7 @@
                             </div>
                             <div class="pt-2 col-sm-8 col-lg-10">
                                 <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="sho7">
+                                    <input type="checkbox" class="custom-control-input" name="checked" id="sho7">
                                     <label class="pt-0 custom-control-label" for="sho7">Only show the shop I work at</label>
                                 </div>
                             </div>
@@ -112,7 +112,7 @@
                 </div>
 
                 <div class="col-sm-6">
-                    <table class="table" id="table1">
+                    <table class="table table-striped" id="table1">
                         <thead class="thead-dark">
                             <tr>
                                 <th>Shop</th>
@@ -122,7 +122,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- dynamic table body -->
+                            <tr id="shop0">
+                                <td>Hsinchu</td>
+                                <td>Hsinchu</td>
+                                <td>50</td>
+                                <td>10000</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

@@ -18,7 +18,7 @@
         font-weight: bold;
         padding-top: 7px;
 
-        >span{
+        > span{
             font-weight: bold;
         }
     }
@@ -52,16 +52,28 @@
         th{
             width: 25%;
         }
+        td{
+            vertical-align: middle;
+        }
     }
     
     #shop{
         th{
-            :nth-child(1), 
-            :nth-child(3){
-                width: 25%;
+            &:nth-child(1){
+                width: 30%;
             }
-            :nth-child(2){
+            &:nth-child(2){
                 width: 50%;
+            }
+            &:nth-child(3){
+                width: 20%;
+            }
+        }
+        td{
+            vertical-align: middle;
+
+            &:last-child{
+                text-align: right;
             }
         }
     }
