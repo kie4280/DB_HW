@@ -17,10 +17,34 @@ function checkInput(i) {
     return true;
 }
 
-function loadForm() {
+function register(event) {
+    event.preventDefault();
+
+    let success = true;
+    for (let i = 3; i <= 4; i++) {
+        success &= checkInput(i);
+    }
+    if (!checkInput(1)) { return; }
+
+    let data = $("#regs").serialize();
+    let posting = $.post("/register-shop", data);
+
+    posting.done(function (data) {
+        if (!data.status) {
+            $("#regs-err1").html("*Shop name has been used! QAQ");
+        } else if (success) {
+            window.alert("Register Success!");
+            $("#shop").empty().load("shop-info.html", loadShopInfo);
+        }
+    });
+}
+
+function loadShopForm() {
     for (let i = 1; i <= 4; i++) {
         $(`#regs${i}`).focus(_ => $(`#regs-err${i}`).html(""));
     }
+
+    $("#regs").submit(register);
 }
 
 function loadShopInfo() {
@@ -32,12 +56,10 @@ function loadShopInfo() {
         $("#mys3").val(data.price);
         $("#mys5").val(data.amount);
 
-        $.each(data.clerk, (k1, v1) => {
-            $("#table2 > tbody").append(`<tr id="clerk${k1}"></tr>`);
-            $.each(v1, (k2, v2) => {
-                $("#table2 > tbody tr:last-child").append(`<td>${v2}</td>`);
-            });
-            $("#table2 > tbody tr:last-child").append(`<td><button type="button" class="btn btn-danger" id="del${k1}">Delete</button></td>`);
+        $.each(data.clerk, (k, v) => {
+            let row = `<td>${v.account}</td><td>${v.phone}</td>`;
+            let btn = `<td><button type="button" class="btn btn-danger" id="del${k}">Delete</button></td>`;
+            $("#table2 > tbody").append(`<tr id="clerk${k}">${row}${btn}</tr>`);
         });
     });
 
