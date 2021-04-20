@@ -18,14 +18,8 @@ class Database {
           UID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
           account varchar(20) NOT NULL UNIQUE,
           password char(64) NOT NULL,
-          name varchar(20)
-       );`, (err, results, fields) => {
-            if (err) {
-                console.log(err);
-                return;
-            }
-            console.log(results);
-        });
+          phone varchar(10)
+       );`);
         this.database.query(`CREATE TABLE IF NOT EXISTS shop(
           SID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
           name varchar(30) NOT NULL UNIQUE,
@@ -45,13 +39,13 @@ class Database {
           SID INTEGER NOT NULL,
           role char(1) NOT NULL check (role in ('c', 'm')),
           PRIMARY KEY(UID, SID, role),
-          FOREIGN KEY(UID) REFERENCES user(UID),
-          FOREIGN KEY(SID) REFERENCES shop(SID)
+          FOREIGN KEY(UID) REFERENCES user(UID) ON DELETE CASCADE,
+          FOREIGN KEY(SID) REFERENCES shop(SID) ON DELETE CASCADE
       );`);
     }
-    async addUser(account, password, name) {
+    async addUser(account, password, phone) {
         let aa = new Promise((resolve, reject) => {
-            let q = this.database.query("INSERT INTO user VALUES (0, ?, ?, ?)", [account, password, name], (err, results, fiels) => {
+            let q = this.database.query("INSERT INTO user VALUES (0, ?, ?, ?)", [account, password, phone], (err, results, fields) => {
                 if (err) {
                     // reject(err);
                     console.log(err.message);
@@ -69,10 +63,12 @@ class Database {
     }
 }
 exports.Database = Database;
-let db = new Database();
-let add = db.addUser("13sf", "sdf", "sdffs");
-add.then((success) => {
-    console.log(add);
-    db.close();
-});
+function test() {
+    let db = new Database();
+    let add = db.addUser("13sf", "sdf", "sdffs");
+    add.then((success) => {
+        console.log(add);
+        db.close();
+    });
+}
 //# sourceMappingURL=database.js.map

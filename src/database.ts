@@ -25,16 +25,9 @@ export class Database {
           UID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
           account varchar(20) NOT NULL UNIQUE,
           password char(64) NOT NULL,
-          name varchar(20)
+          phone varchar(10)
        );`
-      , (err, results, fields) => {
-        if (err) {
-          console.log(err);
-          return;
-        }
-        console.log(results);
-
-      });
+    );
 
 
 
@@ -66,18 +59,19 @@ export class Database {
           SID INTEGER NOT NULL,
           role char(1) NOT NULL check (role in ('c', 'm')),
           PRIMARY KEY(UID, SID, role),
-          FOREIGN KEY(UID) REFERENCES user(UID),
-          FOREIGN KEY(SID) REFERENCES shop(SID)
+          FOREIGN KEY(UID) REFERENCES user(UID) ON DELETE CASCADE,
+          FOREIGN KEY(SID) REFERENCES shop(SID) ON DELETE CASCADE
       );`
     );
 
   }
 
-  public async addUser(account: string, password: string, name: string): Promise<boolean> {
+  public async addUser(account: string, password: string,
+    phone: string): Promise<boolean> {
     let aa = new Promise<boolean>((resolve, reject) => {
       let q = this.database.query(
-        "INSERT INTO user VALUES (0, ?, ?, ?)", [account, password, name],
-        (err, results, fiels) => {
+        "INSERT INTO user VALUES (0, ?, ?, ?)", [account, password, phone],
+        (err, results, fields) => {
           if (err) {
 
             // reject(err);
@@ -99,13 +93,16 @@ export class Database {
   }
 }
 
+function test() {
+  let db = new Database();
+  let add = db.addUser("13sf", "sdf", "sdffs");
+  add.then((success) => {
+    console.log(add);
+    db.close()
+  });
+}
 
-let db = new Database();
-let add = db.addUser("13sf", "sdf", "sdffs");
-add.then((success) => {
-  console.log(add);
-  db.close()
-})
+
 
 
 
