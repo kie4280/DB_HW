@@ -33,12 +33,7 @@ function loadUserInfo() {
 
 function logout() {
     let posting = $.post("/logout-user");
-
-    posting.done(function (data) {
-        if (data.status) {
-            window.location.replace("index.html");
-        }
-    });
+    window.location.replace("index.html");
 }
 
 function search(event) {
