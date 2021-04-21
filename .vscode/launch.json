@@ -13,10 +13,8 @@
             ],
             "type": "pwa-node",
             "console": "integratedTerminal",
-            
+            "cwd": "${workspaceFolder}"
         },
-        
-        
         {
             "type": "pwa-node",
             "request": "launch",
@@ -29,7 +27,7 @@
                 "${workspaceFolder}/ts-build/**/*.js"
             ],
             "console": "integratedTerminal",
-            
+            "cwd": "${workspaceFolder}"
         }
     ]
 }

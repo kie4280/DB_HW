@@ -45,15 +45,40 @@ class Database {
     }
     async addUser(account, password, phone) {
         let aa = new Promise((resolve, reject) => {
-            let q = this.database.query("INSERT INTO user VALUES (0, ?, ?, ?)", [account, password, phone], (err, results, fields) => {
+            let q = this.database.query("SELECT * FROM user WHERE account = ?", [account], (err, results, fields) => {
                 if (err) {
-                    // reject(err);
+                    reject(err.message);
                     console.log(err.message);
-                    resolve(false);
                 }
-                else {
-                    resolve(results.affectedRows > 0);
+                resolve(results.length > 0);
+            });
+        }).then((hasUser) => {
+            if (hasUser) {
+                return false;
+            }
+            let bb = new Promise((resolve, reject) => {
+                let q = this.database.query("INSERT INTO user VALUES (0, ?, ?, ?)", [account, password, phone], (err, results, fields) => {
+                    if (err) {
+                        reject(err);
+                        console.log(err.message);
+                    }
+                    else {
+                        resolve(results.affectedRows > 0);
+                    }
+                });
+            });
+            return bb;
+        });
+        return aa;
+    }
+    async checkpassword(account, password) {
+        let aa = new Promise((resolve, reject) => {
+            this.database.query(`SELECT account, password FROM user
+          where account = ? and password = ?`, [account, password], (err, results, fields) => {
+                if (err) {
+                    reject(err);
                 }
+                resolve(results.length > 0);
             });
         });
         return aa;

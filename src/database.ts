@@ -70,21 +70,57 @@ export class Database {
     phone: string): Promise<boolean> {
     let aa = new Promise<boolean>((resolve, reject) => {
       let q = this.database.query(
-        "INSERT INTO user VALUES (0, ?, ?, ?)", [account, password, phone],
+        "SELECT * FROM user WHERE account = ?", [account],
         (err, results, fields) => {
           if (err) {
-
-            // reject(err);
-            console.log(err.message)
-            resolve(false);
-          } else {
-            resolve(results.affectedRows > 0);
+            reject(err.message);
+            console.log(err.message);
           }
-        });
+
+          resolve(results.length > 0);
+        }
+      );
+
+    }).then((hasUser) => {
+
+      if (hasUser) {
+        return false;
+      }
+
+      let bb = new Promise<boolean>((resolve, reject) => {
+        let q = this.database.query(
+          "INSERT INTO user VALUES (0, ?, ?, ?)",
+          [account, password, phone],
+          (err, results, fields) => {
+            if (err) {
+              reject(err);
+              console.log(err.message);
+            } else {
+              resolve(results.affectedRows > 0);
+            }
+          });
+      });
+      return bb;
     });
 
+    return aa;
+  }
 
+  public async checkpassword(account: string, password: string) {
+    let aa = new Promise<boolean>((resolve, reject) => {
+      this.database.query(
+        `SELECT account, password FROM user
+          where account = ? and password = ?`,
+        [account, password],
+        (err, results, fields) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(results.length > 0);
 
+        }
+      );
+    });
     return aa;
   }
 
