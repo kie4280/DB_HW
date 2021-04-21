@@ -36,7 +36,7 @@ function clearInput(i) {
         $("#reg").find("input").val("");
         $("#reg").find("span").html("");
     } else {
-        $("log").find("input").val("");
+        $("#log").find("input").val("");
     }
 }
 
@@ -58,7 +58,7 @@ function register(event) {
         } else if (success) {
             window.alert("Register Success!");
             $(".nav-tabs a[href='#login']").tab("show");
-            clearInput(2);
+            clearInput(1);
         }
     });
 }
