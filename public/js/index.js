@@ -72,7 +72,7 @@ function login(event) {
     posting.done(function (data) {
         if (!data.status) {
             window.alert("Login Failed! QAQ");
-            clearInput(1);
+            clearInput(2);
         } else {
             window.location.replace("main.html");
         }
