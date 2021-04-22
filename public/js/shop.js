@@ -39,6 +39,16 @@ function register(event) {
     });
 }
 
+function deleteClerk() {
+    let td = $(this);
+
+    let posting = $.post("/delete-clerk", { account: td.parents("tr").find("td:first") });
+
+    posting.done(function (data) {
+        td.parents("tr").remove();
+    });
+}
+
 function loadShopForm() {
     for (let i = 1; i <= 4; i++) {
         $(`#regs${i}`).focus(_ => $(`#regs-err${i}`).html(""));
@@ -69,4 +79,8 @@ function loadShopInfo() {
     for (let i = 3; i <= 5; i += 2) {
         $(`#mys${i}`).blur(_ => $(`#mys${i}`).prop('disabled', true));
     }
+    
+    $("#table2").on("click", "td button", function () {
+        deleteClerk();
+    });
 }
