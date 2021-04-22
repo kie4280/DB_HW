@@ -54,6 +54,7 @@ function loadClerk() {
     let posting = $.post("/get-info", { type: "clerk", account: $("#mys7").val() });
 
     posting.done(function (data) {
+        $("#table2 > tbody").empty();
         $.each(data.clerk, (k, v) => {
             let row = `<td>${v.account}</td><td>${v.phone}</td>`;
             let btn = `<td><button type="button" class="btn btn-danger" id="del${k}">Delete</button></td>`;
