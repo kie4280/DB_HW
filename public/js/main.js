@@ -16,8 +16,8 @@ function clearInput(i) {
     }
 }
 
-function loadUserInfo() {
-    let posting = $.post("/get-info", { type: "user-info" });
+function loadProfile() {
+    let posting = $.post("/get-info", { type: "profile" });
 
     posting.done(function (data) {
         $("#pro1").html(data.account);
@@ -39,7 +39,7 @@ function logout() {
 function search(event) {
     event.preventDefault();
 
-    let data = $("#sho").serialize() + "&type=search-shop";
+    let data = $("#sho").serialize() + "&type=search";
     let posting = $.post("/get-info", data);
 
     posting.done(function (data) {
@@ -59,5 +59,5 @@ $(document).ready(function () {
     $("#tab3").click(logout);
     $("#sho").submit(search);
 
-    loadUserInfo();
+    loadProfile();
 });

@@ -39,8 +39,8 @@ function register(event) {
     });
 }
 
-function loadInfo() {
-    let posting = $.post("/get-info", { type: "shop-info" });
+function loadShop() {
+    let posting = $.post("/get-info", { type: "shop" });
 
     posting.done(function (data) {
         $("#mys1").html(data.shop);
@@ -92,6 +92,6 @@ function loadShopInfo() {
     $("#table2").on("click", "td button", deleteClerk);
     $("#mys8").click(loadClerk);
 
-    loadInfo();
+    loadShop();
     loadClerk();
 }
