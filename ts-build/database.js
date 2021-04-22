@@ -2,6 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Database = void 0;
 const sql = require("mysql");
+const crypto = require("crypto");
+function genHash(password) {
+    var hash = crypto.createHash("sha256")
+        .update(password).digest("hex");
+    return hash;
+}
 class Database {
     constructor() {
         this.database = sql.createConnection({
@@ -50,14 +56,16 @@ class Database {
                     reject(err.message);
                     console.log(err.message);
                 }
-                resolve(results.length > 0);
+                else {
+                    resolve(results.length > 0);
+                }
             });
         }).then((hasUser) => {
             if (hasUser) {
                 return false;
             }
             let bb = new Promise((resolve, reject) => {
-                let q = this.database.query("INSERT INTO user VALUES (0, ?, ?, ?)", [account, password, phone], (err, results, fields) => {
+                let q = this.database.query("INSERT INTO user VALUES (0, ?, ?, ?)", [account, genHash(password), phone], (err, results, fields) => {
                     if (err) {
                         reject(err);
                         console.log(err.message);
@@ -74,11 +82,35 @@ class Database {
     async checkpassword(account, password) {
         let aa = new Promise((resolve, reject) => {
             this.database.query(`SELECT account, password FROM user
-          where account = ? and password = ?`, [account, password], (err, results, fields) => {
+          where account = ? and password = ?`, [account, genHash(password)], (err, results, fields) => {
                 if (err) {
                     reject(err);
                 }
-                resolve(results.length > 0);
+                else {
+                    resolve(results.length > 0);
+                }
+            });
+        });
+        return aa;
+    }
+    async getWork(account) {
+        let aa = new Promise((resolve, reject) => {
+            this.database.query(`SELECT SID, role, phone FROM role NATURAL JOIN user
+        WHERE account = ?`, [account], (err, results, fields) => {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    var isManager = false;
+                    var phone;
+                    for (let i = 0; i < results.length; i++) {
+                        const element = results[i];
+                        // console.log(element);
+                        isManager = isManager || element.role == "c";
+                        phone = element.phone;
+                    }
+                    resolve({ account, isManager, phone });
+                }
             });
         });
         return aa;

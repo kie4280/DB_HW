@@ -15,8 +15,7 @@ app.use(express_session({
 }));
 // end middleware
 app.get("/main.html", (req, res) => {
-    console.log(req.session.id);
-    console.log(req.session.account);
+    console.log("account login: ", req.session.account);
     if (req.session.account) {
         res.status(200).sendFile(process.cwd() + "/public/main.html");
     }
@@ -43,10 +42,29 @@ app.post("/logout-user", (req, res) => {
     });
     res.status(200);
 });
+app.post("/get-info", (req, res) => {
+    let ac = req.session.account;
+    if (ac == undefined) {
+        res.sendStatus(404);
+    }
+    switch (req.body.type) {
+        case "search":
+            break;
+        case "profile":
+            let w = db.getWork(ac);
+            w.then((obj) => {
+                res.status(200).send(obj);
+            });
+            break;
+        default:
+            res.sendStatus(404);
+            break;
+    }
+});
 app.post("/register-user", (req, res) => {
     console.log("register");
     console.log(req.body);
-    let q = db.addUser(req.body["account"], req.body["password"], req.body["phone"]);
+    let q = db.addUser(req.body.account, req.body.password, req.body.phone);
     q.then((r) => {
         res.status(200).send({ status: r });
     });

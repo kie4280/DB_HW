@@ -1,5 +1,13 @@
-import e = require("express");
 import * as sql from "mysql"
+import * as crypto from "crypto"
+
+
+function genHash(password: string): string {
+  var hash = crypto.createHash("sha256")
+    .update(password).digest("hex")
+  return hash;
+
+}
 
 
 export class Database {
@@ -15,11 +23,7 @@ export class Database {
     this.createTables();
   }
 
-
-
   private createTables(): void {
-
-
     this.database.query(
       `CREATE TABLE IF NOT EXISTS user(
           UID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -28,8 +32,6 @@ export class Database {
           phone varchar(10)
        );`
     );
-
-
 
     this.database.query(
       `CREATE TABLE IF NOT EXISTS shop(
@@ -40,7 +42,6 @@ export class Database {
       );`
     );
 
-
     // status 'c': canceled, 'p': pending, 'f': finished
     this.database.query(
       `CREATE TABLE IF NOT EXISTS \`order\` (
@@ -50,7 +51,6 @@ export class Database {
           finish_time datetime NOT NULL
       );`
     );
-
 
     // role 'c': clerk, 'm': manager
     this.database.query(
@@ -67,7 +67,7 @@ export class Database {
   }
 
   public async addUser(account: string, password: string,
-    phone: string): Promise<boolean> {
+    phone: string) {
     let aa = new Promise<boolean>((resolve, reject) => {
       let q = this.database.query(
         "SELECT * FROM user WHERE account = ?", [account],
@@ -75,9 +75,11 @@ export class Database {
           if (err) {
             reject(err.message);
             console.log(err.message);
+          } else {
+            resolve(results.length > 0);
           }
 
-          resolve(results.length > 0);
+
         }
       );
 
@@ -90,7 +92,7 @@ export class Database {
       let bb = new Promise<boolean>((resolve, reject) => {
         let q = this.database.query(
           "INSERT INTO user VALUES (0, ?, ?, ?)",
-          [account, password, phone],
+          [account, genHash(password), phone],
           (err, results, fields) => {
             if (err) {
               reject(err);
@@ -111,17 +113,53 @@ export class Database {
       this.database.query(
         `SELECT account, password FROM user
           where account = ? and password = ?`,
-        [account, password],
+        [account, genHash(password)],
         (err, results, fields) => {
           if (err) {
             reject(err);
+          } else {
+            resolve(results.length > 0);
           }
-          resolve(results.length > 0);
+
 
         }
       );
     });
     return aa;
+  }
+
+  public async getWork(account: string) {
+
+    let aa = new Promise<{
+      account: string, isManager: boolean,
+      phone: string
+    }>((resolve, reject) => {
+      this.database.query(
+        `SELECT SID, role, phone FROM role NATURAL JOIN user
+        WHERE account = ?`,
+        [account],
+        (err, results, fields) => {
+          if (err) {
+            reject(err)
+          } else {
+            var isManager: boolean = false;
+            var phone: string;
+            for (let i = 0; i < results.length; i++) {
+              const element = results[i];
+              // console.log(element);
+              isManager = isManager || element.role == "c";
+              phone = element.phone;
+            }
+            resolve({ account, isManager, phone });
+
+          }
+
+        }
+      );
+    });
+
+    return aa;
+
   }
 
   public close() {
@@ -137,8 +175,5 @@ function test() {
     db.close()
   });
 }
-
-
-
 
 
