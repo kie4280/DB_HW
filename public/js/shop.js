@@ -39,13 +39,36 @@ function register(event) {
     });
 }
 
-function deleteClerk() {
-    let td = $(this);
-
-    let posting = $.post("/delete-clerk", { account: td.parents("tr").find("td:first") });
+function loadInfo() {
+    let posting = $.post("/get-info", { type: "shop-info" });
 
     posting.done(function (data) {
-        td.parents("tr").remove();
+        $("#mys1").html(data.shop);
+        $("#mys2").html(data.city);
+        $("#mys3").val(data.price);
+        $("#mys5").val(data.amount);
+    });
+}
+
+function loadClerk() {
+    let posting = $.post("/get-info", { type: "clerk", account: $("#mys7").val() });
+
+    posting.done(function (data) {
+        $.each(data.clerk, (k, v) => {
+            let row = `<td>${v.account}</td><td>${v.phone}</td>`;
+            let btn = `<td><button type="button" class="btn btn-danger" id="del${k}">Delete</button></td>`;
+            $("#table2 > tbody").append(`<tr id="clerk${k}">${row}${btn}</tr>`);
+        });
+    });
+}
+
+function deleteClerk() {
+    let btn = $(this);
+
+    let posting = $.post("/delete-clerk", { account: btn.parents("tr").find("td:first") });
+
+    posting.done(function (data) {
+        btn.parents("tr").remove();
     });
 }
 
@@ -58,29 +81,16 @@ function loadShopForm() {
 }
 
 function loadShopInfo() {
-    let posting = $.post("/get-info", { type: "shop-info" });
-
-    posting.done(function (data) {
-        $("#mys1").html(data.shop);
-        $("#mys2").html(data.city);
-        $("#mys3").val(data.price);
-        $("#mys5").val(data.amount);
-
-        $.each(data.clerk, (k, v) => {
-            let row = `<td>${v.account}</td><td>${v.phone}</td>`;
-            let btn = `<td><button type="button" class="btn btn-danger" id="del${k}">Delete</button></td>`;
-            $("#table2 > tbody").append(`<tr id="clerk${k}">${row}${btn}</tr>`);
-        });
-    });
-
     for (let i = 4; i <= 6; i += 2) {
         $(`#mys${i}`).click(_ => $(`#mys${i - 1}`).prop('disabled', false).focus());
     }
     for (let i = 3; i <= 5; i += 2) {
         $(`#mys${i}`).blur(_ => $(`#mys${i}`).prop('disabled', true));
     }
-    
-    $("#table2").on("click", "td button", function () {
-        deleteClerk();
-    });
+
+    $("#table2").on("click", "td button", deleteClerk);
+    $("#mys8").click(loadClerk);
+
+    loadInfo();
+    loadClerk();
 }
