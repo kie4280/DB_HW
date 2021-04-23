@@ -7,20 +7,24 @@
   visibility: hidden;
 }
 
-#main .tab-pane, #index .tab-pane {
+#main .tab-pane,
+#index .tab-pane {
   margin-top: 15px;
 }
 
-#main form, #index form {
+#main form,
+#index form {
   margin-left: 25px;
 }
 
-#main label, #index label {
+#main label,
+#index label {
   font-weight: bold;
   padding-top: 7px;
 }
 
-#main label > span, #index label > span {
+#main label > span,
+#index label > span {
   font-weight: bold;
 }
 

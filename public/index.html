@@ -1,108 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <title>DB</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    </link>
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
 
-<head>
-    <title> DB </title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./css/style.css">
-</head>
-
-<body>
+  <body>
     <div id="header">
-        <header>Header</header>
+      <header>Header</header>
     </div>
 
     <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a class="nav-link active" data-toggle="tab" href="#login" id="tab1">Login</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#register" id="tab2">Register</a>
-        </li>
+      <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#login" id="tab1">
+          Login
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#register" id="tab2">
+          Register
+        </a>
+      </li>
     </ul>
 
     <div class="tab-content" id="index">
-        <div class="tab-pane container-fluid active" id="login">
-            <form action="/login-user" method="POST" id="log">
-                <div class="form-group row">
-                    <div class="col-sm-3 col-lg-2 text-right">
-                        <label for="log1">Account</label>
-                    </div>
-                    <div class="col-sm-5 col-lg-3">
-                        <input type="text" class="form-control" name="account" id="log1">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-sm-3 col-lg-2 text-right">
-                        <label for="log2">Password</label>
-                    </div>
-                    <div class="col-sm-5 col-lg-3">
-                        <input type="password" class="form-control" name="password" id="log2">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="offset-sm-3 offset-lg-2 col">
-                        <button type="submit" class="btn btn-primary" id="log3">Login</button>
-                    </div>
-                </div>
-            </form>
-        </div>
+      <div class="tab-pane container-fluid active" id="login">
+        <form action="/login-user" method="POST" id="log">
+          <div class="form-group row">
+            <div class="col-sm-3 col-lg-2 text-right">
+              <label for="log1">Account</label>
+            </div>
+            <div class="col-sm-5 col-lg-3">
+              <input
+                type="text"
+                class="form-control"
+                name="account"
+                id="log1">
+              </input>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-3 col-lg-2 text-right">
+              <label for="log2">Password</label>
+            </div>
+            <div class="col-sm-5 col-lg-3">
+              <input
+                type="password"
+                class="form-control"
+                name="password"
+                id="log2">
+              </input>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="offset-sm-3 offset-lg-2 col">
+              <button type="submit" class="btn btn-primary" id="log3">
+                Login
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
 
-        <div class="tab-pane container-fluid fade" id="register">
-            <form action="/register-user" method="POST" id="reg">
-                <div class="form-group row">
-                    <div class="col-sm-3 col-lg-2 text-right">
-                        <label for="reg1">Account</label>
-                    </div>
-                    <div class="col-sm-5 col-lg-3">
-                        <input type="text" class="form-control" name="account" id="reg1">
-                    </div>
-                    <div class="col">
-                        <label for="reg1"><span class="text-danger" id="reg-err1"></span></label>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-sm-3 col-lg-2 text-right">
-                        <label for="reg2">Password</label>
-                    </div>
-                    <div class="col-sm-5 col-lg-3">
-                        <input type="password" class="form-control" name="password" id="reg2">
-                    </div>
-                    <div class="col">
-                        <label for="reg2"><span class="text-danger" id="reg-err2"></span></label>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-sm-3 col-lg-2 text-right">
-                        <label for="reg3">Confirm Password</label>
-                    </div>
-                    <div class="col-sm-5 col-lg-3">
-                        <input type="password" class="form-control" id="reg3">
-                    </div>
-                    <div class="col">
-                        <label for="reg3"><span class="text-danger" id="reg-err3"></span></label>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-sm-3 col-lg-2 text-right">
-                        <label for="reg4">Phone</label>
-                    </div>
-                    <div class="col-sm-5 col-lg-3">
-                        <input type="text" class="form-control" name="phone" id="reg4">
-                    </div>
-                    <div class="col">
-                        <label for="reg4"><span class="text-danger" id="reg-err4"></span></label>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="offset-sm-3 offset-lg-2 col">
-                        <button type="submit" class="btn btn-primary" id="reg5">Register</button>
-                    </div>
-                </div>
-            </form>
-        </div>
+      <div class="tab-pane container-fluid fade" id="register">
+        <form action="/register-user" method="POST" id="reg">
+          <div class="form-group row">
+            <div class="col-sm-3 col-lg-2 text-right">
+              <label for="reg1">Account</label>
+            </div>
+            <div class="col-sm-5 col-lg-3">
+              <input
+                type="text"
+                class="form-control"
+                name="account"
+                id="reg1">
+              </input>
+            </div>
+            <div class="col">
+              <label for="reg1">
+                <span class="text-danger" id="reg-err1"></span>
+              </label>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-3 col-lg-2 text-right">
+              <label for="reg2">Password</label>
+            </div>
+            <div class="col-sm-5 col-lg-3">
+              <input
+                type="password"
+                class="form-control"
+                name="password"
+                id="reg2">
+              </input>
+            </div>
+            <div class="col">
+              <label for="reg2">
+                <span class="text-danger" id="reg-err2"></span>
+              </label>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-3 col-lg-2 text-right">
+              <label for="reg3">Confirm Password</label>
+            </div>
+            <div class="col-sm-5 col-lg-3">
+              <input type="password" class="form-control" id="reg3" />
+            </div>
+            <div class="col">
+              <label for="reg3">
+                <span class="text-danger" id="reg-err3"></span>
+              </label>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-3 col-lg-2 text-right">
+              <label for="reg4">Phone</label>
+            </div>
+            <div class="col-sm-5 col-lg-3">
+              <input type="text" class="form-control" name="phone" id="reg4" />
+            </div>
+            <div class="col">
+              <label for="reg4">
+                <span class="text-danger" id="reg-err4"></span>
+              </label>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="offset-sm-3 offset-lg-2 col">
+              <button type="submit" class="btn btn-primary" id="reg5">
+                Register
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
 
     <!-- jQuery library -->
@@ -113,6 +151,5 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script type="text/javascript" src="./js/index.js"></script>
-</body>
-
+  </body>
 </html>
