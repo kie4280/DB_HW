@@ -128,7 +128,7 @@ export class Database {
     return aa;
   }
 
-  public async getWork(account: string) {
+  public async getUserInfo(account: string) {
 
     let aa = new Promise<{
       account: string, isManager: boolean,
@@ -156,6 +156,32 @@ export class Database {
 
         }
       );
+    }).then((val: {
+      account: string, isManager: boolean, phone: string
+    }) => {
+      this.database.query(
+        `SELECT SID, role, phone FROM role NATURAL JOIN user
+        WHERE account = ?`,
+        [account],
+        (err, results, fields) => {
+          if (err) {
+            throw err;
+          } else {
+            var isManager: boolean = false;
+            var phone: string;
+            for (let i = 0; i < results.length; i++) {
+              const element = results[i];
+              // console.log(element);
+              isManager = isManager || element.role == "c";
+              phone = element.phone;
+            }
+            return { account, isManager, phone };
+
+          }
+
+        }
+      );
+
     });
 
     return aa;

@@ -64,7 +64,7 @@ app.post("/get-info", (req, res) => {
 
             break;
         case "profile":
-            let w = db.getWork(ac);
+            let w = db.getUserInfo(ac);
             w.then((obj) => {
                 res.status(200).send(obj);
 
