@@ -28,6 +28,11 @@
   font-weight: bold;
 }
 
+#main .spinner-border,
+#index .spinner-border {
+  display: none;
+}
+
 @media screen and (max-width: 576px) {
   #index .text-right {
     text-align: left !important;

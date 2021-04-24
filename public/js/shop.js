@@ -28,9 +28,11 @@ function register(event) {
     return;
   }
 
+  $("#regs").find(".spinner-border").css("display", "inline-block");
   let posting = $.post("/register-shop", $("#regs").serialize());
 
   posting.done(function (data) {
+    $("#regs").find(".spinner-border").css("display", "none");
     if (!data.status) {
       $("#regs-err1").html("*Shop name has been used! QAQ");
     } else if (success) {

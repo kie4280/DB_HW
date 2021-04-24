@@ -50,9 +50,11 @@ function logout() {
 function search(event) {
   event.preventDefault();
 
+  $("#sho").find(".spinner-border").css("display", "inline-block");
   let posting = $.post("/get-info", $("#sho").serialize() + "&type=search");
 
   posting.done(function (data) {
+    $("#sho").find(".spinner-border").css("display", "inline-block");
     $("#table1 > tbody").empty();
     $.each(data, function (k, v) {
       $("#table1 > tbody").append(
