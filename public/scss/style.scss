@@ -23,8 +23,10 @@
       font-weight: bold;
     }
   }
-  .spinner-border {
-    display: none;
+  button {
+    > span {
+      display: none;
+    }
   }
 }
 

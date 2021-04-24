@@ -28,8 +28,8 @@
   font-weight: bold;
 }
 
-#main .spinner-border,
-#index .spinner-border {
+#main button > span,
+#index button > span {
   display: none;
 }
 

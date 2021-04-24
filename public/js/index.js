@@ -53,11 +53,11 @@ function register(event) {
     return;
   }
 
-  $("#reg").find(".spinner-border").css("display", "inline-block");
+  $("#reg5 > span").css("display", "inline-block");
   let posting = $.post("/register-user", $("#reg").serialize());
 
   posting.done(function (data) {
-    $("#reg").find(".spinner-border").css("display", "none");
+    $("#reg5 > span").css("display", "none");
     if (!data.status) {
       $("#reg-err1").html("*Account has been registered! QAQ");
     } else if (success) {
@@ -71,11 +71,11 @@ function register(event) {
 function login(event) {
   event.preventDefault();
 
-  $("#log").find(".spinner-border").css("display", "inline-block");
+  $("#log3 > span").css("display", "inline-block");
   let posting = $.post("/login-user", $("#log").serialize());
 
   posting.done(function (data) {
-    $("#log").find(".spinner-border").css("display", "none");
+    $("#log3 > span").css("display", "none");
     if (!data.status) {
       window.alert("Login Failed! QAQ");
       clearInput(2);
