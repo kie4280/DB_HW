@@ -85,7 +85,7 @@ export class Database {
         phone,
       ]);
 
-    return (results as any).length == 1;
+    return (results as any).affectedRows == 1;
   }
 
   public async checkpassword(account: string, password: string) {

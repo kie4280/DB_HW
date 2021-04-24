@@ -65,7 +65,7 @@ class Database {
             genHash(password),
             phone,
         ]);
-        return results.length == 1;
+        return results.affectedRows == 1;
     }
     async checkpassword(account, password) {
         let [results, _] = await this.database.promise().execute(`SELECT account, password FROM user
