@@ -13,7 +13,7 @@ function checkInput(i) {
   }
   if (i == 1 || i == 2) {
     if (!patt1.test(value)) {
-      $(`#reg-err2${i}`).html(
+      $(`#reg-err${i}`).html(
         "*Invalid format (only upper/lower-case character and number are allowed)"
       );
       return false;
