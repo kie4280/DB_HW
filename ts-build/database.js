@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Database = void 0;
-const sql = require("mysql");
+const mysql = require("mysql2");
 const crypto = require("crypto");
 function genHash(password) {
     var hash = crypto.createHash("sha256").update(password).digest("hex");
@@ -9,13 +9,12 @@ function genHash(password) {
 }
 class Database {
     constructor() {
-        this.database = sql.createConnection({
+        this.database = mysql.createPool({
             host: "vm1.australiacentral.cloudapp.azure.com",
             user: "mask",
             password: "mask",
             database: "maskDB",
         });
-        this.database.connect();
         this.createTables();
     }
     createTables() {
@@ -27,10 +26,10 @@ class Database {
        );`);
         this.database.query(`CREATE TABLE IF NOT EXISTS shop(
           SID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
-          name varchar(30) NOT NULL UNIQUE,
-          city varchar(30) NOT NULL,
-          mask_amount int NOT NULL,
-          mask_price int NOT NULL
+          shop_name varchar(30) NOT NULL UNIQUE,
+          shop_city varchar(30) NOT NULL,
+          mask_amount int NOT NULL CHECK(mask_amount >= 0),
+          mask_price int NOT NULL CHECK(mask_price >= 0)
       );`);
         // status 'c': canceled, 'p': pending, 'f': finished
         this.database.query(`CREATE TABLE IF NOT EXISTS \`order\` (
@@ -49,95 +48,80 @@ class Database {
           FOREIGN KEY(SID) REFERENCES shop(SID) ON DELETE CASCADE
       );`);
     }
-    async addUser(account, password, phone) {
-        let aa = new Promise((resolve, reject) => {
-            let q = this.database.query("SELECT * FROM user WHERE account = ?", [account], (err, results, fields) => {
-                if (err) {
-                    reject(err.message);
-                    console.log(err.message);
-                }
-                else {
-                    resolve(results.length > 0);
-                }
-            });
-        }).then((hasUser) => {
-            if (hasUser) {
-                return false;
-            }
-            let bb = new Promise((resolve, reject) => {
-                let q = this.database.query("INSERT INTO user VALUES (0, ?, ?, ?)", [account, genHash(password), phone], (err, results, fields) => {
-                    if (err) {
-                        reject(err);
-                        console.log(err.message);
-                    }
-                    else {
-                        resolve(results.affectedRows > 0);
-                    }
-                });
-            });
-            return bb;
-        });
-        return aa;
+    async registerUser(account, password, phone) {
+        let [results, _,] = await this.database
+            .promise()
+            .execute("SELECT * FROM user WHERE account = ?", [account]);
+        if (results.length == 1) {
+            return false;
+        }
+        [
+            results,
+            _,
+        ] = await this.database
+            .promise()
+            .execute("INSERT INTO user VALUES (0, ?, ?, ?)", [
+            account,
+            genHash(password),
+            phone,
+        ]);
+        return results.length == 1;
     }
     async checkpassword(account, password) {
-        let aa = new Promise((resolve, reject) => {
-            this.database.query(`SELECT account, password FROM user
-          where account = ? and password = ?`, [account, genHash(password)], (err, results, fields) => {
-                if (err) {
-                    reject(err);
-                }
-                else {
-                    resolve(results.length > 0);
-                }
-            });
-        });
-        return aa;
+        let [results, _] = await this.database.promise().execute(`SELECT account, password FROM user
+          where account = ? and password = ?`, [account, genHash(password)]);
+        return results.length == 1;
     }
     async getUserInfo(account) {
-        let first = () => {
-            return new Promise((resolve, reject) => {
-                this.database.query(`SELECT phone FROM user
-            WHERE account = ?`, [account], (err, results, fields) => {
-                    if (err) {
-                        reject(err);
-                    }
-                    else {
-                        resolve(results[0].phone);
-                    }
-                });
-            });
-        };
-        let second = (phone) => {
-            return new Promise((resolve, reject) => {
-                let worksAt = [];
-                let manages = "";
-                this.database.query(`SELECT name, role FROM role NATURAL JOIN user
-            NATURAL JOIN shop WHERE account = ?`, [account], (err, results, fields) => {
-                    if (err) {
-                        return reject(err);
-                    }
-                    else {
-                        let isManager = false;
-                        for (let i = 0; i < results.length; i++) {
-                            const element = results[i];
-                            // console.log(element);
-                            isManager = isManager || element.role == "c";
-                            if (element.role != "c") {
-                                worksAt.concat(element.name);
-                            }
-                            else {
-                                manages = element.name;
-                            }
-                        }
-                        resolve({ account, phone, isManager, manages, worksAt });
-                    }
-                });
-            });
-        };
-        return first().then(second);
+        let [results, _] = await this.database.promise().execute(`SELECT phone FROM user
+          WHERE account = ?`, [account]);
+        const phone = results[0].phone;
+        [results, _] = await this.database.promise().execute(`SELECT shop_name, role FROM role NATURAL JOIN user
+          NATURAL JOIN shop WHERE account = ?`, [account]);
+        let worksAt = [];
+        let manages = "";
+        let isManager = false;
+        for (let i = 0; i < results.length; i++) {
+            const element = results[i];
+            // console.log(element);
+            isManager = isManager || element.role == "m";
+            if (element.role != "m") {
+                worksAt.concat(element.shop_name);
+            }
+            else {
+                manages = element.shop_name;
+            }
+        }
+        return { account, phone, isManager, manages, worksAt };
     }
-    async searchShop() {
+    async registerShop(shop, city, price, amount, account) {
+        let [results, _,] = await this.database
+            .promise()
+            .execute(`SELECT * FROM shop where shop_name = ?`, [shop]);
+        if (results.length > 0) {
+            return false;
+        }
+        const conn = await this.database.promise().getConnection();
+        await conn.beginTransaction();
+        try {
+            await conn.execute(`INSERT INTO shop VALUES (0, ?, ?, ?, ?);`, [
+                shop,
+                city,
+                price,
+                amount,
+            ]);
+            [results, _] = await conn.execute(`INSERT INTO role VALUES (
+          (SELECT UID FROM user WHERE account = ?), 
+          (SELECT SID FROM shop WHERE shop_name = ?), 'm');`, [account, shop]);
+            await conn.commit();
+        }
+        catch (error) {
+            await conn.rollback();
+            return false;
+        }
+        return true;
     }
+    async searchShop() { }
     close() {
         this.database.end();
     }
@@ -145,7 +129,7 @@ class Database {
 exports.Database = Database;
 function test() {
     let db = new Database();
-    let add = db.addUser("13sf", "sdf", "sdffs");
+    let add = db.registerUser("13sf", "sdf", "sdffs");
     add.then((success) => {
         console.log(add);
         db.close();

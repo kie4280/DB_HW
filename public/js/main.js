@@ -23,10 +23,10 @@ function loadProfile() {
     $("#pro1").html(data.account);
     $("#pro2").html(data.phone);
 
-    if (data.isManager != "manager") {
-      $("#shop").load("shop-form.html", loadShopForm);
-    } else {
+    if (data.isManager) {
       $("#shop").load("shop-info.html", loadShopInfo);
+    } else {
+      $("#shop").load("shop-form.html", loadShopForm);
     }
   });
 }

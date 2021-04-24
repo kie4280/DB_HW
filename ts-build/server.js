@@ -28,10 +28,10 @@ app.get("/main.html", (req, res) => {
 app.post("/login-user", (req, res) => {
     console.log("login");
     console.log(req.body);
-    let q = db.checkpassword(req.body["account"], req.body["password"]);
+    let q = db.checkpassword(req.body.account, req.body.password);
     q.then((r) => {
         if (r) {
-            req.session.account = req.body["account"];
+            req.session.account = req.body.account;
         }
         res.status(200).send({ status: r });
     });
@@ -65,10 +65,18 @@ app.post("/get-info", (req, res) => {
             break;
     }
 });
-app.post("/register-user", (req, res) => {
-    console.log("register");
+app.post("/register-shop", (req, res) => {
+    console.log("register shop");
     console.log(req.body);
-    let q = db.addUser(req.body.account, req.body.password, req.body.phone);
+    let q = db.registerShop(req.body.shop, req.body.city, parseInt(req.body.price), parseInt(req.body.amount), req.session.account);
+    q.then((success) => {
+        res.status(200).send({ status: success });
+    });
+});
+app.post("/register-user", (req, res) => {
+    console.log("register user");
+    console.log(req.body);
+    let q = db.registerUser(req.body.account, req.body.password, req.body.phone);
     q.then((r) => {
         res.status(200).send({ status: r });
     });
