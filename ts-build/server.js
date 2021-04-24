@@ -5,17 +5,19 @@ const express_session = require("express-session");
 const database_1 = require("./database");
 const db = new database_1.Database();
 const app = express();
-app.listen(3000, () => { console.log("App is listening on port 3000"); });
+app.listen(3000, () => {
+    console.log("App is listening on port 3000");
+});
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express_session({
     saveUninitialized: false,
     secret: "df4t3g8rybuib",
-    resave: false
+    resave: false,
 }));
 // end middleware
 app.get("/main.html", (req, res) => {
-    console.log("account login: ", req.session.account);
+    console.log("current account: ", req.session.account);
     if (req.session.account) {
         res.status(200).sendFile(process.cwd() + "/public/main.html");
     }
@@ -51,10 +53,12 @@ app.post("/get-info", (req, res) => {
         case "search":
             break;
         case "profile":
-            let w = db.getWork(ac);
+            let w = db.getUserInfo(ac);
             w.then((obj) => {
                 res.status(200).send(obj);
             });
+            break;
+        case "city":
             break;
         default:
             res.sendStatus(404);

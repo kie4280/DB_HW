@@ -1,23 +1,19 @@
-import * as sql from "mysql"
-import * as crypto from "crypto"
-
+import * as sql from "mysql";
+import * as crypto from "crypto";
 
 function genHash(password: string): string {
-  var hash = crypto.createHash("sha256")
-    .update(password).digest("hex")
+  var hash = crypto.createHash("sha256").update(password).digest("hex");
   return hash;
-
 }
-
 
 export class Database {
   database: sql.Connection;
   constructor() {
     this.database = sql.createConnection({
-      host: 'localhost',
-      user: 'mask',
-      password: 'mask',
-      database: 'maskDB'
+      host: "vm1.australiacentral.cloudapp.azure.com",
+      user: "mask",
+      password: "mask",
+      database: "maskDB",
     });
     this.database.connect();
     this.createTables();
@@ -37,6 +33,7 @@ export class Database {
       `CREATE TABLE IF NOT EXISTS shop(
           SID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
           name varchar(30) NOT NULL UNIQUE,
+          city varchar(30) NOT NULL,
           mask_amount int NOT NULL,
           mask_price int NOT NULL
       );`
@@ -63,14 +60,13 @@ export class Database {
           FOREIGN KEY(SID) REFERENCES shop(SID) ON DELETE CASCADE
       );`
     );
-
   }
 
-  public async addUser(account: string, password: string,
-    phone: string) {
+  public async addUser(account: string, password: string, phone: string) {
     let aa = new Promise<boolean>((resolve, reject) => {
       let q = this.database.query(
-        "SELECT * FROM user WHERE account = ?", [account],
+        "SELECT * FROM user WHERE account = ?",
+        [account],
         (err, results, fields) => {
           if (err) {
             reject(err.message);
@@ -78,13 +74,9 @@ export class Database {
           } else {
             resolve(results.length > 0);
           }
-
-
         }
       );
-
     }).then((hasUser) => {
-
       if (hasUser) {
         return false;
       }
@@ -100,7 +92,8 @@ export class Database {
             } else {
               resolve(results.affectedRows > 0);
             }
-          });
+          }
+        );
       });
       return bb;
     });
@@ -120,8 +113,6 @@ export class Database {
           } else {
             resolve(results.length > 0);
           }
-
-
         }
       );
     });
@@ -129,63 +120,63 @@ export class Database {
   }
 
   public async getUserInfo(account: string) {
-
-    let aa = new Promise<{
-      account: string, isManager: boolean,
-      phone: string
-    }>((resolve, reject) => {
-      this.database.query(
-        `SELECT SID, role, phone FROM role NATURAL JOIN user
-        WHERE account = ?`,
-        [account],
-        (err, results, fields) => {
-          if (err) {
-            reject(err)
-          } else {
-            var isManager: boolean = false;
-            var phone: string;
-            for (let i = 0; i < results.length; i++) {
-              const element = results[i];
-              // console.log(element);
-              isManager = isManager || element.role == "c";
-              phone = element.phone;
+    let first = () => {
+      return new Promise<string>((resolve, reject) => {
+        this.database.query(
+          `SELECT phone FROM user
+            WHERE account = ?`,
+          [account],
+          (err, results, fields) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(results[0].phone);
             }
-            resolve({ account, isManager, phone });
-
           }
-
-        }
-      );
-    }).then((val: {
-      account: string, isManager: boolean, phone: string
-    }) => {
-      this.database.query(
-        `SELECT SID, role, phone FROM role NATURAL JOIN user
-        WHERE account = ?`,
-        [account],
-        (err, results, fields) => {
-          if (err) {
-            throw err;
-          } else {
-            var isManager: boolean = false;
-            var phone: string;
-            for (let i = 0; i < results.length; i++) {
-              const element = results[i];
-              // console.log(element);
-              isManager = isManager || element.role == "c";
-              phone = element.phone;
+        );
+      });
+    };
+    let second = (phone: string) => {
+      return new Promise<{
+        account: string;
+        phone: string;
+        isManager: boolean;
+        manages: string;
+        worksAt: string[];
+      }>((resolve, reject) => {
+        let worksAt: Array<string> = [];
+        let manages: string = "";
+        this.database.query(
+          `SELECT name, role FROM role NATURAL JOIN user
+            NATURAL JOIN shop WHERE account = ?`,
+          [account],
+          (err, results, fields) => {
+            if (err) {
+              return reject(err);
+            } else {
+              let isManager: boolean = false;
+              for (let i = 0; i < results.length; i++) {
+                const element = results[i];
+                // console.log(element);
+                isManager = isManager || element.role == "c";
+                if (element.role != "c") {
+                  worksAt.concat(element.name);
+                } else {
+                  manages = element.name;
+                }
+              }
+              resolve({ account, phone, isManager, manages, worksAt });
             }
-            return { account, isManager, phone };
-
           }
+        );
+      });
+    };
 
-        }
-      );
+    return first().then(second);
+  }
 
-    });
-
-    return aa;
-
+  public async searchShop() {
+    
   }
 
   public close() {
@@ -198,8 +189,6 @@ function test() {
   let add = db.addUser("13sf", "sdf", "sdffs");
   add.then((success) => {
     console.log(add);
-    db.close()
+    db.close();
   });
 }
-
-

@@ -4,17 +4,16 @@ exports.Database = void 0;
 const sql = require("mysql");
 const crypto = require("crypto");
 function genHash(password) {
-    var hash = crypto.createHash("sha256")
-        .update(password).digest("hex");
+    var hash = crypto.createHash("sha256").update(password).digest("hex");
     return hash;
 }
 class Database {
     constructor() {
         this.database = sql.createConnection({
-            host: 'localhost',
-            user: 'mask',
-            password: 'mask',
-            database: 'maskDB'
+            host: "vm1.australiacentral.cloudapp.azure.com",
+            user: "mask",
+            password: "mask",
+            database: "maskDB",
         });
         this.database.connect();
         this.createTables();
@@ -29,6 +28,7 @@ class Database {
         this.database.query(`CREATE TABLE IF NOT EXISTS shop(
           SID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
           name varchar(30) NOT NULL UNIQUE,
+          city varchar(30) NOT NULL,
           mask_amount int NOT NULL,
           mask_price int NOT NULL
       );`);
@@ -93,27 +93,50 @@ class Database {
         });
         return aa;
     }
-    async getWork(account) {
-        let aa = new Promise((resolve, reject) => {
-            this.database.query(`SELECT SID, role, phone FROM role NATURAL JOIN user
-        WHERE account = ?`, [account], (err, results, fields) => {
-                if (err) {
-                    reject(err);
-                }
-                else {
-                    var isManager = false;
-                    var phone;
-                    for (let i = 0; i < results.length; i++) {
-                        const element = results[i];
-                        // console.log(element);
-                        isManager = isManager || element.role == "c";
-                        phone = element.phone;
+    async getUserInfo(account) {
+        let first = () => {
+            return new Promise((resolve, reject) => {
+                this.database.query(`SELECT phone FROM user
+            WHERE account = ?`, [account], (err, results, fields) => {
+                    if (err) {
+                        reject(err);
                     }
-                    resolve({ account, isManager, phone });
-                }
+                    else {
+                        resolve(results[0].phone);
+                    }
+                });
             });
-        });
-        return aa;
+        };
+        let second = (phone) => {
+            return new Promise((resolve, reject) => {
+                let worksAt = [];
+                let manages = "";
+                this.database.query(`SELECT name, role FROM role NATURAL JOIN user
+            NATURAL JOIN shop WHERE account = ?`, [account], (err, results, fields) => {
+                    if (err) {
+                        return reject(err);
+                    }
+                    else {
+                        let isManager = false;
+                        for (let i = 0; i < results.length; i++) {
+                            const element = results[i];
+                            // console.log(element);
+                            isManager = isManager || element.role == "c";
+                            if (element.role != "c") {
+                                worksAt.concat(element.name);
+                            }
+                            else {
+                                manages = element.name;
+                            }
+                        }
+                        resolve({ account, phone, isManager, manages, worksAt });
+                    }
+                });
+            });
+        };
+        return first().then(second);
+    }
+    async searchShop() {
     }
     close() {
         this.database.end();
