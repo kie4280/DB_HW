@@ -80,7 +80,7 @@ function login(event) {
       window.alert("Login Failed! QAQ");
       clearInput(2);
     } else {
-      window.location.replace("main.html");
+      window.location.replace("/main");
     }
   });
 }

@@ -10,7 +10,7 @@ function genHash(password) {
 class Database {
     constructor() {
         this.database = mysql.createPool({
-            host: "vm1.australiacentral.cloudapp.azure.com",
+            host: "eecsvm1.westeurope.cloudapp.azure.com",
             user: "mask",
             password: "mask",
             database: "maskDB",

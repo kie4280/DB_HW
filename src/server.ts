@@ -23,12 +23,15 @@ app.use(
 );
 
 // end middleware
+app.get("/", (req, res) => {
+  res.render("pages/index");
+});
 
-app.get("/main.html", (req, res) => {
+app.get("/main", (req, res) => {
   console.log("current account: ", req.session.account);
   if (req.session.account) {
     // res.status(200).sendFile(process.cwd() + "/public/main.html");
-    res.render("pages/main");
+    res.render("pages/main", { account: "test", phone: "test", template: "../partials/shop-form.ejs" });
   } else {
     // res.redirect("/index.html");
     res.render("pages/index");

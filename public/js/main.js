@@ -44,7 +44,7 @@ function loadCity() {
 
 function logout() {
   let posting = $.post("/logout-user");
-  window.location.replace("index.html");
+  window.location.replace("/");
 }
 
 function search(event) {

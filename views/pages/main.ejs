@@ -41,13 +41,13 @@
 
               <div class="col-sm-3 col-lg-2"><p>Account</p></div>
               <div class="col-sm-3 col-lg-2">
-                <p><span id="pro1"></span></p>
+                <p><span id="pro1"><%= account %></span></p>
               </div>
               <div class="w-100"></div>
 
               <div class="col-sm-3 col-lg-2"><p>Phone</p></div>
               <div class="col-sm-3 col-lg-2">
-                <p><span id="pro2"></span></p>
+                <p><span id="pro2"><%= phone %></span></p>
               </div>
               <div class="w-100"></div>
 
@@ -177,7 +177,9 @@
         </div>
       </div>
 
-      <div class="tab-pane container-fluid fade" id="shop"></div>
+      <div class="tab-pane container-fluid fade" id="shop">
+        <%- include(template) %>
+      </div>
 
       <div class="tab-pane container-fluid fade" id="logout"></div>
     </div>

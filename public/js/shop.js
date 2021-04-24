@@ -37,7 +37,7 @@ function register(event) {
       $("#regs-err1").html("*Shop name has been used! QAQ");
     } else if (success) {
       window.alert("Register Success!");
-      $("#shop").empty().load("shop-info.html", loadShopInfo);
+      window.location.replace("/main");
     }
   });
 }
