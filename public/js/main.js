@@ -29,7 +29,12 @@ function loadCity() {
 
 function logout() {
   let posting = $.post("/logout-user");
-  window.location.replace("/");
+
+  posting.done(function (data) {
+    if (data.status) {
+      window.location.replace("/");
+    }
+  });
 }
 
 function search(event) {

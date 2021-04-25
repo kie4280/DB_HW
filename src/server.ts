@@ -75,7 +75,7 @@ app.post("/logout-user", (req, res) => {
       throw err;
     }
   });
-  res.status(200);
+  res.status(200).send({ status: true });
 });
 
 app.post("/get-info", (req, res) => {
