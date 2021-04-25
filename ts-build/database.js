@@ -55,9 +55,6 @@ class Database {
         if (results.length == 1) {
             return false;
         }
-        else if (!password || !phone) {
-            return true;
-        }
         [
             results,
             _,

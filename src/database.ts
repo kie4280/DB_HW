@@ -72,8 +72,6 @@ export class Database {
 
     if ((results as any).length == 1) {
       return false;
-    } else if (!password || !phone) {
-      return true;
     }
 
     [

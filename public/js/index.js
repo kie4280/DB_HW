@@ -46,10 +46,10 @@ function register(event) {
   event.preventDefault();
 
   let success = true;
-  for (let i = 2; i <= 4; i++) {
+  for (let i = 1; i <= 4; i++) {
     success &= checkInput(i);
   }
-  if (!checkInput(1)) {
+  if (!success) {
     return;
   }
 
@@ -58,12 +58,12 @@ function register(event) {
 
   posting.done(function (data) {
     $("#reg5 > span").css("display", "none");
-    if (!data.status) {
-      $("#reg-err1").html("*Account has been registered! QAQ");
-    } else if (success) {
+    if (data.status) {
       window.alert("Register Success!");
       $(".nav-tabs a[href='#login']").tab("show");
       clearInput(1);
+    } else {
+      $("#reg-err1").html("*Account has been registered! QAQ");
     }
   });
 }
@@ -75,12 +75,12 @@ function login(event) {
   let posting = $.post("/login-user", $("#log").serialize());
 
   posting.done(function (data) {
-    if (!data.status) {
+    if (data.status) {
+      window.location.replace("/main");
+    } else {
       $("#log3 > span").css("display", "none");
       window.alert("Login Failed! QAQ");
       clearInput(2);
-    } else {
-      window.location.replace("/main");
     }
   });
 }
