@@ -75,12 +75,11 @@ function addClerk() {
 }
 
 function deleteClerk() {
-  let btn = $(this);
   let posting = $.post("/delete-clerk", {
-    account: btn.parents("tr").find("td:first"),
+    account: $(this).parents("tr").find("td:first").html(),
   });
   posting.done(function (data) {
-    btn.parents("tr").remove();
+    $(`#clerk${data.id}`).remove();
   });
 }
 
