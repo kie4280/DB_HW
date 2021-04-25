@@ -154,9 +154,7 @@ export class Database {
 
     if ((results as any).length > 0) {
       return false;
-    } else if (!price || !amount) {
-      return true;
-    }
+    } 
 
     const conn = await this.database.promise().getConnection();
     await conn.beginTransaction();
@@ -178,9 +176,10 @@ export class Database {
       await conn.commit();
     } catch (error) {
       await conn.rollback();
+      conn.release();
       return false;
     }
-
+    conn.release();
     return true;
   }
 

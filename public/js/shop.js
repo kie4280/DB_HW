@@ -24,7 +24,7 @@ function register(event) {
   for (let i = 3; i <= 4; i++) {
     success &= checkInput(i);
   }
-  if (!checkInput(1)) {
+  if (!checkInput(1) || !success) {
     return;
   }
 

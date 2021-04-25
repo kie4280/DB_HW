@@ -104,9 +104,6 @@ class Database {
         if (results.length > 0) {
             return false;
         }
-        else if (!price || !amount) {
-            return true;
-        }
         const conn = await this.database.promise().getConnection();
         await conn.beginTransaction();
         try {
@@ -123,8 +120,10 @@ class Database {
         }
         catch (error) {
             await conn.rollback();
+            conn.release();
             return false;
         }
+        conn.release();
         return true;
     }
     async searchShop() { }
