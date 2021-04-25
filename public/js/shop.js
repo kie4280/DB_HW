@@ -42,20 +42,9 @@ function register(event) {
   });
 }
 
-function loadShop() {
-  let posting = $.post("/get-info", { type: "shop" });
-
-  posting.done(function (data) {
-    $("#mys1").html(data.shop);
-    $("#mys2").html(data.city);
-    $("#mys3").val(data.price);
-    $("#mys5").val(data.amount);
-  });
-}
-
 function addClerk() {
   let posting = $.post("/add-clerk", {
-    account: $("#mys7").val(),
+    account: $("#mys5").val(),
   });
 
   posting.done(function (data) {
@@ -91,22 +80,19 @@ function loadShopForm() {
 }
 
 function loadShopInfo() {
-  for (let i = 4; i <= 6; i += 2) {
+  for (let i = 2; i <= 4; i += 2) {
     $(`#mys${i}`).click(function () {
       $(`#mys${i - 1}`)
         .prop("disabled", false)
         .focus();
     });
   }
-  for (let i = 3; i <= 5; i += 2) {
+  for (let i = 1; i <= 3; i += 2) {
     $(`#mys${i}`).blur(function () {
       $(`#mys${i}`).prop("disabled", true);
     });
   }
 
   $("#table2").on("click", "td button", deleteClerk);
-  $("#mys8").click(loadClerk);
-
-  loadShop();
-  loadClerk();
+  $("#mys6").click(addClerk);
 }

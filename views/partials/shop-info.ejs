@@ -7,13 +7,13 @@
 
       <div class="col-sm-3 col-lg-2"><p>Shop</p></div>
       <div class="col-sm-3 col-lg-2">
-        <p><span id="mys1"></span></p>
+        <p><span><%= shop %></span></p>
       </div>
       <div class="w-100"></div>
 
       <div class="col-sm-3 col-lg-2"><p>City</p></div>
       <div class="col-sm-3 col-lg-2">
-        <p><span id="mys2"></span></p>
+        <p><span><%= city %></span></p>
       </div>
       <div class="w-100"></div>
     </div>
@@ -21,11 +21,38 @@
     <form action="" method="POST" id="mys">
       <div class="form-group row">
         <div class="col-sm-3 col-lg-2">
-          <label for="mys3">Price</label>
+          <label for="mys1">Price</label>
         </div>
         <div class="col-sm-9 col-lg-6">
           <div class="input-group">
-            <input type="number" class="form-control" id="mys3" disabled />
+            <input
+              type="number"
+              class="form-control"
+              value="<%= price %>"
+              id="mys1"
+              disabled
+            />
+            <div class="input-group-append">
+              <button type="button" class="btn btn-primary" id="mys2">
+                Edit
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-3 col-lg-2">
+          <label for="mys3">Amount</label>
+        </div>
+        <div class="col-sm-9 col-lg-6">
+          <div class="input-group">
+            <input
+              type="number"
+              class="form-control"
+              value="<%= amount %>"
+              id="mys3"
+              disabled
+            />
             <div class="input-group-append">
               <button type="button" class="btn btn-primary" id="mys4">
                 Edit
@@ -35,23 +62,8 @@
         </div>
       </div>
       <div class="form-group row">
-        <div class="col-sm-3 col-lg-2">
-          <label for="mys5">Amount</label>
-        </div>
-        <div class="col-sm-9 col-lg-6">
-          <div class="input-group">
-            <input type="number" class="form-control" id="mys5" disabled />
-            <div class="input-group-append">
-              <button type="button" class="btn btn-primary" id="mys6">
-                Edit
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="form-group row">
         <div class="col-sm-12">
-          <label for="mys7">Employee</label>
+          <label for="mys5">Employee</label>
         </div>
         <div class="col-sm-12 col-lg-8">
           <div class="input-group">
@@ -59,17 +71,17 @@
               type="text"
               class="form-control"
               placeholder="Type Account"
-              id="mys7"
+              id="mys5"
             />
             <div class="input-group-append">
-              <button type="button" class="btn btn-primary" id="mys8">
+              <button type="button" class="btn btn-primary" id="mys6">
                 Add
               </button>
             </div>
           </div>
         </div>
         <div class="col">
-          <label for="mys7"
+          <label for="mys5"
             ><span class="text-danger" id="mys-err1"></span
           ></label>
         </div>

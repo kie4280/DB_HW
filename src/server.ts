@@ -37,7 +37,11 @@ app.get("/main", (req, res) => {
         res.render("pages/main", { 
           account: obj.account, 
           phone: obj.phone, 
-          template: "../partials/shop-info.ejs" 
+          template: "../partials/shop-info.ejs",
+          shop: "shop1",
+          city: "Taipei",
+          price: "0",
+          amount: "0",
         });
       } else {
         res.render("pages/main", { 
