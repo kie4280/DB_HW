@@ -32,8 +32,8 @@ function register(event) {
   let posting = $.post("/register-shop", $("#regs").serialize());
 
   posting.done(function (data) {
-    $("#regs5 > span").css("display", "none");
     if (!data.status) {
+      $("#regs5 > span").css("display", "none");
       $("#regs-err1").html("*Shop name has been used! QAQ");
     } else if (success) {
       window.alert("Register Success!");
@@ -53,14 +53,12 @@ function loadShop() {
   });
 }
 
-function loadClerk() {
-  let posting = $.post("/get-info", {
-    type: "clerk",
+function addClerk() {
+  let posting = $.post("/add-clerk", {
     account: $("#mys7").val(),
   });
 
   posting.done(function (data) {
-    $("#table2 > tbody").empty();
     $.each(data, function (k, v) {
       $("#table2 > tbody").append(
         `<tr id="clerk${k}"><td>${v.account}</td><td>${v.phone}</td>

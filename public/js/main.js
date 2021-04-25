@@ -16,21 +16,6 @@ function clearInput(i) {
   }
 }
 
-function loadProfile() {
-  let posting = $.post("/get-info", { type: "profile" });
-
-  posting.done(function (data) {
-    $("#pro1").html(data.account);
-    $("#pro2").html(data.phone);
-
-    if (data.isManager) {
-      $("#shop").load("shop-info.html", loadShopInfo);
-    } else {
-      $("#shop").load("shop-form.html", loadShopForm);
-    }
-  });
-}
-
 function loadCity() {
   let posting = $.post("/get-info", { type: "city" });
 
@@ -74,6 +59,7 @@ $(document).ready(function () {
   $("#tab3").click(logout);
   $("#sho").submit(search);
 
-  loadProfile();
+  loadShopForm();
+  loadShopInfo();
   loadCity();
 });

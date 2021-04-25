@@ -24,11 +24,26 @@ app.get("/", (req, res) => {
 app.get("/main", (req, res) => {
     console.log("current account: ", req.session.account);
     if (req.session.account) {
-        // res.status(200).sendFile(process.cwd() + "/public/main.html");
-        res.render("pages/main", { account: "test", phone: "test", template: "../partials/shop-form.ejs" });
+        let ac = req.session.account;
+        let w = db.getUserInfo(ac);
+        w.then((obj) => {
+            if (obj.isManager) {
+                res.render("pages/main", {
+                    account: obj.account,
+                    phone: obj.phone,
+                    template: "../partials/shop-info.ejs"
+                });
+            }
+            else {
+                res.render("pages/main", {
+                    account: obj.account,
+                    phone: obj.phone,
+                    template: "../partials/shop-form.ejs"
+                });
+            }
+        });
     }
     else {
-        // res.redirect("/index.html");
         res.render("pages/index");
     }
 });
@@ -58,12 +73,6 @@ app.post("/get-info", (req, res) => {
     }
     switch (req.body.type) {
         case "search":
-            break;
-        case "profile":
-            let w = db.getUserInfo(ac);
-            w.then((obj) => {
-                res.status(200).send(obj);
-            });
             break;
         case "city":
             break;

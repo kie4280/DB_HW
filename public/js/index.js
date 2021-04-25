@@ -75,8 +75,8 @@ function login(event) {
   let posting = $.post("/login-user", $("#log").serialize());
 
   posting.done(function (data) {
-    $("#log3 > span").css("display", "none");
     if (!data.status) {
+      $("#log3 > span").css("display", "none");
       window.alert("Login Failed! QAQ");
       clearInput(2);
     } else {
