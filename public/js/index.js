@@ -36,7 +36,7 @@ function clearInput(i) {
   // 1: register, 2: login
   if (i == 1) {
     $("#reg").find("input").val("");
-    $("#reg").find("span").html("");
+    $("#reg").find("label > span").html("");
   } else {
     $("#log").find("input").val("");
   }
