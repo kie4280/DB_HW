@@ -4,21 +4,20 @@
   <div class="col-sm-6">
     <div class="row">
       <div class="col-sm-12"><h4>My Shop</h4></div>
-
-      <div class="col-sm-3 col-lg-2"><p>Shop</p></div>
-      <div class="col-sm-3 col-lg-2">
-        <p><span><%= shop %></span></p>
-      </div>
-      <div class="w-100"></div>
-
-      <div class="col-sm-3 col-lg-2"><p>City</p></div>
-      <div class="col-sm-3 col-lg-2">
-        <p><span><%= city %></span></p>
-      </div>
-      <div class="w-100"></div>
     </div>
 
     <form action="" method="POST" id="mys">
+      <div class="form-group row">
+        <div class="col-sm-3 col-lg-2"><p>Shop</p></div>
+        <div class="col-sm-3 col-lg-2">
+          <p><span><%= shop %></span></p>
+        </div>
+        <div class="w-100"></div>
+        <div class="col-sm-3 col-lg-2"><p>City</p></div>
+        <div class="col-sm-3 col-lg-2">
+          <p><span><%= city %></span></p>
+        </div>
+      </div>
       <div class="form-group row">
         <div class="col-sm-3 col-lg-2">
           <label for="mys1">Price</label>
@@ -62,10 +61,10 @@
         </div>
       </div>
       <div class="form-group row">
-        <div class="col-sm-12">
+        <div class="col-sm-3 col-lg-2">
           <label for="mys5">Employee</label>
         </div>
-        <div class="col-sm-12 col-lg-8">
+        <div class="col-sm-9 col-lg-6">
           <div class="input-group">
             <input
               type="text"
@@ -82,7 +81,7 @@
         </div>
         <div class="col">
           <label for="mys5"
-            ><span class="text-danger" id="mys-err1"></span
+            ><span class="text-danger" id="mys-err5"></span
           ></label>
         </div>
       </div>

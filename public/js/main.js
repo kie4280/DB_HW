@@ -22,10 +22,10 @@ function clearInput(i) {
   if (i == 1) {
     $("#regs").find("input").val("");
     $("#regs").find("select").val("1");
-    $("#regs").find("span").html("");
+    $("#regs").find("label > span").html("");
 
     $("#mys").find("input:not([disabled])").val("");
-    $("#mys").find("span").html("");
+    $("#mys").find("label > span").html("");
   } else {
     $("#sho").find("input:not([type=checkbox])").val("");
     $("#sho").find("input[type=checkbox]").prop("checked", false);
@@ -63,10 +63,14 @@ function addClerk() {
     account: $("#mys5").val(),
   });
   posting.done(function (data) {
-    $("#table2 > tbody").append(
-      `<tr id="clerk${data.id}"><td>${data.account}</td><td>${data.phone}</td>
-        <td><button type="button" class="btn btn-danger" id="del${data.id}">Delete</button></td></tr>`
-    );
+    if (data.status) {
+      $("#table2 > tbody").append(
+        `<tr id="clerk${data.id}"><td>${data.account}</td><td>${data.phone}</td>
+          <td><button type="button" class="btn btn-danger" id="del${data.id}">Delete</button></td></tr>`
+      );
+    } else {
+      $("#mys-err5").html(data.err);
+    }
   });
 }
 

@@ -83,4 +83,8 @@
 #main #shop td:last-child {
   text-align: right;
 }
+
+#main #shop #mys p {
+  margin-left: 0;
+}
 /*# sourceMappingURL=style.css.map */
