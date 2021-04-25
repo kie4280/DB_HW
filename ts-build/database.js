@@ -55,6 +55,9 @@ class Database {
         if (results.length == 1) {
             return false;
         }
+        else if (!password || !phone) {
+            return true;
+        }
         [
             results,
             _,
@@ -100,6 +103,9 @@ class Database {
             .execute(`SELECT * FROM shop where shop_name = ?`, [shop]);
         if (results.length > 0) {
             return false;
+        }
+        else if (!price || !amount) {
+            return true;
         }
         const conn = await this.database.promise().getConnection();
         await conn.beginTransaction();

@@ -72,6 +72,8 @@ export class Database {
 
     if ((results as any).length == 1) {
       return false;
+    } else if (!password || !phone) {
+      return true;
     }
 
     [
@@ -152,6 +154,8 @@ export class Database {
 
     if ((results as any).length > 0) {
       return false;
+    } else if (!price || !amount) {
+      return true;
     }
 
     const conn = await this.database.promise().getConnection();

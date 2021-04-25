@@ -94,6 +94,7 @@ app.post("/get-info", (req, res) => {
 app.post("/register-shop", (req, res) => {
   console.log("register shop");
   console.log(req.body);
+
   let q = db.registerShop(
     req.body.shop,
     req.body.city,
