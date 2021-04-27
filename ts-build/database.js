@@ -80,7 +80,7 @@ class Database {
        WHERE account = ? AND role = 'm'`, [account]);
         let [user_i, manage_i] = await Promise.all([userInfo, manageShopInfo]);
         const phone = user_i[0][0].phone;
-        let clerks = new Map();
+        let clerks = [];
         let isManager = manage_i[0].length > 0;
         if (isManager) {
             let shop_name = manage_i[0][0].shop_name;
@@ -88,7 +88,8 @@ class Database {
             NATURAL JOIN shop WHERE shop_name = ?`, [shop_name]);
             result = result;
             for (let i = 0; i < result.length; ++i) {
-                clerks.set(result[i].UID, {
+                clerks.concat({
+                    id: result[i].UID,
                     account: result[i].account,
                     phone: result[i].phone,
                 });

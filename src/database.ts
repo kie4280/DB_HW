@@ -105,7 +105,7 @@ export class Database {
     phone: string;
     isManager: boolean;
     manages?: { name: string; city: string; price: number; amount: number };
-    clerks?: Map<number, { account: string; phone: string }>;
+    clerks?: Array<{ id: number; account: string; phone: string }>;
   }> {
     let userInfo = this.database.promise().execute(
       `SELECT phone FROM user
@@ -122,7 +122,11 @@ export class Database {
     let [user_i, manage_i] = await Promise.all([userInfo, manageShopInfo]);
     const phone = user_i[0][0].phone;
 
-    let clerks: Map<number, { account: string; phone: string }>=new Map();
+    let clerks: Array<{
+      id: number;
+      account: string;
+      phone: string;
+    }> = [];
     let isManager: boolean = (manage_i[0] as mysql.RowDataPacket[]).length > 0;
 
     if (isManager) {
@@ -134,7 +138,8 @@ export class Database {
       );
       result = result as mysql.RowDataPacket[];
       for (let i = 0; i < result.length; ++i) {
-        clerks.set(result[i].UID, {
+        clerks.concat({
+          id: result[i].UID,
           account: result[i].account,
           phone: result[i].phone,
         });
