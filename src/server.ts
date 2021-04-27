@@ -87,6 +87,10 @@ app.post("/get-info", (req, res) => {
     case "search":
       break;
     case "city":
+      let qc = db.getCities();
+      qc.then((arr)=> {
+        res.send(arr);
+      });
       break;
     default:
       res.sendStatus(404);

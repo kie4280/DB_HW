@@ -197,7 +197,18 @@ export class Database {
 
   public async searchShop() {}
 
-  public async getCities() {}
+  public async getCities(): Promise<Array<string>> {
+    let [results, _] = await this.database
+      .promise()
+      .query(`SELECT DISTINCT shop_city FROM shop`);
+    results = results as mysql.RowDataPacket[];
+    let arr: Array<string> = [];
+    for (let i = 0; i < results.length; ++i) {
+      arr.concat(results[i].shop_city);
+    }
+    return arr;
+  }
+
   public close() {
     this.database.end();
   }
