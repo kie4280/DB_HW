@@ -21,7 +21,7 @@ function clearInput(i) {
   // 1: register shop / my shop, 2: shop list
   if (i == 1) {
     $("#regs").find("input").val("");
-    $("#regs").find("select").val("1");
+    $("#regs").find("select").val("Taipei");
     $("#regs").find("label > span").html("");
 
     $("#mys").find("input:not([disabled])").val("");
@@ -29,7 +29,7 @@ function clearInput(i) {
   } else {
     $("#sho").find("input:not([type=checkbox])").val("");
     $("#sho").find("input[type=checkbox]").prop("checked", false);
-    $("#sho").find("select").val("0");
+    $("#sho").find("select").val("All");
   }
 }
 
