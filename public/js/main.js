@@ -133,6 +133,9 @@ $(document).ready(function () {
       clearInput(i);
     });
   }
+  $("option").val(function () {
+    return $(this).text();
+  });
 
   $("#table2").on("click", "td button", deleteClerk);
   $("#mys6").click(addClerk);
