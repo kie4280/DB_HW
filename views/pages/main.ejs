@@ -75,9 +75,9 @@
                 <div class="col-sm-9 col-lg-6">
                   <select class="form-control" name="city" id="sho2">
                     <option value="0" selected>All</option>
-                    <option value="1">Taipei</option>
-                    <option value="2">Hsinchu</option>
-                    <option value="3">Tainan</option>
+                    <% cities.forEach(function (c, index) { %>
+                    <option value="<%= index %>"><%= c %></option>
+                    <% }); %>
                   </select>
                 </div>
               </div>
@@ -162,12 +162,6 @@
                 <tr id="shop1">
                   <td>Taipei</td>
                   <td>Taipei</td>
-                  <td>50</td>
-                  <td>10000</td>
-                </tr>
-                <tr id="shop2">
-                  <td>Tainan</td>
-                  <td>Tainan</td>
                   <td>50</td>
                   <td>10000</td>
                 </tr>

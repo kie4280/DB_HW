@@ -66,7 +66,7 @@ function addClerk() {
     if (data.status) {
       $("#table2 > tbody").append(
         `<tr id="clerk${data.id}"><td>${data.account}</td><td>${data.phone}</td>
-          <td><button type="button" class="btn btn-danger" id="del${data.id}">Delete</button></td></tr>`
+         <td><button type="button" class="btn btn-danger" id="del${data.id}">Delete</button></td></tr>`
       );
     } else {
       $("#mys-err5").html(data.err);
@@ -97,16 +97,17 @@ function search(event) {
   event.preventDefault();
 
   $("#sho6 > span").css("display", "inline-block");
-  let posting = $.post("/get-info", $("#sho").serialize() + "&type=search");
+  let posting = $.post("/search-shop", $("#sho").serialize());
 
   posting.done(function (data) {
     $("#sho6 > span").css("display", "none");
     $("#table1 > tbody").empty();
-    $.each(data, function (k, v) {
+    for (let i = 0; i < data.length; i++) {
       $("#table1 > tbody").append(
-        `<tr id="shop${k}"><td>${v.shop}</td><td>${v.city}</td><td>${v.price}</td><td>${v.amount}</td></tr>`
+        `<tr id="shop${data[i].id}"><td>${data[i].shop}</td><td>${data[i].city}</td>
+         <td>${data[i].price}</td><td>${data[i].amount}</td></tr>`
       );
-    });
+    }
   });
 }
 
@@ -133,8 +134,11 @@ $(document).ready(function () {
       clearInput(i);
     });
   }
-  $("option").val(function () {
+  $("option").val(function (index, value) {
     return $(this).text();
+  });
+  $("#sho1").val(function (index, value) {
+    return value.toLowerCase();
   });
 
   $("#table2").on("click", "td button", deleteClerk);

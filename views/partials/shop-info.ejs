@@ -10,12 +10,12 @@
       <div class="form-group row">
         <div class="col-sm-3 col-lg-2"><p>Shop</p></div>
         <div class="col-sm-3 col-lg-2">
-          <p><span><%= shop[Object.keys(shop)[0]] %></span></p>
+          <p><span><%= shop.shop_name %></span></p>
         </div>
         <div class="w-100"></div>
         <div class="col-sm-3 col-lg-2"><p>City</p></div>
         <div class="col-sm-3 col-lg-2">
-          <p><span><%= shop[Object.keys(shop)[1]] %></span></p>
+          <p><span><%= shop.shop_city %></span></p>
         </div>
       </div>
       <div class="form-group row">
@@ -27,7 +27,7 @@
             <input
               type="number"
               class="form-control"
-              value="<%= shop[Object.keys(shop)[2]] %>"
+              value="<%= shop.mask_price %>"
               id="mys1"
               disabled
             />
@@ -48,7 +48,7 @@
             <input
               type="number"
               class="form-control"
-              value="<%= shop[Object.keys(shop)[3]] %>"
+              value="<%= shop.mask_amount %>"
               id="mys3"
               disabled
             />
@@ -98,7 +98,7 @@
         </tr>
       </thead>
       <tbody>
-        <% clerks.forEach(function(c){ %>
+        <% clerks.forEach(function (c) { %>
         <tr id="clerk<%= c.id %>">
           <td><%= c.account %></td>
           <td><%= c.phone %></td>
