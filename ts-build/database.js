@@ -73,26 +73,31 @@ class Database {
         return results.length == 1;
     }
     async getUserInfo(account) {
-        let [results, _] = await this.database.promise().execute(`SELECT phone FROM user
+        let userInfo = this.database.promise().execute(`SELECT phone FROM user
           WHERE account = ?`, [account]);
-        const phone = results[0].phone;
-        [results, _] = await this.database.promise().execute(`SELECT shop_name, role FROM role NATURAL JOIN user
-          NATURAL JOIN shop WHERE account = ?`, [account]);
-        let worksAt = [];
-        let manages = "";
-        let isManager = false;
-        for (let i = 0; i < results.length; i++) {
-            const element = results[i];
-            // console.log(element);
-            isManager = isManager || element.role == "m";
-            if (element.role != "m") {
-                worksAt.concat(element.shop_name);
+        let manageShopInfo = this.database.promise().execute(`SELECT shop_name, shop_city, mask_amount, mask_price
+       FROM role NATURAL JOIN user NATURAL JOIN shop
+       WHERE account = ? AND role = 'm'`, [account]);
+        let [user_i, manage_i] = await Promise.all([userInfo, manageShopInfo]);
+        const phone = user_i[0][0].phone;
+        let clerks = new Map();
+        let isManager = manage_i[0].length > 0;
+        if (isManager) {
+            let shop_name = manage_i[0][0].shop_name;
+            let [result, _] = await this.database.promise().execute(`SELECT UID, account, phone FROM role NATURAL JOIN user
+            NATURAL JOIN shop WHERE shop_name = ?`, [shop_name]);
+            result = result;
+            for (let i = 0; i < result.length; ++i) {
+                clerks.set(result[i].UID, {
+                    account: result[i].account,
+                    phone: result[i].phone,
+                });
             }
-            else {
-                manages = element.shop_name;
-            }
+            return { account, phone, isManager, manages: manage_i[0][0], clerks };
         }
-        return { account, phone, isManager, manages, worksAt };
+        else {
+            return { account, phone, isManager };
+        }
     }
     async registerShop(shop, city, price, amount, account) {
         let [results, _,] = await this.database
@@ -124,6 +129,7 @@ class Database {
         return true;
     }
     async searchShop() { }
+    async getCities() { }
     close() {
         this.database.end();
     }

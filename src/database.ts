@@ -1,5 +1,6 @@
 import * as mysql from "mysql2";
 import * as crypto from "crypto";
+import { createStrictEquality } from "typescript";
 
 function genHash(password: string): string {
   var hash = crypto.createHash("sha256").update(password).digest("hex");
@@ -103,37 +104,45 @@ export class Database {
     account: string;
     phone: string;
     isManager: boolean;
-    manages: string;
-    worksAt: string[];
+    manages?: { name: string; city: string; price: number; amount: number };
+    clerks?: Map<number, { account: string; phone: string }>;
   }> {
-    let [results, _] = await this.database.promise().execute(
+    let userInfo = this.database.promise().execute(
       `SELECT phone FROM user
           WHERE account = ?`,
       [account]
     );
-    const phone = results[0].phone;
-
-    [results, _] = await this.database.promise().execute(
-      `SELECT shop_name, role FROM role NATURAL JOIN user
-          NATURAL JOIN shop WHERE account = ?`,
+    let manageShopInfo = this.database.promise().execute(
+      `SELECT shop_name, shop_city, mask_amount, mask_price
+       FROM role NATURAL JOIN user NATURAL JOIN shop
+       WHERE account = ? AND role = 'm'`,
       [account]
     );
 
-    let worksAt: Array<string> = [];
-    let manages: string = "";
-    let isManager: boolean = false;
+    let [user_i, manage_i] = await Promise.all([userInfo, manageShopInfo]);
+    const phone = user_i[0][0].phone;
 
-    for (let i = 0; i < (results as mysql.RowDataPacket[]).length; i++) {
-      const element = results[i];
-      // console.log(element);
-      isManager = isManager || element.role == "m";
-      if (element.role != "m") {
-        worksAt.concat(element.shop_name);
-      } else {
-        manages = element.shop_name;
+    let clerks: Map<number, { account: string; phone: string }>=new Map();
+    let isManager: boolean = (manage_i[0] as mysql.RowDataPacket[]).length > 0;
+
+    if (isManager) {
+      let shop_name = manage_i[0][0].shop_name;
+      let [result, _] = await this.database.promise().execute(
+        `SELECT UID, account, phone FROM role NATURAL JOIN user
+            NATURAL JOIN shop WHERE shop_name = ?`,
+        [shop_name]
+      );
+      result = result as mysql.RowDataPacket[];
+      for (let i = 0; i < result.length; ++i) {
+        clerks.set(result[i].UID, {
+          account: result[i].account,
+          phone: result[i].phone,
+        });
       }
+      return { account, phone, isManager, manages: manage_i[0][0], clerks };
+    } else {
+      return { account, phone, isManager };
     }
-    return { account, phone, isManager, manages, worksAt };
   }
 
   public async registerShop(
@@ -152,7 +161,7 @@ export class Database {
 
     if ((results as any).length > 0) {
       return false;
-    } 
+    }
 
     const conn = await this.database.promise().getConnection();
     await conn.beginTransaction();
@@ -183,6 +192,7 @@ export class Database {
 
   public async searchShop() {}
 
+  public async getCities() {}
   public close() {
     this.database.end();
   }

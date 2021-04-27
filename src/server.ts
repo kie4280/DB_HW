@@ -10,7 +10,7 @@ app.listen(3000, () => {
 });
 
 app.set("view engine", "ejs");
-app.set('view cache', false);
+app.set("view cache", false);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -33,21 +33,20 @@ app.get("/main", (req, res) => {
     let ac = req.session.account;
     let w = db.getUserInfo(ac);
     w.then((obj) => {
-      if(obj.isManager) {
-        res.render("pages/main", { 
-          account: obj.account, 
-          phone: obj.phone, 
+      console.log(obj);
+      if (obj.isManager) {
+        res.render("pages/main", {
+          account: obj.account,
+          phone: obj.phone,
           template: "../partials/shop-info.ejs",
-          shop: "shop1",
-          city: "Taipei",
-          price: "0",
-          amount: "0",
+          shop: obj.manages,
+          clerks:obj.clerks
         });
       } else {
-        res.render("pages/main", { 
-          account: obj.account, 
-          phone: obj.phone, 
-          template: "../partials/shop-form.ejs" 
+        res.render("pages/main", {
+          account: obj.account,
+          phone: obj.phone,
+          template: "../partials/shop-form.ejs",
         });
       }
     });

@@ -10,12 +10,12 @@
       <div class="form-group row">
         <div class="col-sm-3 col-lg-2"><p>Shop</p></div>
         <div class="col-sm-3 col-lg-2">
-          <p><span><%= shop %></span></p>
+          <p><span><%= shop.name %></span></p>
         </div>
         <div class="w-100"></div>
         <div class="col-sm-3 col-lg-2"><p>City</p></div>
         <div class="col-sm-3 col-lg-2">
-          <p><span><%= city %></span></p>
+          <p><span><%= shop.city %></span></p>
         </div>
       </div>
       <div class="form-group row">
@@ -27,7 +27,7 @@
             <input
               type="number"
               class="form-control"
-              value="<%= price %>"
+              value="<%= shop.price %>"
               id="mys1"
               disabled
             />
@@ -48,7 +48,7 @@
             <input
               type="number"
               class="form-control"
-              value="<%= amount %>"
+              value="<%= shop.amount %>"
               id="mys3"
               disabled
             />
