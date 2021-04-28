@@ -158,19 +158,31 @@ class Database {
         let [role_i, user_i] = await Promise.all([checkRole, checkUser]);
         const alreadyWorking = role_i[0].length > 0;
         const user = user_i[0];
-        if (alreadyWorking || user.length != 1) {
-            return { status: false };
+        if (alreadyWorking) {
+            return { status: false, err: "*Already a clerk in this shop!" };
+        }
+        else if (user.length != 1) {
+            return { status: false, err: "*No such user!" };
         }
         let [insert_r, _] = await this.database.promise().execute(`INSERT INTO role VALUES (
         (SELECT UID FROM user WHERE account = ?),
         (SELECT SID FROM shop WHERE shop_name = ?),
         'c');`, [account, shop]);
-        return {
-            status: insert_r.affectedRows > 0,
-            id: user[0].UID,
-            account: user[0].account,
-            phone: user[0].phone,
-        };
+        const insert_suc = insert_r.affectedRows > 0;
+        if (insert_suc) {
+            return {
+                status: true,
+                id: user[0].UID,
+                account: user[0].account,
+                phone: user[0].phone,
+            };
+        }
+        else {
+            return {
+                status: false,
+                err: "*Cannot add clerk, sorry!",
+            };
+        }
     }
     async deleteClerk(account, shop) {
         let [userinfo, _1] = await this.database.promise().execute(`SELECT UID, account, SID FROM 

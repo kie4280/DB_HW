@@ -228,6 +228,7 @@ export class Database {
     id?: number;
     account?: string;
     phone?: string;
+    err?: string;
   }> {
     let checkRole = this.database.promise().execute(
       `SELECT UID FROM 
@@ -243,9 +244,11 @@ export class Database {
     );
     let [role_i, user_i] = await Promise.all([checkRole, checkUser]);
     const alreadyWorking = (role_i[0] as mysql.RowDataPacket[]).length > 0;
-    const user = (user_i[0] as mysql.RowDataPacket[]);
-    if (alreadyWorking|| user.length != 1) {
-      return { status: false };
+    const user = user_i[0] as mysql.RowDataPacket[];
+    if (alreadyWorking) {
+      return { status: false, err: "*Already a clerk in this shop!" };
+    } else if (user.length != 1) {
+      return { status: false, err: "*No such user!" };
     }
 
     let [insert_r, _] = await this.database.promise().execute(
@@ -255,13 +258,20 @@ export class Database {
         'c');`,
       [account, shop]
     );
-
-    return {
-      status: (insert_r as mysql.OkPacket).affectedRows > 0,
-      id: user[0].UID,
-      account: user[0].account,
-      phone: user[0].phone,
-    };
+    const insert_suc = (insert_r as mysql.OkPacket).affectedRows > 0;
+    if (insert_suc) {
+      return {
+        status: true,
+        id: user[0].UID,
+        account: user[0].account,
+        phone: user[0].phone,
+      };
+    } else {
+      return {
+        status: false,
+        err: "*Cannot add clerk, sorry!",
+      };
+    }
   }
 
   public async deleteClerk(
