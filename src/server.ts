@@ -22,6 +22,13 @@ app.use(
   })
 );
 
+declare module "express-session" {
+  interface Session {
+    account: string;
+    shop_name: string;
+  }
+};
+
 // end middleware
 app.get("/", (req, res) => {
   res.render("pages/index");
