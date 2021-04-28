@@ -74,9 +74,9 @@
                 </div>
                 <div class="col-sm-9 col-lg-6">
                   <select class="form-control" name="city" id="sho2">
-                    <option value="0" selected>All</option>
-                    <% cities.forEach(function (c, index) { %>
-                    <option value="<%= index %>"><%= c %></option>
+                    <option selected>All</option>
+                    <% cities.forEach(function (c) { %>
+                    <option><%= c %></option>
                     <% }); %>
                   </select>
                 </div>
@@ -111,10 +111,10 @@
                 </div>
                 <div class="col-sm-9 col-lg-6">
                   <select class="form-control" name="amount" id="sho5">
-                    <option value="0" selected>All</option>
-                    <option value="1">(Sold out) 0</option>
-                    <option value="2">(Rare) 1 ~ 99</option>
-                    <option value="3">(Adequate) 100+</option>
+                    <option selected>All</option>
+                    <option>(Sold out) 0</option>
+                    <option>(Rare) 1 ~ 99</option>
+                    <option>(Adequate) 100+</option>
                   </select>
                 </div>
               </div>
