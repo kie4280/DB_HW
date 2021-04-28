@@ -98,10 +98,10 @@ app.post("/add-clerk", (req, res) => {
   if (req.session.account == undefined || req.session.shop_name == undefined) {
     res.sendStatus(404);
   }
-  console.log(req.body);
+  // console.log(req.body);
   let qa = db.addClerk(req.body.account, req.session.shop_name);
   qa.then((obj) => {
-    console.log(obj);
+    // console.log(obj);
     res.status(200).send(obj);
   });
 });
@@ -110,10 +110,10 @@ app.post("/delete-clerk", (req, res) => {
   if (req.session.account == undefined || req.session.shop_name == undefined) {
     res.sendStatus(404);
   }
-  console.log(req.body);
+  // console.log(req.body);
   let qd = db.deleteClerk(req.body.account, req.session.shop_name);
   qd.then((obj) => {
-    console.log(obj);
+    // console.log(obj);
     res.status(200).send(obj);
   });
 });
