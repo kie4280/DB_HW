@@ -59,14 +59,18 @@ function register(event) {
 }
 
 function addClerk() {
+  $("#mys6 > span").css("display", "inline-block");
   let posting = $.post("/add-clerk", {
     account: $("#mys5").val(),
   });
   posting.done(function (data) {
+    $("#mys6 > span").css("display", "none");
     if (data.status) {
+      clearInput(1);
       $("#table2 > tbody").append(
         `<tr id="clerk${data.id}"><td>${data.account}</td><td>${data.phone}</td>
-         <td><button type="button" class="btn btn-danger" id="del${data.id}">Delete</button></td></tr>`
+         <td><button type="button" class="btn btn-danger" id="del${data.id}">
+         <span class="spinner-border spinner-border-sm"></span>Delete</button></td></tr>`
       );
     } else {
       $("#mys-err5").html(data.err);
@@ -75,6 +79,7 @@ function addClerk() {
 }
 
 function deleteClerk() {
+  $(this).find("span").css("display", "inline-block");
   let posting = $.post("/delete-clerk", {
     account: $(this).parents("tr").find("td:first").html(),
   });
@@ -102,6 +107,7 @@ function search(event) {
   let posting = $.post("/search-shop", $("#sho").serialize());
 
   posting.done(function (data) {
+    clearInput(2);
     $("#sho6 > span").css("display", "none");
     $("#table1 > tbody").empty();
     for (let i = 0; i < data.length; i++) {
@@ -136,6 +142,9 @@ $(document).ready(function () {
       clearInput(i);
     });
   }
+  $("#mys5").focus(function () {
+    $("#mys-err5").html("");
+  });
   $("option").val(function (index, value) {
     return $(this).text();
   });
@@ -143,7 +152,7 @@ $(document).ready(function () {
     return value.toLowerCase();
   });
 
-  $("#table2").on("click", "td button", deleteClerk);
+  $("#table2").on("click", "button", deleteClerk);
   $("#mys6").click(addClerk);
   $("#tab3").click(logout);
   $("#regs").submit(register);
