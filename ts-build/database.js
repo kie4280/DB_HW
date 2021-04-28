@@ -100,7 +100,7 @@ class Database {
             NATURAL JOIN shop WHERE shop_name = ?`, [shop_name]);
             result = result;
             for (let i = 0; i < result.length; ++i) {
-                clerks.concat({
+                clerks = clerks.concat({
                     id: result[i].UID,
                     account: result[i].account,
                     phone: result[i].phone,
@@ -147,6 +147,44 @@ class Database {
         }
         conn.release();
         return true;
+    }
+    async addClerk(account, shop) {
+        let [result, _] = await this.database.promise().execute(`SELECT UID FROM 
+        user NATURAL JOIN role NATURAL JOIN shop
+        WHERE account = ? AND shop_name = ?;`, [account, shop]);
+        result = result;
+        if (result.length > 0) {
+            return { status: false };
+        }
+        let insertClerk = this.database.promise().execute(`INSERT INTO role VALUES (
+        (SELECT UID FROM user WHERE account = ?),
+        (SELECT SID FROM shop WHERE shop_name = ?),
+        'c');`, [account, shop]);
+        let getuserinfo = this.database.promise().execute(`SELECT UID, account, phone FROM user
+        WHERE account = ?`, [account]);
+        const [insert_r, user_i] = await Promise.all([insertClerk, getuserinfo]);
+        const user = user_i[0];
+        return {
+            status: insert_r[0].affectedRows > 0,
+            id: user[0].UID,
+            account: user[0].account,
+            phone: user[0].phone,
+        };
+    }
+    async deleteClerk(account, shop) {
+        let [userinfo, _1] = await this.database.promise().execute(`SELECT UID, account, SID FROM 
+        user NATURAL JOIN role NATURAL JOIN shop
+        WHERE account = ? AND shop_name = ?`, [account, shop]);
+        userinfo = userinfo;
+        if (userinfo.length == 0) {
+            return { status: false };
+        }
+        const UID = userinfo[0].UID;
+        const SID = userinfo[0].SID;
+        let [deleteOP, _2] = await this.database.promise().execute(`DELETE FROM role 
+        WHERE UID = ? AND SID = ?`, [UID, SID]);
+        deleteOP = deleteOP;
+        return { status: deleteOP.affectedRows > 0, id: UID };
     }
     async searchShop(onlyMyShop, shop_name, shop_city, price_min, price_max, amount) { }
     close() {

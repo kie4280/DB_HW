@@ -1,6 +1,5 @@
 import * as mysql from "mysql2";
 import * as crypto from "crypto";
-import { createStrictEquality } from "typescript";
 
 function genHash(password: string): string {
   var hash = crypto.createHash("sha256").update(password).digest("hex");
@@ -157,7 +156,7 @@ export class Database {
       );
       result = result as mysql.RowDataPacket[];
       for (let i = 0; i < result.length; ++i) {
-        clerks.concat({
+        clerks = clerks.concat({
           id: result[i].UID,
           account: result[i].account,
           phone: result[i].phone,
@@ -219,6 +218,77 @@ export class Database {
     }
     conn.release();
     return true;
+  }
+
+  public async addClerk(
+    account: string,
+    shop: string
+  ): Promise<{
+    status: boolean;
+    id?: number;
+    account?: string;
+    phone?: string;
+  }> {
+    let [result, _] = await this.database.promise().execute(
+      `SELECT UID FROM 
+        user NATURAL JOIN role NATURAL JOIN shop
+        WHERE account = ? AND shop_name = ?;`,
+      [account, shop]
+    );
+    result = result as mysql.RowDataPacket[];
+    if (result.length > 0) {
+      return { status: false };
+    }
+
+    let insertClerk = this.database.promise().execute(
+      `INSERT INTO role VALUES (
+        (SELECT UID FROM user WHERE account = ?),
+        (SELECT SID FROM shop WHERE shop_name = ?),
+        'c');`,
+      [account, shop]
+    );
+
+    let getuserinfo = this.database.promise().execute(
+      `SELECT UID, account, phone FROM user
+        WHERE account = ?`,
+      [account]
+    );
+
+    const [insert_r, user_i] = await Promise.all([insertClerk, getuserinfo]);
+    const user = user_i[0] as mysql.RowDataPacket[];
+    return {
+      status: (insert_r[0] as mysql.OkPacket).affectedRows > 0,
+      id: user[0].UID,
+      account: user[0].account,
+      phone: user[0].phone,
+    };
+  }
+
+  public async deleteClerk(
+    account: string,
+    shop: string
+  ): Promise<{ status: boolean; id?: number }> {
+    let [userinfo, _1] = await this.database.promise().execute(
+      `SELECT UID, account, SID FROM 
+        user NATURAL JOIN role NATURAL JOIN shop
+        WHERE account = ? AND shop_name = ?`,
+      [account, shop]
+    );
+    userinfo = userinfo as mysql.RowDataPacket[];
+    if (userinfo.length == 0) {
+      return { status: false };
+    }
+    const UID = userinfo[0].UID;
+    const SID = userinfo[0].SID;
+
+    let [deleteOP, _2] = await this.database.promise().execute(
+      `DELETE FROM role 
+        WHERE UID = ? AND SID = ?`,
+      [UID, SID]
+    );
+
+    deleteOP = deleteOP as mysql.OkPacket;
+    return { status: deleteOP.affectedRows > 0, id: UID };
   }
 
   public async searchShop(

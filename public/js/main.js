@@ -79,7 +79,9 @@ function deleteClerk() {
     account: $(this).parents("tr").find("td:first").html(),
   });
   posting.done(function (data) {
-    $(`#clerk${data.id}`).remove();
+    if (data.status) {
+      $(`#clerk${data.id}`).remove();
+    }
   });
 }
 

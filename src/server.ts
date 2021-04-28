@@ -1,4 +1,4 @@
-import * as express from "express"; // Create a new express app instance
+import * as express from "express";
 import * as express_session from "express-session";
 import { Database } from "./database";
 
@@ -35,19 +35,21 @@ app.get("/main", (req, res) => {
     w.then((obj) => {
       console.log(obj);
       if (obj.isManager) {
+        req.session.shop_name = obj.manages.shop_name;
         res.render("pages/main", {
           account: obj.account,
           phone: obj.phone,
           template: "../partials/shop-info.ejs",
           shop: obj.manages,
-          clerks:obj.clerks,
-          cities:obj.cities
+          clerks: obj.clerks,
+          cities: obj.cities,
         });
       } else {
         res.render("pages/main", {
           account: obj.account,
           phone: obj.phone,
           template: "../partials/shop-form.ejs",
+          cities: obj.cities,
         });
       }
     });
@@ -78,27 +80,35 @@ app.post("/logout-user", (req, res) => {
   res.status(200).send({ status: true });
 });
 
-app.post("/get-info", (req, res) => {
+app.post("/search-shop", (req, res) => {
   let ac = req.session.account;
   if (ac == undefined) {
     res.sendStatus(404);
   }
+});
 
-  switch (req.body.type) {
-    case "search":
-      console.log(req.body)
-      // let qs = db.searchShop()
-      break;
-    case "city":
-      let qc = db.getCities();
-      qc.then((arr)=> {
-        res.send(arr);
-      });
-      break;
-    default:
-      res.sendStatus(404);
-      break;
+app.post("/add-clerk", (req, res) => {
+  if (req.session.account == undefined || req.session.shop_name == undefined) {
+    res.sendStatus(404);
   }
+  console.log(req.body);
+  let qa = db.addClerk(req.body.account, req.session.shop_name);
+  qa.then((obj) => {
+    console.log(obj);
+    res.status(200).send(obj);
+  });
+});
+
+app.post("delete-clerk", (req, res) => {
+  if (req.session.account == undefined || req.session.shop_name == undefined) {
+    res.sendStatus(404);
+  }
+  console.log(req.body);
+  let qd = db.deleteClerk(req.body.account, req.session.shop_name);
+  qd.then((obj) => {
+    console.log(obj);
+    res.status(200).send(obj);
+  });
 });
 
 app.post("/register-shop", (req, res) => {
