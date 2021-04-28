@@ -97,7 +97,7 @@ class Database {
         if (isManager) {
             let shop_name = manage_i[0][0].shop_name;
             let [result, _] = await this.database.promise().execute(`SELECT UID, account, phone FROM role NATURAL JOIN user
-            NATURAL JOIN shop WHERE shop_name = ?`, [shop_name]);
+            NATURAL JOIN shop WHERE shop_name = ? AND role != 'm';`, [shop_name]);
             result = result;
             for (let i = 0; i < result.length; ++i) {
                 clerks = clerks.concat({
@@ -149,23 +149,24 @@ class Database {
         return true;
     }
     async addClerk(account, shop) {
-        let [result, _] = await this.database.promise().execute(`SELECT UID FROM 
+        let checkRole = this.database.promise().execute(`SELECT UID FROM 
         user NATURAL JOIN role NATURAL JOIN shop
-        WHERE account = ? AND shop_name = ?;`, [account, shop]);
-        result = result;
-        if (result.length > 0) {
+        WHERE account = ? AND shop_name = ?;
+      `, [account, shop]);
+        let checkUser = this.database.promise().execute(`SELECT UID, account, phone 
+        FROM user WHERE account = ?`, [account]);
+        let [role_i, user_i] = await Promise.all([checkRole, checkUser]);
+        const alreadyWorking = role_i[0].length > 0;
+        const user = user_i[0];
+        if (alreadyWorking || user.length != 1) {
             return { status: false };
         }
-        let insertClerk = this.database.promise().execute(`INSERT INTO role VALUES (
+        let [insert_r, _] = await this.database.promise().execute(`INSERT INTO role VALUES (
         (SELECT UID FROM user WHERE account = ?),
         (SELECT SID FROM shop WHERE shop_name = ?),
         'c');`, [account, shop]);
-        let getuserinfo = this.database.promise().execute(`SELECT UID, account, phone FROM user
-        WHERE account = ?`, [account]);
-        const [insert_r, user_i] = await Promise.all([insertClerk, getuserinfo]);
-        const user = user_i[0];
         return {
-            status: insert_r[0].affectedRows > 0,
+            status: insert_r.affectedRows > 0,
             id: user[0].UID,
             account: user[0].account,
             phone: user[0].phone,
@@ -182,7 +183,7 @@ class Database {
         const UID = userinfo[0].UID;
         const SID = userinfo[0].SID;
         let [deleteOP, _2] = await this.database.promise().execute(`DELETE FROM role 
-        WHERE UID = ? AND SID = ?`, [UID, SID]);
+        WHERE UID = ? AND SID = ? AND role = 'c'`, [UID, SID]);
         deleteOP = deleteOP;
         return { status: deleteOP.affectedRows > 0, id: UID };
     }

@@ -151,7 +151,7 @@ export class Database {
       let shop_name = manage_i[0][0].shop_name;
       let [result, _] = await this.database.promise().execute(
         `SELECT UID, account, phone FROM role NATURAL JOIN user
-            NATURAL JOIN shop WHERE shop_name = ?`,
+            NATURAL JOIN shop WHERE shop_name = ? AND role != 'm';`,
         [shop_name]
       );
       result = result as mysql.RowDataPacket[];
@@ -229,18 +229,26 @@ export class Database {
     account?: string;
     phone?: string;
   }> {
-    let [result, _] = await this.database.promise().execute(
+    let checkRole = this.database.promise().execute(
       `SELECT UID FROM 
         user NATURAL JOIN role NATURAL JOIN shop
-        WHERE account = ? AND shop_name = ?;`,
+        WHERE account = ? AND shop_name = ?;
+      `,
       [account, shop]
     );
-    result = result as mysql.RowDataPacket[];
-    if (result.length > 0) {
+    let checkUser = this.database.promise().execute(
+      `SELECT UID, account, phone 
+        FROM user WHERE account = ?`,
+      [account]
+    );
+    let [role_i, user_i] = await Promise.all([checkRole, checkUser]);
+    const alreadyWorking = (role_i[0] as mysql.RowDataPacket[]).length > 0;
+    const user = (user_i[0] as mysql.RowDataPacket[]);
+    if (alreadyWorking|| user.length != 1) {
       return { status: false };
     }
 
-    let insertClerk = this.database.promise().execute(
+    let [insert_r, _] = await this.database.promise().execute(
       `INSERT INTO role VALUES (
         (SELECT UID FROM user WHERE account = ?),
         (SELECT SID FROM shop WHERE shop_name = ?),
@@ -248,16 +256,8 @@ export class Database {
       [account, shop]
     );
 
-    let getuserinfo = this.database.promise().execute(
-      `SELECT UID, account, phone FROM user
-        WHERE account = ?`,
-      [account]
-    );
-
-    const [insert_r, user_i] = await Promise.all([insertClerk, getuserinfo]);
-    const user = user_i[0] as mysql.RowDataPacket[];
     return {
-      status: (insert_r[0] as mysql.OkPacket).affectedRows > 0,
+      status: (insert_r as mysql.OkPacket).affectedRows > 0,
       id: user[0].UID,
       account: user[0].account,
       phone: user[0].phone,
@@ -283,7 +283,7 @@ export class Database {
 
     let [deleteOP, _2] = await this.database.promise().execute(
       `DELETE FROM role 
-        WHERE UID = ? AND SID = ?`,
+        WHERE UID = ? AND SID = ? AND role = 'c'`,
       [UID, SID]
     );
 
