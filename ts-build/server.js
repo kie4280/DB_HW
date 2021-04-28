@@ -89,7 +89,7 @@ app.post("/add-clerk", (req, res) => {
         res.status(200).send(obj);
     });
 });
-app.post("delete-clerk", (req, res) => {
+app.post("/delete-clerk", (req, res) => {
     if (req.session.account == undefined || req.session.shop_name == undefined) {
         res.sendStatus(404);
     }
