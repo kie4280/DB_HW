@@ -72,14 +72,26 @@ class Database {
           where account = ? and password = ?`, [account, genHash(password)]);
         return results.length == 1;
     }
-    async getUserInfo(account) {
+    async getInfo(account) {
         let userInfo = this.database.promise().execute(`SELECT phone FROM user
           WHERE account = ?`, [account]);
         let manageShopInfo = this.database.promise().execute(`SELECT shop_name, shop_city, mask_amount, mask_price
        FROM role NATURAL JOIN user NATURAL JOIN shop
        WHERE account = ? AND role = 'm'`, [account]);
-        let [user_i, manage_i] = await Promise.all([userInfo, manageShopInfo]);
+        let cityInfo = this.database
+            .promise()
+            .query(`SELECT DISTINCT shop_city FROM shop`);
+        let [user_i, manage_i, city_i] = await Promise.all([
+            userInfo,
+            manageShopInfo,
+            cityInfo,
+        ]);
         const phone = user_i[0][0].phone;
+        let cities = [];
+        let cities_i = city_i[0];
+        for (let i = 0; i < cities_i.length; ++i) {
+            cities = cities.concat(cities_i[i].shop_city);
+        }
         let clerks = [];
         let isManager = manage_i[0].length > 0;
         if (isManager) {
@@ -94,10 +106,17 @@ class Database {
                     phone: result[i].phone,
                 });
             }
-            return { account, phone, isManager, manages: manage_i[0][0], clerks };
+            return {
+                account,
+                phone,
+                isManager,
+                cities,
+                manages: manage_i[0][0],
+                clerks,
+            };
         }
         else {
-            return { account, phone, isManager };
+            return { account, phone, isManager, cities };
         }
     }
     async registerShop(shop, city, price, amount, account) {
@@ -129,29 +148,11 @@ class Database {
         conn.release();
         return true;
     }
-    async searchShop() { }
-    async getCities() {
-        let [results, _] = await this.database
-            .promise()
-            .query(`SELECT DISTINCT shop_city FROM shop`);
-        results = results;
-        let arr = [];
-        for (let i = 0; i < results.length; ++i) {
-            arr.concat(results[i].shop_city);
-        }
-        return arr;
-    }
+    async searchShop(onlyMyShop, shop_name, shop_city, price_min, price_max, amount) { }
     close() {
         this.database.end();
     }
 }
 exports.Database = Database;
-function test() {
-    let db = new Database();
-    let add = db.registerUser("13sf", "sdf", "sdffs");
-    add.then((success) => {
-        console.log(add);
-        db.close();
-    });
-}
+function test() { }
 //# sourceMappingURL=database.js.map

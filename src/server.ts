@@ -31,7 +31,7 @@ app.get("/main", (req, res) => {
   console.log("current account: ", req.session.account);
   if (req.session.account) {
     let ac = req.session.account;
-    let w = db.getUserInfo(ac);
+    let w = db.getInfo(ac);
     w.then((obj) => {
       console.log(obj);
       if (obj.isManager) {
@@ -40,7 +40,8 @@ app.get("/main", (req, res) => {
           phone: obj.phone,
           template: "../partials/shop-info.ejs",
           shop: obj.manages,
-          clerks:obj.clerks
+          clerks:obj.clerks,
+          cities:obj.cities
         });
       } else {
         res.render("pages/main", {
@@ -85,6 +86,8 @@ app.post("/get-info", (req, res) => {
 
   switch (req.body.type) {
     case "search":
+      console.log(req.body)
+      // let qs = db.searchShop()
       break;
     case "city":
       let qc = db.getCities();

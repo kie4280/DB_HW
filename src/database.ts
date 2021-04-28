@@ -98,13 +98,19 @@ export class Database {
     return (results as any).length == 1;
   }
 
-  public async getUserInfo(
+  public async getInfo(
     account: string
   ): Promise<{
     account: string;
     phone: string;
     isManager: boolean;
-    manages?: { name: string; city: string; price: number; amount: number };
+    cities: string[];
+    manages?: {
+      shop_name: string;
+      shop_city: string;
+      mask_amount: number;
+      mask_price: number;
+    };
     clerks?: Array<{ id: number; account: string; phone: string }>;
   }> {
     let userInfo = this.database.promise().execute(
@@ -119,8 +125,21 @@ export class Database {
       [account]
     );
 
-    let [user_i, manage_i] = await Promise.all([userInfo, manageShopInfo]);
+    let cityInfo = this.database
+      .promise()
+      .query(`SELECT DISTINCT shop_city FROM shop`);
+
+    let [user_i, manage_i, city_i] = await Promise.all([
+      userInfo,
+      manageShopInfo,
+      cityInfo,
+    ]);
     const phone = user_i[0][0].phone;
+    let cities: string[] = [];
+    let cities_i = city_i[0] as mysql.RowDataPacket[];
+    for (let i = 0; i < cities_i.length; ++i) {
+      cities = cities.concat(cities_i[i].shop_city);
+    }
 
     let clerks: Array<{
       id: number;
@@ -144,9 +163,16 @@ export class Database {
           phone: result[i].phone,
         });
       }
-      return { account, phone, isManager, manages: manage_i[0][0], clerks };
+      return {
+        account,
+        phone,
+        isManager,
+        cities,
+        manages: manage_i[0][0],
+        clerks,
+      };
     } else {
-      return { account, phone, isManager };
+      return { account, phone, isManager, cities };
     }
   }
 
@@ -195,30 +221,18 @@ export class Database {
     return true;
   }
 
-  public async searchShop() {}
-
-  public async getCities(): Promise<Array<string>> {
-    let [results, _] = await this.database
-      .promise()
-      .query(`SELECT DISTINCT shop_city FROM shop`);
-    results = results as mysql.RowDataPacket[];
-    let arr: Array<string> = [];
-    for (let i = 0; i < results.length; ++i) {
-      arr.concat(results[i].shop_city);
-    }
-    return arr;
-  }
+  public async searchShop(
+    onlyMyShop: boolean,
+    shop_name?: string,
+    shop_city?: string,
+    price_min?: number,
+    price_max?: number,
+    amount?: string
+  ) {}
 
   public close() {
     this.database.end();
   }
 }
 
-function test() {
-  let db = new Database();
-  let add = db.registerUser("13sf", "sdf", "sdffs");
-  add.then((success) => {
-    console.log(add);
-    db.close();
-  });
-}
+function test() {}
