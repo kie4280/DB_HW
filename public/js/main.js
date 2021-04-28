@@ -60,9 +60,11 @@ function register(event) {
 
 function addClerk() {
   $("#mys6 > span").css("display", "inline-block");
-  let posting = $.post("/add-clerk", {
+  let posting = $.post("/edit-shop", {
+    type: "add-clerk",
     account: $("#mys5").val(),
   });
+
   posting.done(function (data) {
     $("#mys6 > span").css("display", "none");
     if (data.status) {
@@ -81,12 +83,46 @@ function addClerk() {
 
 function deleteClerk() {
   $(this).find("span").css("display", "inline-block");
-  let posting = $.post("/delete-clerk", {
+  let posting = $.post("/edit-shop", {
+    type: "delete-clerk",
     account: $(this).parents("tr").find("td:first").html(),
   });
+
   posting.done(function (data) {
     if (data.status) {
       $(`#clerk${data.id}`).remove();
+    }
+  });
+}
+
+function editPrice() {
+  $("#mys2 > span").css("display", "inline-block");
+  $("#mys1").prop("disabled", true);
+  let posting = $.post("/edit-shop", {
+    type: "edit-price",
+    price: $("#mys1").val(),
+  });
+
+  posting.done(function (data) {
+    $("#mys2 > span").css("display", "none");
+    if (!data.status) {
+      $("#mys1").val(data.price);
+    }
+  });
+}
+
+function editAmount() {
+  $("#mys4 > span").css("display", "inline-block");
+  $("#mys3").prop("disabled", true);
+  let posting = $.post("/edit-shop", {
+    type: "edit-amount",
+    amount: $("#mys3").val(),
+  });
+
+  posting.done(function (data) {
+    $("#mys4 > span").css("display", "none");
+    if (!data.status) {
+      $("#mys3").val(data.amount);
     }
   });
 }
@@ -128,11 +164,6 @@ $(document).ready(function () {
         .focus();
     });
   }
-  for (let i = 1; i <= 3; i += 2) {
-    $(`#mys${i}`).blur(function () {
-      $(`#mys${i}`).prop("disabled", true);
-    });
-  }
   for (let i = 1; i <= 4; i++) {
     $(`#regs${i}`).focus(function () {
       $(`#regs-err${i}`).html("");
@@ -143,9 +174,6 @@ $(document).ready(function () {
       clearInput(i);
     });
   }
-  $("#mys5").focus(function () {
-    $("#mys-err5").html("");
-  });
   $("option").val(function (index, value) {
     return $(this).text();
   });
@@ -155,6 +183,8 @@ $(document).ready(function () {
 
   $("#table2").on("click", "button", deleteClerk);
   $("#mys6").click(addClerk);
+  $("#mys1").blur(editPrice);
+  $("#mys3").blur(editAmount);
   $("#tab3").click(logout);
   $("#regs").submit(register);
   $("#sho").submit(search);
