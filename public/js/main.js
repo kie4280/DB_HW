@@ -70,7 +70,8 @@ function addClerk() {
       $("#table2 > tbody").append(
         `<tr id="clerk${data.id}"><td>${data.account}</td><td>${data.phone}</td>
          <td><button type="button" class="btn btn-danger" id="del${data.id}">
-         <span class="spinner-border spinner-border-sm"></span>Delete</button></td></tr>`
+         <span class="spinner-border spinner-border-sm"></span>
+         Delete</button></td></tr>`
       );
     } else {
       $("#mys-err5").html(data.err);
