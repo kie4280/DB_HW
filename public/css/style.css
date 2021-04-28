@@ -33,6 +33,11 @@
   display: none;
 }
 
+#main table,
+#index table {
+  border: 1px solid black;
+}
+
 @media screen and (max-width: 576px) {
   #index .text-right {
     text-align: left !important;
