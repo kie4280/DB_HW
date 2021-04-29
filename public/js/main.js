@@ -34,17 +34,7 @@ function search(event) {
   posting.done(function (data) {
     clearInput(2);
     $("#sho6 span").css("display", "none");
-    $("#table1 tbody").empty();
-    for (let i = 0; i < data.length; i++) {
-      $("#table1 tbody").append(
-        `<tr id="shop${data[i].id}">
-           <td>${data[i].shop}</td>
-           <td>${data[i].city}</td>
-           <td>${data[i].price}</td>
-           <td>${data[i].amount}</td>
-         </tr>`
-      );
-    }
+    $("#table1").DataTable().clear().rows.add(data).draw();
   });
 }
 
@@ -52,8 +42,13 @@ $(document).ready(function () {
   $("#table1").DataTable({
     lengthChange: false,
     searching: false,
-    info: false,
     pageLength: 8,
+    columns: [
+      { data: "shop" },
+      { data: "city" },
+      { data: "price" },
+      { data: "amount" },
+    ],
   });
 
   for (let i = 1; i <= 2; i++) {

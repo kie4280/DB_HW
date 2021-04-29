@@ -43,18 +43,7 @@ function addClerk() {
     $("#mys6 span").css("display", "none");
     if (data.status) {
       clearInput(1);
-      $("#table2 tbody").append(
-        `<tr id="clerk${data.id}">
-           <td>${data.account}</td>
-           <td>${data.phone}</td>
-           <td>
-             <button type="button" class="btn btn-danger" id="del${data.id}">
-               <span class="spinner-border spinner-border-sm"></span>
-               Delete
-             </button>
-           </td>
-         </tr>`
-      );
+      $("#table2").DataTable().row.add(data).draw();
     } else {
       $("#mys-err5").html(data.err);
     }
@@ -62,15 +51,17 @@ function addClerk() {
 }
 
 function deleteClerk() {
-  $(this).children("span").css("display", "inline-block");
+  let tr = $(this).parents("tr");
+
+  tr.find("span").css("display", "inline-block");
   let posting = $.post("/edit-shop", {
     type: "delete-clerk",
-    account: $(this).parents("tr").children("td:first").html(),
+    account: tr.children("td:first").html(),
   });
 
   posting.done(function (data) {
     if (data.status) {
-      $(`#clerk${data.id}`).remove();
+      $("#table2").DataTable().row(tr).remove().draw();
     }
   });
 }
@@ -79,8 +70,18 @@ $(document).ready(function () {
   $("#table2").DataTable({
     lengthChange: false,
     searching: false,
-    info: false,
     pageLength: 5,
+    columnDefs: [{ orderable: false, targets: 2 }],
+    columns: [
+      { data: "account" },
+      { data: "phone" },
+      {
+        data: "button",
+        defaultContent: `<button type="button" class="btn btn-danger">
+        <span class="spinner-border spinner-border-sm"></span>
+        Delete</button>`,
+      },
+    ],
   });
 
   for (let i = 2; i <= 4; i += 2) {

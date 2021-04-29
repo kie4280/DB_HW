@@ -102,11 +102,11 @@
       </thead>
       <tbody>
         <% clerks.forEach(function (c) { %>
-        <tr id="clerk<%= c.id %>">
+        <tr>
           <td><%= c.account %></td>
           <td><%= c.phone %></td>
           <td>
-            <button type="button" class="btn btn-danger" id="del<%= c.id %>">
+            <button type="button" class="btn btn-danger">
               <span class="spinner-border spinner-border-sm"></span>
               Delete
             </button>
