@@ -79,6 +79,7 @@ $(document).ready(function () {
   $("#table2").DataTable({
     lengthChange: false,
     searching: false,
+    info: false,
     pageLength: 5,
   });
 
