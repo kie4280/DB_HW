@@ -73,14 +73,20 @@ app.post("/logout-user", (req, res) => {
     res.status(200).send({ status: true });
 });
 app.post("/search-shop", (req, res) => {
-    let ac = req.session.account;
+    const ac = req.session.account;
     if (ac == undefined) {
-        res.sendStatus(404);
+        res.sendStatus(403);
     }
+    let sp = db.searchShop(ac, req.body.checked, req.body.shop, req.body.city, req.body.min_price, req.body.max_price, req.body.amount);
+    sp.then((obj) => {
+        console.log("search results:", obj);
+        res.status(200).send(obj);
+    });
+    // console.log(req.body);
 });
 app.post("/edit-shop", (req, res) => {
     if (req.session.account == undefined || req.session.shop_name == undefined) {
-        res.sendStatus(404);
+        res.sendStatus(403);
     }
     console.log(req.body);
     switch (req.body.type) {
@@ -118,7 +124,11 @@ app.post("/edit-shop", (req, res) => {
 app.post("/register-shop", (req, res) => {
     console.log("register shop");
     console.log(req.body);
-    let q = db.registerShop(req.body.shop, req.body.city, parseInt(req.body.price), parseInt(req.body.amount), req.session.account);
+    const ac = req.session.account;
+    if (ac == undefined) {
+        res.sendStatus(403);
+    }
+    let q = db.registerShop(req.body.shop, req.body.city, parseInt(req.body.price), parseInt(req.body.amount), ac);
     q.then((success) => {
         res.status(200).send({ status: success });
     });

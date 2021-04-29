@@ -246,7 +246,68 @@ class Database {
         results = results;
         return { status: results.affectedRows > 0, amount: old_amount };
     }
-    async searchShop(onlyMyShop, shop_name, shop_city, price_min, price_max, amount) { }
+    async searchShop(account, onlyMyShop, shop_name, shop_city, price_min, price_max, amount) {
+        let shops = [];
+        let args = [];
+        let filterQueries = [];
+        if (onlyMyShop) {
+            filterQueries = filterQueries.concat(`shop.SID in (SELECT SID FROM
+          shop NATURAL JOIN role NATURAL JOIN user
+          WHERE account = ?)`);
+            args = args.concat(account);
+        }
+        if (shop_name.length > 0) {
+            filterQueries = filterQueries.concat(`LOWER(shop_name) = ?`);
+            args = args.concat(shop_name.toLowerCase());
+        }
+        if (shop_city != "All") {
+            filterQueries = filterQueries.concat(`shop_city = ?`);
+            args = args.concat(shop_city);
+        }
+        const price_min_n = parseInt(price_min);
+        const price_max_n = parseInt(price_max);
+        if (!Number.isNaN(price_min_n)) {
+            filterQueries = filterQueries.concat(`mask_price >= ?`);
+            args = args.concat(price_min_n);
+        }
+        if (!Number.isNaN(price_max_n)) {
+            filterQueries = filterQueries.concat(`mask_price <= ?`);
+            args = args.concat(price_max_n);
+        }
+        switch (amount) {
+            case "All":
+                break;
+            case "(Sold out) 0":
+                filterQueries = filterQueries.concat(`mask_amount = 0`);
+                break;
+            case "(Rare) 1 ~ 99":
+                filterQueries = filterQueries.concat(`mask_amount > 0 AND mask_amount < 100`);
+                break;
+            case "(Adequate) 100+":
+                filterQueries = filterQueries.concat(`mask_amount > 100`);
+                break;
+            default:
+                break;
+        }
+        const q = filterQueries.join(" AND ");
+        // console.log("search filters", q);
+        let [results, _] = await this.database
+            .promise()
+            .execute(`SELECT shop_name, shop_city, mask_price, mask_amount FROM shop` +
+            (q.length > 0 ? " WHERE " : "") +
+            q, args);
+        results = results;
+        results.forEach((val, index, raw) => {
+            let s = {
+                shop: val.shop_name,
+                city: val.shop_city,
+                price: val.mask_price,
+                amount: val.mask_amount,
+            };
+            shops = shops.concat(s);
+        });
+        return shops;
+    }
     close() {
         this.database.end();
     }
