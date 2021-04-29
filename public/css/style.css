@@ -85,7 +85,7 @@
   vertical-align: middle;
 }
 
-#main #shop td:last-child {
+#main #shop td:last-child:not(:first-child) {
   text-align: right;
 }
 

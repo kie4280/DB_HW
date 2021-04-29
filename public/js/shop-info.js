@@ -77,9 +77,11 @@ $(document).ready(function () {
       { data: "phone" },
       {
         data: "button",
-        defaultContent: `<button type="button" class="btn btn-danger">
-        <span class="spinner-border spinner-border-sm"></span>
-        Delete</button>`,
+        defaultContent: [
+          `<button type="button" class="btn btn-danger">
+           <span class="spinner-border spinner-border-sm"></span>
+           Delete</button>`,
+        ],
       },
     ],
   });
