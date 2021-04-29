@@ -20,16 +20,54 @@ function checkInput(i) {
 function clearInput(i) {
   // 1: register shop / my shop, 2: shop list
   if (i == 1) {
-    $("#regs").find("input").val("");
-    $("#regs").find("select").val("Taipei");
-    $("#regs").find("label > span").html("");
+    $("#regs input").val("");
+    $("#regs select").val("Taipei");
+    $("#regs label span").html("");
 
-    $("#mys").find("input:not([disabled])").val("");
-    $("#mys").find("label > span").html("");
+    $("#mys input:not([disabled])").val("");
+    $("#mys label span").html("");
   } else {
-    $("#sho").find("input:not([type=checkbox])").val("");
-    $("#sho").find("input[type=checkbox]").prop("checked", false);
-    $("#sho").find("select").val("All");
+    $("#sho input:not([type=checkbox])").val("");
+    $("#sho input[type=checkbox]").prop("checked", false);
+    $("#sho select").val("All");
+  }
+}
+
+function sortTable(i) {
+  let switched = false;
+  let asc = true;
+
+  while (!switched) {
+    for (let j = 1; j <= $("#table1 tbody tr").length; j++) {
+      for (let k = 1; k <= $("#table1 tbody tr").length - j; k++) {
+        let td1 = $(
+          `#table1 
+           tbody tr:nth-child(${k}) 
+           td:nth-child(${i})`
+        );
+        let td2 = $(
+          `#table1 
+           tbody tr:nth-child(${k + 1}) 
+           td:nth-child(${i})`
+        );
+
+        if (asc) {
+          if (td1.html().toLowerCase() > td2.html().toLowerCase()) {
+            td1.parent().insertAfter(td2.parent());
+            switched = true;
+          }
+        }
+        if (!asc) {
+          if (td1.html().toLowerCase() < td2.html().toLowerCase()) {
+            td1.parent().insertAfter(td2.parent());
+            switched = true;
+          }
+        }
+      }
+    }
+    if (switched == false) {
+      asc = !asc;
+    }
   }
 }
 
@@ -44,7 +82,7 @@ function register(event) {
     return;
   }
 
-  $("#regs5 > span").css("display", "inline-block");
+  $("#regs5 span").css("display", "inline-block");
   let posting = $.post("/register-shop", $("#regs").serialize());
 
   posting.done(function (data) {
@@ -52,28 +90,34 @@ function register(event) {
       window.alert("Register Success!");
       window.location.replace("/main");
     } else {
-      $("#regs5 > span").css("display", "none");
+      $("#regs5 span").css("display", "none");
       $("#regs-err1").html("*Shop name has been used! QAQ");
     }
   });
 }
 
 function addClerk() {
-  $("#mys6 > span").css("display", "inline-block");
+  $("#mys6 span").css("display", "inline-block");
   let posting = $.post("/edit-shop", {
     type: "add-clerk",
     account: $("#mys5").val(),
   });
 
   posting.done(function (data) {
-    $("#mys6 > span").css("display", "none");
+    $("#mys6 span").css("display", "none");
     if (data.status) {
       clearInput(1);
-      $("#table2 > tbody").append(
-        `<tr id="clerk${data.id}"><td>${data.account}</td><td>${data.phone}</td>
-         <td><button type="button" class="btn btn-danger" id="del${data.id}">
-         <span class="spinner-border spinner-border-sm"></span>
-         Delete</button></td></tr>`
+      $("#table2 tbody").append(
+        `<tr id="clerk${data.id}">
+           <td>${data.account}</td>
+           <td>${data.phone}</td>
+           <td>
+             <button type="button" class="btn btn-danger" id="del${data.id}">
+             <span class="spinner-border spinner-border-sm"></span>
+               Delete
+             </button>
+           </td>
+         </tr>`
       );
     } else {
       $("#mys-err5").html(data.err);
@@ -82,10 +126,10 @@ function addClerk() {
 }
 
 function deleteClerk() {
-  $(this).find("span").css("display", "inline-block");
+  $(this).children("span").css("display", "inline-block");
   let posting = $.post("/edit-shop", {
     type: "delete-clerk",
-    account: $(this).parents("tr").find("td:first").html(),
+    account: $(this).parents("tr").children("td:first").html(),
   });
 
   posting.done(function (data) {
@@ -96,7 +140,7 @@ function deleteClerk() {
 }
 
 function editPrice() {
-  $("#mys2 > span").css("display", "inline-block");
+  $("#mys2 span").css("display", "inline-block");
   $("#mys1").prop("disabled", true);
   let posting = $.post("/edit-shop", {
     type: "edit-price",
@@ -104,7 +148,7 @@ function editPrice() {
   });
 
   posting.done(function (data) {
-    $("#mys2 > span").css("display", "none");
+    $("#mys2 span").css("display", "none");
     if (!data.status) {
       $("#mys1").val(data.price);
     }
@@ -112,7 +156,7 @@ function editPrice() {
 }
 
 function editAmount() {
-  $("#mys4 > span").css("display", "inline-block");
+  $("#mys4 span").css("display", "inline-block");
   $("#mys3").prop("disabled", true);
   let posting = $.post("/edit-shop", {
     type: "edit-amount",
@@ -120,7 +164,7 @@ function editAmount() {
   });
 
   posting.done(function (data) {
-    $("#mys4 > span").css("display", "none");
+    $("#mys4 span").css("display", "none");
     if (!data.status) {
       $("#mys3").val(data.amount);
     }
@@ -140,23 +184,32 @@ function logout() {
 function search(event) {
   event.preventDefault();
 
-  $("#sho6 > span").css("display", "inline-block");
+  $("#sho6 span").css("display", "inline-block");
   let posting = $.post("/search-shop", $("#sho").serialize());
 
   posting.done(function (data) {
     clearInput(2);
-    $("#sho6 > span").css("display", "none");
-    $("#table1 > tbody").empty();
+    $("#sho6 span").css("display", "none");
+    $("#table1 tbody").empty();
     for (let i = 0; i < data.length; i++) {
-      $("#table1 > tbody").append(
-        `<tr id="shop${data[i].id}"><td>${data[i].shop}</td><td>${data[i].city}</td>
-         <td>${data[i].price}</td><td>${data[i].amount}</td></tr>`
+      $("#table1 tbody").append(
+        `<tr id="shop${data[i].id}">
+           <td>${data[i].shop}</td>
+           <td>${data[i].city}</td>
+           <td>${data[i].price}</td>
+           <td>${data[i].amount}</td>
+         </tr>`
       );
     }
   });
 }
 
 $(document).ready(function () {
+  for (let i = 1; i <= 4; i++) {
+    $(`#table1 th:nth-child(${i})`).click(function () {
+      sortTable(i);
+    });
+  }
   for (let i = 2; i <= 4; i += 2) {
     $(`#mys${i}`).click(function () {
       $(`#mys${i - 1}`)

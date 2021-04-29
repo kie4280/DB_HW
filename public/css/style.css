@@ -23,13 +23,13 @@
   padding-top: 7px;
 }
 
-#main label > span,
-#index label > span {
+#main label span,
+#index label span {
   font-weight: bold;
 }
 
-#main button > span,
-#index button > span {
+#main button span,
+#index button span {
   display: none;
 }
 

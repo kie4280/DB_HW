@@ -35,10 +35,10 @@ function checkInput(i) {
 function clearInput(i) {
   // 1: register, 2: login
   if (i == 1) {
-    $("#reg").find("input").val("");
-    $("#reg").find("label > span").html("");
+    $("#reg input").val("");
+    $("#reg label span").html("");
   } else {
-    $("#log").find("input").val("");
+    $("#log input").val("");
   }
 }
 
@@ -53,11 +53,11 @@ function register(event) {
     return;
   }
 
-  $("#reg5 > span").css("display", "inline-block");
+  $("#reg5 span").css("display", "inline-block");
   let posting = $.post("/register-user", $("#reg").serialize());
 
   posting.done(function (data) {
-    $("#reg5 > span").css("display", "none");
+    $("#reg5 span").css("display", "none");
     if (data.status) {
       window.alert("Register Success!");
       $(".nav-tabs a[href='#login']").tab("show");
@@ -71,14 +71,14 @@ function register(event) {
 function login(event) {
   event.preventDefault();
 
-  $("#log3 > span").css("display", "inline-block");
+  $("#log3 span").css("display", "inline-block");
   let posting = $.post("/login-user", $("#log").serialize());
 
   posting.done(function (data) {
     if (data.status) {
       window.location.replace("/main");
     } else {
-      $("#log3 > span").css("display", "none");
+      $("#log3 span").css("display", "none");
       window.alert("Login Failed! QAQ");
       clearInput(2);
     }
