@@ -63,4 +63,5 @@ $(document).ready(function () {
 
   $("#tab3").click(logout);
   $("#sho").submit(search);
+  $("#sho").trigger("submit");
 });
