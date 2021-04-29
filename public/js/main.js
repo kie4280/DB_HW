@@ -32,7 +32,6 @@ function search(event) {
   let posting = $.post("/search-shop", $("#sho").serialize());
 
   posting.done(function (data) {
-    clearInput(2);
     $("#sho6 span").css("display", "none");
     $("#table1").DataTable().clear().rows.add(data).draw();
   });
