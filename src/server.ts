@@ -119,7 +119,7 @@ app.post("/edit-shop", (req, res) => {
       break;
 
     case "edit-price":
-      let ep = db.editAmount(
+      let ep = db.editPrice(
         req.session.shop_name,
         req.session.account,
         req.body.price
