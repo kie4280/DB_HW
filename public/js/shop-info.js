@@ -76,6 +76,12 @@ function deleteClerk() {
 }
 
 $(document).ready(function () {
+  $("#table2").DataTable({
+    lengthChange: false,
+    searching: false,
+    pageLength: 5,
+  });
+
   for (let i = 2; i <= 4; i += 2) {
     $(`#mys${i}`).click(function () {
       $(`#mys${i - 1}`)
