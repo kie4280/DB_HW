@@ -34,8 +34,9 @@ export class Database {
           SID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
           shop_name varchar(30) NOT NULL UNIQUE,
           shop_city varchar(30) NOT NULL,
-          mask_amount int NOT NULL CHECK(mask_amount >= 0),
-          mask_price int NOT NULL CHECK(mask_price >= 0)
+          mask_amount int NOT NULL,
+          mask_price int NOT NULL,
+          CONSTRAINT chk_s CHECK(mask_amount >= 0 AND mask_price >= 0)
       );`
     );
 
@@ -43,9 +44,10 @@ export class Database {
     this.database.query(
       `CREATE TABLE IF NOT EXISTS \`order\` (
           OID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
-          status char(1) NOT NULL check (status in ('c', 'p', 'f')),
+          status char(1) NOT NULL,
           create_time datetime NOT NULL,
-          finish_time datetime NOT NULL
+          finish_time datetime NOT NULL,
+          CONSTRAINT chk_o CHECK(status in ('c', 'p', 'f'))
       );`
     );
 
@@ -54,10 +56,11 @@ export class Database {
       `CREATE TABLE IF NOT EXISTS role(
           UID INTEGER NOT NULL,
           SID INTEGER NOT NULL,
-          role char(1) NOT NULL check (role in ('c', 'm')),
+          role char(1) NOT NULL,
           PRIMARY KEY(UID, SID, role),
           FOREIGN KEY(UID) REFERENCES user(UID) ON DELETE CASCADE,
-          FOREIGN KEY(SID) REFERENCES shop(SID) ON DELETE CASCADE
+          FOREIGN KEY(SID) REFERENCES shop(SID) ON DELETE CASCADE,
+          CONSTRAINT chk_r CHECK(role in ('c', 'm'))
       );`
     );
   }
@@ -301,7 +304,7 @@ export class Database {
     return { status: deleteOP.affectedRows > 0, id: UID };
   }
 
-  public async editPrice(shop_name: string, account: string, price: number) {
+  public async editPrice(shop_name: string, account: string, price: string) {
     let [old, _o] = await this.database.promise().execute(
       `SELECT mask_price FROM shop WHERE shop_name = ? AND EXISTS
         (SELECT * FROM shop AS S NATURAL JOIN role NATURAL JOIN user
@@ -313,6 +316,10 @@ export class Database {
       return Promise.reject("Something terrible happened");
     }
     const old_price = old[0].mask_price;
+    const price_: number = parseFloat(price);
+    if (Number.isNaN(price_) || !Number.isInteger(price_) || price_ < 0) {
+      return { status: false, price: old_price };
+    }
 
     let [
       results,
@@ -322,14 +329,13 @@ export class Database {
       .execute(`UPDATE shop SET mask_price = ? WHERE shop_name = ?;`, [
         price,
         shop_name,
-        account,
       ]);
 
     results = results as mysql.OkPacket;
     return { status: results.affectedRows > 0, price: old_price };
   }
 
-  public async editAmount(shop_name: string, account: string, amount: number) {
+  public async editAmount(shop_name: string, account: string, amount: string) {
     let [old, _o] = await this.database.promise().execute(
       `SELECT mask_amount FROM shop WHERE shop_name = ? AND EXISTS
         (SELECT * FROM shop AS S NATURAL JOIN role NATURAL JOIN user
@@ -340,8 +346,12 @@ export class Database {
     if (old.length != 1) {
       return Promise.reject("Something terrible happened");
     }
-    const old_amount = old[0].mask_price;
 
+    const old_amount = old[0].mask_amount;
+    const amount_: number = parseFloat(amount);
+    if (Number.isNaN(amount_) || !Number.isInteger(amount_) || amount_ < 0) {
+      return { status: false, amount: old_amount };
+    }
     let [
       results,
       _,

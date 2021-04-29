@@ -28,24 +28,27 @@ class Database {
           SID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
           shop_name varchar(30) NOT NULL UNIQUE,
           shop_city varchar(30) NOT NULL,
-          mask_amount int NOT NULL CHECK(mask_amount >= 0),
-          mask_price int NOT NULL CHECK(mask_price >= 0)
+          mask_amount int NOT NULL,
+          mask_price int NOT NULL,
+          CONSTRAINT chk_s CHECK(mask_amount >= 0 AND mask_price >= 0)
       );`);
         // status 'c': canceled, 'p': pending, 'f': finished
         this.database.query(`CREATE TABLE IF NOT EXISTS \`order\` (
           OID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
-          status char(1) NOT NULL check (status in ('c', 'p', 'f')),
+          status char(1) NOT NULL,
           create_time datetime NOT NULL,
-          finish_time datetime NOT NULL
+          finish_time datetime NOT NULL,
+          CONSTRAINT chk_o CHECK(status in ('c', 'p', 'f'))
       );`);
         // role 'c': clerk, 'm': manager
         this.database.query(`CREATE TABLE IF NOT EXISTS role(
           UID INTEGER NOT NULL,
           SID INTEGER NOT NULL,
-          role char(1) NOT NULL check (role in ('c', 'm')),
+          role char(1) NOT NULL,
           PRIMARY KEY(UID, SID, role),
           FOREIGN KEY(UID) REFERENCES user(UID) ON DELETE CASCADE,
-          FOREIGN KEY(SID) REFERENCES shop(SID) ON DELETE CASCADE
+          FOREIGN KEY(SID) REFERENCES shop(SID) ON DELETE CASCADE,
+          CONSTRAINT chk_r CHECK(role in ('c', 'm'))
       );`);
     }
     async registerUser(account, password, phone) {
@@ -208,12 +211,15 @@ class Database {
             return Promise.reject("Something terrible happened");
         }
         const old_price = old[0].mask_price;
+        const price_ = parseFloat(price);
+        if (Number.isNaN(price_) || !Number.isInteger(price_) || price_ < 0) {
+            return { status: false, price: old_price };
+        }
         let [results, _,] = await this.database
             .promise()
             .execute(`UPDATE shop SET mask_price = ? WHERE shop_name = ?;`, [
             price,
             shop_name,
-            account,
         ]);
         results = results;
         return { status: results.affectedRows > 0, price: old_price };
@@ -226,7 +232,11 @@ class Database {
         if (old.length != 1) {
             return Promise.reject("Something terrible happened");
         }
-        const old_amount = old[0].mask_price;
+        const old_amount = old[0].mask_amount;
+        const amount_ = parseFloat(amount);
+        if (Number.isNaN(amount_) || !Number.isInteger(amount_) || amount_ < 0) {
+            return { status: false, amount: old_amount };
+        }
         let [results, _,] = await this.database
             .promise()
             .execute(`UPDATE shop SET mask_amount = ? WHERE shop_name = ?;`, [

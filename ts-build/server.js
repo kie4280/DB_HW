@@ -82,6 +82,7 @@ app.post("/edit-shop", (req, res) => {
     if (req.session.account == undefined || req.session.shop_name == undefined) {
         res.sendStatus(404);
     }
+    console.log(req.body);
     switch (req.body.type) {
         case "add-clerk":
             let qa = db.addClerk(req.body.account, req.session.shop_name);
