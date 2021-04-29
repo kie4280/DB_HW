@@ -301,6 +301,61 @@ export class Database {
     return { status: deleteOP.affectedRows > 0, id: UID };
   }
 
+  public async editPrice(shop_name: string, account: string, price: number) {
+    let [old, _o] = await this.database.promise().execute(
+      `SELECT mask_price FROM shop WHERE shop_name = ? AND EXISTS
+        (SELECT * FROM shop AS S NATURAL JOIN role NATURAL JOIN user
+         WHERE S.SID = shop.SID AND account = ?);`,
+      [shop_name, account]
+    );
+    old = old as mysql.RowDataPacket[];
+    if (old.length != 1) {
+      return Promise.reject("Something terrible happened");
+    }
+    const old_price = old[0].mask_price;
+
+    let [
+      results,
+      _,
+    ] = await this.database
+      .promise()
+      .execute(`UPDATE shop SET mask_price = ? WHERE shop_name = ?;`, [
+        price,
+        shop_name,
+        account,
+      ]);
+
+    results = results as mysql.OkPacket;
+    return { status: results.affectedRows > 0, price: old_price };
+  }
+
+  public async editAmount(shop_name: string, account: string, amount: number) {
+    let [old, _o] = await this.database.promise().execute(
+      `SELECT mask_amount FROM shop WHERE shop_name = ? AND EXISTS
+        (SELECT * FROM shop AS S NATURAL JOIN role NATURAL JOIN user
+         WHERE S.SID = shop.SID AND account = ?);`,
+      [shop_name, account]
+    );
+    old = old as mysql.RowDataPacket[];
+    if (old.length != 1) {
+      return Promise.reject("Something terrible happened");
+    }
+    const old_amount = old[0].mask_price;
+
+    let [
+      results,
+      _,
+    ] = await this.database
+      .promise()
+      .execute(`UPDATE shop SET mask_amount = ? WHERE shop_name = ?;`, [
+        amount,
+        shop_name,
+      ]);
+
+    results = results as mysql.OkPacket;
+    return { status: results.affectedRows > 0, amount: old_amount };
+  }
+
   public async searchShop(
     onlyMyShop: boolean,
     shop_name?: string,

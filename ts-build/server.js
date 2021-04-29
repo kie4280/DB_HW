@@ -78,27 +78,41 @@ app.post("/search-shop", (req, res) => {
         res.sendStatus(404);
     }
 });
-app.post("/add-clerk", (req, res) => {
+app.post("/edit-shop", (req, res) => {
     if (req.session.account == undefined || req.session.shop_name == undefined) {
         res.sendStatus(404);
     }
-    // console.log(req.body);
-    let qa = db.addClerk(req.body.account, req.session.shop_name);
-    qa.then((obj) => {
-        // console.log(obj);
-        res.status(200).send(obj);
-    });
-});
-app.post("/delete-clerk", (req, res) => {
-    if (req.session.account == undefined || req.session.shop_name == undefined) {
-        res.sendStatus(404);
+    switch (req.body.type) {
+        case "add-clerk":
+            let qa = db.addClerk(req.body.account, req.session.shop_name);
+            qa.then((obj) => {
+                // console.log(obj);
+                res.status(200).send(obj);
+            });
+            break;
+        case "delete-clerk":
+            let qd = db.deleteClerk(req.body.account, req.session.shop_name);
+            qd.then((obj) => {
+                // console.log(obj);
+                res.status(200).send(obj);
+            });
+            break;
+        case "edit-amount":
+            let ea = db.editAmount(req.session.shop_name, req.session.account, req.body.amount);
+            ea.then((obj) => {
+                res.status(200).send(obj);
+            });
+            break;
+        case "edit-price":
+            let ep = db.editAmount(req.session.shop_name, req.session.account, req.body.price);
+            ep.then((obj) => {
+                res.status(200).send(obj);
+            });
+            break;
+        default:
+            res.sendStatus(404);
+            break;
     }
-    // console.log(req.body);
-    let qd = db.deleteClerk(req.body.account, req.session.shop_name);
-    qd.then((obj) => {
-        // console.log(obj);
-        res.status(200).send(obj);
-    });
 });
 app.post("/register-shop", (req, res) => {
     console.log("register shop");
