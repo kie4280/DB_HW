@@ -89,6 +89,13 @@
   text-align: right;
 }
 
+#main #shop td button {
+  padding-top: 0.15rem;
+  padding-bottom: 0.15rem;
+  padding-left: 0.3rem;
+  padding-right: 0.3rem;
+}
+
 #main #shop #mys p {
   margin-left: 0;
 }

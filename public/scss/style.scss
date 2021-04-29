@@ -84,6 +84,13 @@
       &:last-child {
         text-align: right;
       }
+
+      button {
+        padding-top: 0.15rem;
+        padding-bottom: 0.15rem;
+        padding-left: 0.3rem;
+        padding-right: 0.3rem;
+      }
     }
     #mys p {
       margin-left: 0;
