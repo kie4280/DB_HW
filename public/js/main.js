@@ -16,37 +16,30 @@ function clearInput(i) {
 }
 
 function sortTable(i) {
-  let switched = false;
-  let asc = true;
+  let asc = $(`#table1 th:nth-child(${i})`).data("asc");
 
-  while (!switched) {
-    for (let j = 1; j <= $("#table1 tbody tr").length; j++) {
-      for (let k = 1; k <= $("#table1 tbody tr").length - j; k++) {
-        let td1 = $(
-          `#table1 
+  for (let j = 1; j <= $("#table1 tbody tr").length; j++) {
+    for (let k = 1; k <= $("#table1 tbody tr").length - j; k++) {
+      let td1 = $(
+        `#table1 
            tbody tr:nth-child(${k}) 
            td:nth-child(${i})`
-        );
-        let td2 = $(
-          `#table1 
+      );
+      let td2 = $(
+        `#table1 
            tbody tr:nth-child(${k + 1}) 
            td:nth-child(${i})`
-        );
-
-        if (asc && td1.html().toLowerCase() > td2.html().toLowerCase()) {
-          td1.parent().insertAfter(td2.parent());
-          switched = true;
-        }
-        if (!asc && td1.html().toLowerCase() < td2.html().toLowerCase()) {
-          td1.parent().insertAfter(td2.parent());
-          switched = true;
-        }
+      );
+      if (asc && td1.html().toLowerCase() > td2.html().toLowerCase()) {
+        td1.parent().insertAfter(td2.parent());
+      }
+      if (!asc && td1.html().toLowerCase() < td2.html().toLowerCase()) {
+        td1.parent().insertAfter(td2.parent());
       }
     }
-    if (switched == false) {
-      asc = !asc;
-    }
   }
+
+  $(`#table1 th:nth-child(${i})`).data("asc", !asc);
 }
 
 function logout() {
@@ -84,9 +77,11 @@ function search(event) {
 
 $(document).ready(function () {
   for (let i = 1; i <= 4; i++) {
-    $(`#table1 th:nth-child(${i})`).click(function () {
-      sortTable(i);
-    });
+    $(`#table1 th:nth-child(${i})`)
+      .data("asc", true)
+      .click(function () {
+        sortTable(i);
+      });
   }
   for (let i = 1; i <= 2; i++) {
     $(`#tab${i}`).click(function () {
