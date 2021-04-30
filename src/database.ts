@@ -429,7 +429,7 @@ export class Database {
         );
         break;
       case "(Adequate) 100+":
-        filterQueries = filterQueries.concat(`mask_amount > 100`);
+        filterQueries = filterQueries.concat(`mask_amount >= 100`);
         break;
       default:
         break;
