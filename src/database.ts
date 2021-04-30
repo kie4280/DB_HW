@@ -122,26 +122,26 @@ export class Database {
     };
     clerks?: Array<{ id: number; account: string; phone: string }>;
   }> {
-    let userInfo = this.database.promise().execute(
+    let Q_userInfo = this.database.promise().execute(
       `SELECT phone FROM user
           WHERE account = ?`,
       [account]
     );
-    let manageShopInfo = this.database.promise().execute(
+    let Q_manageShopInfo = this.database.promise().execute(
       `SELECT shop_name, shop_city, mask_amount, mask_price
        FROM role NATURAL JOIN user NATURAL JOIN shop
        WHERE account = ? AND role = 'm'`,
       [account]
     );
 
-    let cityInfo = this.database
+    let Q_cityInfo = this.database
       .promise()
       .query(`SELECT DISTINCT shop_city FROM shop`);
 
     let [user_i, manage_i, city_i] = await Promise.all([
-      userInfo,
-      manageShopInfo,
-      cityInfo,
+      Q_userInfo,
+      Q_manageShopInfo,
+      Q_cityInfo,
     ]);
     const phone = user_i[0][0].phone;
     let cities: string[] = [];
@@ -256,7 +256,7 @@ export class Database {
     const alreadyWorking = (role_i[0] as mysql.RowDataPacket[]).length > 0;
     const user = user_i[0] as mysql.RowDataPacket[];
     if (alreadyWorking) {
-      return { status: false, err: "*Already a clerk in this shop!" };
+      return { status: false, err: "*Already working in this shop!" };
     } else if (user.length != 1) {
       return { status: false, err: "*No such user!" };
     }
