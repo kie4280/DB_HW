@@ -395,8 +395,11 @@ export class Database {
     }
 
     if (shop_name.length > 0) {
-      filterQueries = filterQueries.concat(`LOWER(shop_name) = ?`);
-      args = args.concat(shop_name.toLowerCase());
+      console.log(mysql.escape(`'%${shop_name.toLowerCase()}%'`));
+      filterQueries = filterQueries.concat(
+        `LOWER(shop_name) LIKE ` +
+          mysql.escape(`%${shop_name.toLowerCase()}%`) // check SQL injection 
+      );
     }
 
     if (shop_city != "All") {

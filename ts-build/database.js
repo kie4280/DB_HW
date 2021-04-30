@@ -76,18 +76,18 @@ class Database {
         return results.length == 1;
     }
     async getInfo(account) {
-        let userInfo = this.database.promise().execute(`SELECT phone FROM user
+        let Q_userInfo = this.database.promise().execute(`SELECT phone FROM user
           WHERE account = ?`, [account]);
-        let manageShopInfo = this.database.promise().execute(`SELECT shop_name, shop_city, mask_amount, mask_price
+        let Q_manageShopInfo = this.database.promise().execute(`SELECT shop_name, shop_city, mask_amount, mask_price
        FROM role NATURAL JOIN user NATURAL JOIN shop
        WHERE account = ? AND role = 'm'`, [account]);
-        let cityInfo = this.database
+        let Q_cityInfo = this.database
             .promise()
             .query(`SELECT DISTINCT shop_city FROM shop`);
         let [user_i, manage_i, city_i] = await Promise.all([
-            userInfo,
-            manageShopInfo,
-            cityInfo,
+            Q_userInfo,
+            Q_manageShopInfo,
+            Q_cityInfo,
         ]);
         const phone = user_i[0][0].phone;
         let cities = [];
@@ -162,7 +162,7 @@ class Database {
         const alreadyWorking = role_i[0].length > 0;
         const user = user_i[0];
         if (alreadyWorking) {
-            return { status: false, err: "*Already a clerk in this shop!" };
+            return { status: false, err: "*Already working in this shop!" };
         }
         else if (user.length != 1) {
             return { status: false, err: "*No such user!" };
@@ -257,8 +257,10 @@ class Database {
             args = args.concat(account);
         }
         if (shop_name.length > 0) {
-            filterQueries = filterQueries.concat(`LOWER(shop_name) = ?`);
-            args = args.concat(shop_name.toLowerCase());
+            console.log(mysql.escape(`'%${shop_name.toLowerCase()}%'`));
+            filterQueries = filterQueries.concat(`LOWER(shop_name) LIKE ` +
+                mysql.escape(`%${shop_name.toLowerCase()}%`) // check SQL injection 
+            );
         }
         if (shop_city != "All") {
             filterQueries = filterQueries.concat(`shop_city = ?`);
@@ -284,7 +286,7 @@ class Database {
                 filterQueries = filterQueries.concat(`mask_amount > 0 AND mask_amount < 100`);
                 break;
             case "(Adequate) 100+":
-                filterQueries = filterQueries.concat(`mask_amount > 100`);
+                filterQueries = filterQueries.concat(`mask_amount >= 100`);
                 break;
             default:
                 break;
