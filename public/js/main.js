@@ -54,10 +54,8 @@ $(document).ready(function () {
     $(`#tab${i}`).click(function () {
       clearInput(i);
     });
-  
-  $("#sho1").val(function (index, value) {
-    return value.toLowerCase();
-  });
+  }
+
   $("option").val(function (index, value) {
     return $(this).text();
   });

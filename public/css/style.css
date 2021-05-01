@@ -26,6 +26,7 @@
 #main label span,
 #index label span {
   font-weight: bold;
+  display: none;
 }
 
 #main button span,
@@ -36,6 +37,13 @@
 #main table,
 #index table {
   border: 1px solid black;
+}
+
+@media screen and (max-width: 576px) {
+  #main form,
+  #index form {
+    margin-left: 0;
+  }
 }
 
 @media screen and (max-width: 576px) {
@@ -98,5 +106,17 @@
 
 #main #shop #mys p {
   margin-left: 0;
+}
+
+@media screen and (max-width: 576px) {
+  #main h4 {
+    margin-left: 0;
+  }
+  #main p {
+    margin-left: 0;
+  }
+  #main .info {
+    width: 30%;
+  }
 }
 /*# sourceMappingURL=style.css.map */

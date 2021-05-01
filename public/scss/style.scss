@@ -21,6 +21,7 @@
 
     span {
       font-weight: bold;
+      display: none;
     }
   }
   button {
@@ -30,6 +31,12 @@
   }
   table {
     border: 1px solid black;
+  }
+
+  @media screen and (max-width: 576px) {
+    form {
+      margin-left: 0;
+    }
   }
 }
 
@@ -94,6 +101,18 @@
     }
     #mys p {
       margin-left: 0;
+    }
+  }
+
+  @media screen and (max-width: 576px) {
+    h4 {
+      margin-left: 0;
+    }
+    p {
+      margin-left: 0;
+    }
+    .info {
+      width: 30%;
     }
   }
 }
