@@ -14,6 +14,7 @@ class Database {
             user: "mask",
             password: "mask",
             database: "maskDB",
+            connectionLimit: 10
         });
         this.createTables();
     }
@@ -138,7 +139,7 @@ class Database {
                 price,
                 amount,
             ]);
-            [results, _] = await conn.execute(`INSERT INTO role VALUES (
+            await conn.execute(`INSERT INTO role VALUES (
           (SELECT UID FROM user WHERE account = ?), 
           (SELECT SID FROM shop WHERE shop_name = ?), 'm');`, [account, shop]);
             await conn.commit();
@@ -257,9 +258,8 @@ class Database {
             args = args.concat(account);
         }
         if (shop_name.length > 0) {
-            console.log(mysql.escape(`'%${shop_name.toLowerCase()}%'`));
-            filterQueries = filterQueries.concat(`LOWER(shop_name) LIKE ` +
-                mysql.escape(`%${shop_name.toLowerCase()}%`) // check SQL injection 
+            // console.log(mysql.escape(`'%${shop_name.toLowerCase()}%'`));
+            filterQueries = filterQueries.concat(`LOWER(shop_name) LIKE ` + mysql.escape(`%${shop_name.toLowerCase()}%`) // check SQL injection
             );
         }
         if (shop_city != "All") {

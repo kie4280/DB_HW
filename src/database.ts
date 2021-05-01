@@ -21,8 +21,8 @@ export class Database {
       user: "mask",
       password: "mask",
       database: "maskDB",
+      connectionLimit: 10
     });
-
     this.createTables();
   }
 
@@ -213,7 +213,7 @@ export class Database {
         amount,
       ]);
 
-      [results, _] = await conn.execute(
+      await conn.execute(
         `INSERT INTO role VALUES (
           (SELECT UID FROM user WHERE account = ?), 
           (SELECT SID FROM shop WHERE shop_name = ?), 'm');`,
@@ -395,10 +395,9 @@ export class Database {
     }
 
     if (shop_name.length > 0) {
-      console.log(mysql.escape(`'%${shop_name.toLowerCase()}%'`));
+      // console.log(mysql.escape(`'%${shop_name.toLowerCase()}%'`));
       filterQueries = filterQueries.concat(
-        `LOWER(shop_name) LIKE ` +
-          mysql.escape(`%${shop_name.toLowerCase()}%`) // check SQL injection 
+        `LOWER(shop_name) LIKE ` + mysql.escape(`%${shop_name.toLowerCase()}%`) // check SQL injection
       );
     }
 

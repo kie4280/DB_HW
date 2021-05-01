@@ -95,7 +95,7 @@ app.post("/search-shop", (req, res) => {
     req.body.amount
   );
   sp.then((obj) => {
-    console.log("search results:", obj);
+    // console.log("search results:", obj);
     res.status(200).send(obj);
   });
   // console.log(req.body);

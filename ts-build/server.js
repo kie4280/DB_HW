@@ -79,7 +79,7 @@ app.post("/search-shop", (req, res) => {
     }
     let sp = db.searchShop(ac, req.body.checked, req.body.shop, req.body.city, req.body.min_price, req.body.max_price, req.body.amount);
     sp.then((obj) => {
-        console.log("search results:", obj);
+        // console.log("search results:", obj);
         res.status(200).send(obj);
     });
     // console.log(req.body);
