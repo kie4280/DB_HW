@@ -114,8 +114,11 @@
   #main p {
     margin-left: 0;
   }
-  #main .info {
+  #main .info-title {
     width: 30%;
+  }
+  #main .info-data {
+    width: 70%;
   }
 }
 /*# sourceMappingURL=style.css.map */
