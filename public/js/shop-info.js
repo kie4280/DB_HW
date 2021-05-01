@@ -94,9 +94,6 @@ $(document).ready(function () {
     });
   }
 
-  $("#sho1").val(function (index, value) {
-    return value.toLowerCase();
-  });
   $("#mys5").focus(function () {
     $("#mys-err5").html("");
   });
