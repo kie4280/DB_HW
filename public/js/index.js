@@ -8,24 +8,30 @@ function checkInput(i) {
   let value = $(`#reg${i}`).val();
 
   if (value.length == 0) {
-    $(`#reg-err${i}`).html("*Required!");
+    $(`#reg-err${i}`).html("*Required!").parent().show();
     return false;
   }
   if (i == 1 || i == 2) {
     if (!patt1.test(value)) {
-      $(`#reg-err${i}`).html(
-        "*Invalid format (only upper/lower-case character and number are allowed)"
-      );
+      $(`#reg-err${i}`)
+        .html(
+          "*Invalid format (only upper/lower-case character and number are allowed)"
+        )
+        .parent()
+        .show();
       return false;
     }
   } else if (i == 3) {
     if (value != $("#reg2").val()) {
-      $("#reg-err3").html("*Password mismatch");
+      $("#reg-err3").html("*Password mismatch").parent().show();
       return false;
     }
   } else if (i == 4) {
     if (!patt2.test(value)) {
-      $("#reg-err4").html("*Invalid format (only number are allowed)");
+      $("#reg-err4")
+        .html("*Invalid format (only number are allowed)")
+        .parent()
+        .show();
       return false;
     }
   }
@@ -36,7 +42,7 @@ function clearInput(i) {
   // 1: register, 2: login
   if (i == 1) {
     $("#reg input").val("");
-    $("#reg label span").html("");
+    $("#reg label span").html("").parent().hide();
   } else {
     $("#log input").val("");
   }
@@ -44,6 +50,7 @@ function clearInput(i) {
 
 function register(event) {
   event.preventDefault();
+  console.log("register");
 
   let success = true;
   for (let i = 1; i <= 4; i++) {
@@ -63,7 +70,7 @@ function register(event) {
       $(".nav-tabs a[href='#login']").tab("show");
       clearInput(1);
     } else {
-      $("#reg-err1").html("*Account has been registered! QAQ");
+      $("#reg-err1").html("*Account has been registered! QAQ").parent().show();
     }
   });
 }
@@ -87,8 +94,9 @@ function login(event) {
 
 $(document).ready(function () {
   for (let i = 1; i <= 4; i++) {
+    $(`#reg-err${i}`).parent().hide();
     $(`#reg${i}`).focus(function () {
-      $(`#reg-err${i}`).html("");
+      $(`#reg-err${i}`).html("").parent().hide();
     });
   }
   for (let i = 1; i <= 2; i++) {

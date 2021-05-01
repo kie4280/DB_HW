@@ -5,12 +5,12 @@ function checkInput(i) {
   let value = $(`#regs${i}`).val();
 
   if (value.length == 0) {
-    $(`#regs-err${i}`).html("*Required!");
+    $(`#regs-err${i}`).html("*Required!").parent().show();
     return false;
   }
   if (i == 3 || i == 4) {
     if (value < 0) {
-      $(`#regs-err${i}`).html("*Input a non-negative number");
+      $(`#regs-err${i}`).html("*Input a non-negative number").parent().show();
       return false;
     }
   }
@@ -37,15 +37,16 @@ function register(event) {
       window.location.replace("/main");
     } else {
       $("#regs5 span").css("display", "none");
-      $("#regs-err1").html("*Shop name has been used! QAQ");
+      $("#regs-err1").html("*Shop name has been used! QAQ").parent().show();
     }
   });
 }
 
 $(document).ready(function () {
   for (let i = 1; i <= 4; i++) {
+    $(`#regs-err${i}`).parent().hide();
     $(`#regs${i}`).focus(function () {
-      $(`#regs-err${i}`).html("");
+      $(`#regs-err${i}`).html("").parent().hide();
     });
   }
 
