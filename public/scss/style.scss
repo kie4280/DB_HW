@@ -31,20 +31,6 @@
   table {
     border: 1px solid black;
   }
-
-  @media screen and (max-width: 576px) {
-    form {
-      margin-left: 0;
-    }
-  }
-}
-
-#index {
-  @media screen and (max-width: 576px) {
-    .text-right {
-      text-align: left !important;
-    }
-  }
 }
 
 #main {
@@ -102,8 +88,23 @@
       margin-left: 0;
     }
   }
+}
 
-  @media screen and (max-width: 576px) {
+@media screen and (max-width: 576px) {
+  #index,
+  #main {
+    form {
+      margin-left: 0;
+    }
+  }
+
+  #index {
+    .text-right {
+      text-align: left !important;
+    }
+  }
+
+  #main {
     h4 {
       margin-left: 0;
     }
