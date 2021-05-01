@@ -4,10 +4,10 @@ function clearInput(i) {
   // 1: my shop / register shop, 2: shop list
   if (i == 1) {
     $("#mys input:not([disabled])").val("");
-    $("#mys label span").html("");
+    $("#mys label span").html("").parent().hide();
     $("#regs input").val("");
     $("#regs select").val("Taipei");
-    $("#regs label span").html("");
+    $("#regs label span").html("").parent().hide();
   } else {
     $("#sho input:not([type=checkbox])").val("");
     $("#sho input[type=checkbox]").prop("checked", false);
