@@ -50,7 +50,6 @@ function clearInput(i) {
 
 function register(event) {
   event.preventDefault();
-  console.log("register");
 
   let success = true;
   for (let i = 1; i <= 4; i++) {
