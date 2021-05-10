@@ -45,7 +45,7 @@ function addClerk() {
       clearInput(1);
       $("#table2").DataTable().row.add(data).draw();
     } else {
-      $("#mys-err5").html(data.err);
+      $("#mys-err5").html(data.err).parent().show();
     }
   });
 }
@@ -95,7 +95,7 @@ $(document).ready(function () {
   }
 
   $("#mys5").focus(function () {
-    $("#mys-err5").html("");
+    $("#mys-err5").html("").parent().hide();
   });
 
   $("#mys1").blur(editPrice);
