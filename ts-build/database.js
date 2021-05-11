@@ -136,8 +136,8 @@ class Database {
             await conn.execute(`INSERT INTO shop VALUES (0, ?, ?, ?, ?);`, [
                 shop,
                 city,
-                price,
                 amount,
+                price,
             ]);
             await conn.execute(`INSERT INTO role VALUES (
           (SELECT UID FROM user WHERE account = ?), 

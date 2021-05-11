@@ -209,8 +209,8 @@ export class Database {
       await conn.execute(`INSERT INTO shop VALUES (0, ?, ?, ?, ?);`, [
         shop,
         city,
-        price,
         amount,
+        price,
       ]);
 
       await conn.execute(
