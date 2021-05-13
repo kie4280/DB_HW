@@ -53,21 +53,30 @@
         <div class="row">
           <div class="col-sm-5">
             <div class="row">
-              <div class="col-sm-12"><h4>Profile</h4></div>
-
-              <div class="info-title col-sm-4 col-lg-2"><p>Account</p></div>
+              <div class="col-sm-12">
+                <h4>Profile</h4>
+              </div>
+              <div class="info-title col-sm-4 col-lg-2">
+                <p>Account</p>
+              </div>
               <div class="info-data col-sm-8 col-lg-10">
-                <p><span><%= account %></span></p>
+                <p>
+                  <span><%= account %></span>
+                </p>
               </div>
               <div class="w-100"></div>
-
-              <div class="info-title col-sm-4 col-lg-2"><p>Phone</p></div>
+              <div class="info-title col-sm-4 col-lg-2">
+                <p>Phone</p>
+              </div>
               <div class="info-data col-sm-8 col-lg-10">
-                <p><span><%= phone %></span></p>
+                <p>
+                  <span><%= phone %></span>
+                </p>
               </div>
               <div class="w-100"></div>
-
-              <div class="col-sm-12"><h4>Shop List</h4></div>
+              <div class="col-sm-12">
+                <h4>Shop List</h4>
+              </div>
             </div>
 
             <form action="/search-shop" method="POST" id="sho">
@@ -181,7 +190,9 @@
 
       <div class="tab-pane container-fluid fade" id="my-order">
         <div class="row">
-          <div class="col-sm-12"><h4>My Order</h4></div>
+          <div class="col-sm-12">
+            <h4>My Order</h4>
+          </div>
         </div>
 
         <form action="/search-my-order" method="POST" id="mor">
