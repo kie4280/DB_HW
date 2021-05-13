@@ -58,6 +58,58 @@ app.get("/main", (req, res) => {
   }
 });
 
+// --------------- start test ---------------
+
+app.post("/place-order", (req, res) => {
+  setTimeout(function() {
+    res.status(200).send({status: true});
+  }, 1000);
+});
+
+app.post("/search-my-order", (req, res) => {
+  setTimeout(function() {
+    res.status(200).send([
+      {
+        "oid": 1,
+        "status": "Not finished",
+        "start": 0,
+        "end": 0,
+        "shop": "shop",
+        "total_price": 0,
+      }
+    ]);
+  }, 1000);
+});
+
+app.post("/search-shop-order", (req, res) => {
+  setTimeout(function() {
+    res.status(200).send([
+      {
+        "oid": 1,
+        "status": "Not finished",
+        "start": 0,
+        "end": 0,
+        "shop": "shop",
+        "total_price": 0,
+      }
+    ]);
+  }, 1000);
+});
+
+app.post("/finish-order", (req, res) => {
+  setTimeout(function() {
+    res.status(200).send({status: true});
+  }, 1000);
+});
+
+app.post("/cancel-order", (req, res) => {
+  setTimeout(function() {
+    res.status(200).send({status: true});
+  }, 1000);
+});
+
+// --------------- end test ---------------
+
 app.post("/login-user", (req, res) => {
   console.log("login");
   console.log(req.body);

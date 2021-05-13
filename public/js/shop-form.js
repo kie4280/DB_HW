@@ -32,11 +32,11 @@ function register(event) {
   let posting = $.post("/register-shop", $("#regs").serialize());
 
   posting.done(function (data) {
+    $("#regs5 span").css("display", "none");
     if (data.status) {
       window.alert("Register Success!");
       window.location.replace("/main");
     } else {
-      $("#regs5 span").css("display", "none");
       $("#regs-err1").html("*Shop name has been used! QAQ").parent().show();
     }
   });

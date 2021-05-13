@@ -87,8 +87,8 @@ function login(event) {
     if (data.status) {
       window.location.replace("/main");
     } else {
-      $("#log3 span").css("display", "none");
       window.alert("Login Failed! QAQ");
+      $("#log3 span").css("display", "none");
       clearInput(1);
     }
   });

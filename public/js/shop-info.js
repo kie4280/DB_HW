@@ -60,6 +60,7 @@ function deleteClerk() {
   });
 
   posting.done(function (data) {
+    tr.find("span").css("display", "none");
     if (data.status) {
       $("#table2").DataTable().row(tr).remove().draw();
     }
@@ -71,18 +72,18 @@ $(document).ready(function () {
     lengthChange: false,
     searching: false,
     autoWidth: false,
-    pageLength: 5,
+    pageLength: 8,
     columnDefs: [{ orderable: false, targets: 2 }],
     columns: [
       { data: "account" },
       { data: "phone" },
       {
         data: "button",
-        defaultContent: [
-          `<button type="button" class="btn btn-danger">
-           <span class="spinner-border spinner-border-sm"></span>
-           Delete</button>`,
-        ],
+        render: function (data, type, row, meta) {
+          return `<button type="button" class="btn btn-danger">
+          <span class="spinner-border spinner-border-sm"></span>
+          Delete</button>`;
+        },
       },
     ],
   });

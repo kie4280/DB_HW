@@ -1,7 +1,7 @@
 "use strict";
 
 function clearInput(i) {
-  // 1: my shop / register shop, 2: shop list
+  // 1: my shop / register shop, 2: shop list, 3: my order, 4: shop order
   if (i == 1) {
     $("#sho input:not([type=checkbox])").val("");
     $("#sho input[type=checkbox]").prop("checked", false);
@@ -45,6 +45,7 @@ function searchShop(event) {
 function placeOrder() {
   let tr = $(this).parents("tr");
   let value = parseFloat(tr.find("input").val());
+  let amount = parseInt(tr.children("td:nth-last-child(2)").html());
 
   if (!Number.isInteger(value) || value <= 0) {
     window.alert("Place an order failed!\nInput should be positive integer.");
@@ -62,6 +63,7 @@ function placeOrder() {
     tr.find("span").css("display", "none");
     if (data.status) {
       window.alert("Place an order success!");
+      tr.children("td:nth-last-child(2)").html(amount - value);
     } else {
       window.alert("Place an order failed!\nInsufficient masks!");
     }
@@ -95,15 +97,15 @@ $(document).ready(function () {
       { data: "amount" },
       {
         data: "form",
-        defaultContent: [
-          `<div class="form-group">
-           <div class="input-group">
-           <input type="number" class="form-control" value=0 />
-           <div class="input-group-append">
-           <button type="button" class="btn btn-primary">
-           <span class="spinner-border spinner-border-sm"></span>
-           Buy!</button></div></div></div>`,
-        ],
+        render: function (data, type, row, meta) {
+          return `<div class="form-group">
+          <div class="input-group">
+          <input type="number" class="form-control" value=0 />
+          <div class="input-group-append">
+          <button type="button" class="btn btn-primary">
+          <span class="spinner-border spinner-border-sm"></span>
+          Buy</button></div></div></div>`;
+        },
       },
     ],
   });
@@ -120,7 +122,9 @@ $(document).ready(function () {
     columns: [
       {
         data: "checkbox",
-        defaultContent: [`<input type="checkbox">`],
+        render: function (data, type, row, meta) {
+          return `<input type="checkbox">`;
+        },
       },
       { data: "oid" },
       { data: "status" },
@@ -129,10 +133,15 @@ $(document).ready(function () {
       { data: "shop" },
       { data: "total_price" },
       {
-        data: "action",
-        defaultContent: [
-          `<button type="button" class="btn btn-danger">x</button>`,
-        ],
+        data: "button",
+        render: function (data, type, row, meta) {
+          if (row.status == "Not finished") {
+            return `<button type="button" class="btn btn-danger">
+            <span class="spinner-border spinner-border-sm"></span>
+            Cancel</button>`;
+          }
+          return "";
+        },
       },
     ],
   });
@@ -149,7 +158,9 @@ $(document).ready(function () {
 
   $("#tab5").click(logout);
   $("#sho").submit(searchShop);
-  $("#mor").submit(searchMyOrder);
   $("#sho").trigger("submit");
+  $("#mor").submit(searchMyOrder);
+  $("#mor").trigger("submit");
   $("#table1").on("click", "button", placeOrder);
+  $("#table3").on("click", "button", cancelOrder);
 });

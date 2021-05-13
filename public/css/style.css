@@ -120,32 +120,32 @@
   margin: 0 auto;
 }
 
+#main #my-order th:nth-child(1),
+#main #shop-order th:nth-child(1) {
+  width: 3%;
+}
+
+#main #my-order th:nth-child(2),
+#main #shop-order th:nth-child(2) {
+  width: 6%;
+}
+
 #main #my-order th:nth-child(4), #main #my-order th:nth-child(5),
 #main #shop-order th:nth-child(4),
 #main #shop-order th:nth-child(5) {
   width: 20%;
 }
 
-#main #my-order th:nth-child(3), #main #my-order th:nth-child(6),
-#main #shop-order th:nth-child(3),
+#main #my-order th:nth-child(6),
 #main #shop-order th:nth-child(6) {
   width: 15%;
 }
 
-#main #my-order th:nth-child(1),
-#main #shop-order th:nth-child(1) {
-  width: 4%;
-}
-
-#main #my-order th:nth-child(7),
-#main #shop-order th:nth-child(7) {
-  width: 10%;
-}
-
-#main #my-order th:nth-child(2), #main #my-order th:nth-child(8),
-#main #shop-order th:nth-child(2),
+#main #my-order th:nth-child(3), #main #my-order th:nth-child(7), #main #my-order th:nth-child(8),
+#main #shop-order th:nth-child(3),
+#main #shop-order th:nth-child(7),
 #main #shop-order th:nth-child(8) {
-  width: 8%;
+  width: 12%;
 }
 
 #main #my-order td,
