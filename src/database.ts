@@ -40,7 +40,7 @@ export class Database {
       `CREATE TABLE IF NOT EXISTS shop(
           SID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
           shop_name varchar(30) BINARY NOT NULL UNIQUE,
-          shop_city varchar(30) BINARY NOT NULL,
+          shop_city varchar(30) NOT NULL,
           mask_amount int NOT NULL,
           mask_price int NOT NULL,
           CONSTRAINT chk_s CHECK(mask_amount >= 0 AND mask_price >= 0)
