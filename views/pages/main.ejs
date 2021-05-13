@@ -30,7 +30,19 @@
         <a class="nav-link" data-toggle="tab" href="#shop" id="tab2">Shop</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#logout" id="tab3"
+        <a class="nav-link" data-toggle="tab" href="#my-order" id="tab3"
+          >My Order</a
+        >
+      </li>
+      <% if (isManager) { %>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#shop-order" id="tab4"
+          >Shop Order</a
+        >
+      </li>
+      <% } %>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#logout" id="tab5"
           >Logout</a
         >
       </li>
@@ -39,18 +51,18 @@
     <div class="tab-content" id="main">
       <div class="tab-pane container-fluid active" id="home">
         <div class="row">
-          <div class="col-sm-6">
+          <div class="col-sm-5">
             <div class="row">
               <div class="col-sm-12"><h4>Profile</h4></div>
 
-              <div class="col-sm-3 col-lg-2 info-title"><p>Account</p></div>
-              <div class="col-sm-3 col-lg-2 info-data">
+              <div class="col-sm-4 col-lg-2 info-title"><p>Account</p></div>
+              <div class="col-sm-8 col-lg-10 info-data">
                 <p><span><%= account %></span></p>
               </div>
               <div class="w-100"></div>
 
-              <div class="col-sm-3 col-lg-2 info-title"><p>Phone</p></div>
-              <div class="col-sm-3 col-lg-2 info-data">
+              <div class="col-sm-4 col-lg-2 info-title"><p>Phone</p></div>
+              <div class="col-sm-8 col-lg-10 info-data">
                 <p><span><%= phone %></span></p>
               </div>
               <div class="w-100"></div>
@@ -60,10 +72,10 @@
 
             <form action="/get-info" method="POST" id="sho">
               <div class="form-group row">
-                <div class="col-sm-3 col-lg-2">
+                <div class="col-sm-4 col-lg-2">
                   <label for="sho1">Shop</label>
                 </div>
-                <div class="col-sm-9 col-lg-6">
+                <div class="col-sm-8 col-lg-7">
                   <input
                     type="text"
                     class="form-control"
@@ -73,10 +85,10 @@
                 </div>
               </div>
               <div class="form-group row">
-                <div class="col-sm-3 col-lg-2">
+                <div class="col-sm-4 col-lg-2">
                   <label for="sho2">City</label>
                 </div>
-                <div class="col-sm-9 col-lg-6">
+                <div class="col-sm-8 col-lg-7">
                   <select class="form-control" name="city" id="sho2">
                     <option selected>All</option>
                     <% cities.forEach(function (c) { %>
@@ -86,10 +98,10 @@
                 </div>
               </div>
               <div class="form-group row">
-                <div class="col-sm-3 col-lg-2">
+                <div class="col-sm-4 col-lg-2">
                   <label for="sho3">Price</label>
                 </div>
-                <div class="col-sm-9 col-lg-6">
+                <div class="col-sm-8 col-lg-7">
                   <div class="input-group">
                     <input
                       type="number"
@@ -110,10 +122,10 @@
                 </div>
               </div>
               <div class="form-group row">
-                <div class="col-sm-3 col-lg-2">
+                <div class="col-sm-4 col-lg-2">
                   <label for="sho5">Amount</label>
                 </div>
-                <div class="col-sm-9 col-lg-6">
+                <div class="col-sm-8 col-lg-7">
                   <select class="form-control" name="amount" id="sho5">
                     <option selected>All</option>
                     <option>(Sold out) 0</option>
@@ -146,7 +158,7 @@
             </form>
           </div>
 
-          <div class="col-sm-6">
+          <div class="col-sm-7">
             <table class="table table-striped" id="table1">
               <thead class="thead-dark">
                 <tr>
@@ -154,6 +166,7 @@
                   <th>City</th>
                   <th>Mask Price</th>
                   <th>Mask Amount</th>
+                  <th></th>
                 </tr>
               </thead>
             </table>
@@ -162,7 +175,23 @@
       </div>
 
       <div class="tab-pane container-fluid fade" id="shop">
-        <%- include(template) %>
+        <% if (isManager) { %> <%- include("../partials/shop-info.ejs")%> <% }
+        else { %> <%- include("../partials/shop-form.ejs")%> <% } %>
+      </div>
+
+      <div class="tab-pane container-fluid fade" id="my-order">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="row">
+              <div class="col-sm-12"><h4>My Order</h4></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-pane container-fluid fade" id="shop-order">
+        <% if (isManager) { %> <%- include("../partials/shop-order.ejs") %> <% }
+        %>
       </div>
 
       <div class="tab-pane container-fluid fade" id="logout"></div>

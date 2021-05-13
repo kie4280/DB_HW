@@ -30,7 +30,7 @@ export class Database {
     this.database.query(
       `CREATE TABLE IF NOT EXISTS user(
           UID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
-          account varchar(20) NOT NULL UNIQUE,
+          account varchar(20) BINARY NOT NULL UNIQUE,
           password char(64) NOT NULL,
           phone varchar(10)
        );`
@@ -39,7 +39,7 @@ export class Database {
     this.database.query(
       `CREATE TABLE IF NOT EXISTS shop(
           SID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
-          shop_name varchar(30) NOT NULL UNIQUE,
+          shop_name varchar(30) BINARY NOT NULL UNIQUE,
           shop_city varchar(30) NOT NULL,
           mask_amount int NOT NULL,
           mask_price int NOT NULL,
@@ -209,8 +209,8 @@ export class Database {
       await conn.execute(`INSERT INTO shop VALUES (0, ?, ?, ?, ?);`, [
         shop,
         city,
-        price,
         amount,
+        price,
       ]);
 
       await conn.execute(

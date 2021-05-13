@@ -42,11 +42,24 @@ $(document).ready(function () {
     lengthChange: false,
     searching: false,
     pageLength: 8,
+    columnDefs: [{ orderable: false, targets: 4 }],
     columns: [
       { data: "shop" },
       { data: "city" },
       { data: "price" },
       { data: "amount" },
+      {
+        data: "form",
+        defaultContent: [
+          `<div class="form-group">
+           <div class="input-group">
+           <input type="number" class="form-control" value=0 />
+           <div class="input-group-append">
+           <button type="button" class="btn btn-primary">
+           <span class="spinner-border spinner-border-sm"></span>
+           Buy!</button></div></div></div>`,
+        ],
+      },
     ],
   });
 
@@ -60,7 +73,7 @@ $(document).ready(function () {
     return $(this).text();
   });
 
-  $("#tab3").click(logout);
+  $("#tab5").click(logout);
   $("#sho").submit(search);
   $("#sho").trigger("submit");
 });

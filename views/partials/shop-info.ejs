@@ -1,28 +1,28 @@
 <!-- content for shop manager -->
 
 <div class="row" id="shop-info">
-  <div class="col-sm-6">
+  <div class="col-sm-5">
     <div class="row">
       <div class="col-sm-12"><h4>My Shop</h4></div>
     </div>
 
     <form action="" method="POST" id="mys">
       <div class="form-group row">
-        <div class="col-sm-3 col-lg-2 info-title"><p>Shop</p></div>
-        <div class="col-sm-3 col-lg-2 info-data">
+        <div class="col-sm-4 col-lg-2 info-title"><p>Shop</p></div>
+        <div class="col-sm-8 col-lg-10 info-data">
           <p><span><%= shop.shop_name %></span></p>
         </div>
         <div class="w-100"></div>
-        <div class="col-sm-3 col-lg-2 info-title"><p>City</p></div>
-        <div class="col-sm-3 col-lg-2 info-data">
+        <div class="col-sm-4 col-lg-2 info-title"><p>City</p></div>
+        <div class="col-sm-8 col-lg-10 info-data">
           <p><span><%= shop.shop_city %></span></p>
         </div>
       </div>
       <div class="form-group row">
-        <div class="col-sm-3 col-lg-2">
+        <div class="col-sm-4 col-lg-2">
           <label for="mys1">Price</label>
         </div>
-        <div class="col-sm-9 col-lg-6">
+        <div class="col-sm-8 col-lg-7">
           <div class="input-group">
             <input
               type="number"
@@ -41,10 +41,10 @@
         </div>
       </div>
       <div class="form-group row">
-        <div class="col-sm-3 col-lg-2">
+        <div class="col-sm-4 col-lg-2">
           <label for="mys3">Amount</label>
         </div>
-        <div class="col-sm-9 col-lg-6">
+        <div class="col-sm-8 col-lg-7">
           <div class="input-group">
             <input
               type="number"
@@ -63,10 +63,10 @@
         </div>
       </div>
       <div class="form-group row">
-        <div class="col-sm-3 col-lg-2">
+        <div class="col-sm-4 col-lg-2">
           <label for="mys5">Employee</label>
         </div>
-        <div class="col-sm-9 col-lg-6">
+        <div class="col-sm-8 col-lg-7">
           <div class="input-group">
             <input
               type="text"
@@ -82,7 +82,7 @@
             </div>
           </div>
         </div>
-        <div class="col">
+        <div class="col-sm-12">
           <label for="mys5"
             ><span class="text-danger" id="mys-err5"></span
           ></label>
@@ -91,7 +91,7 @@
     </form>
   </div>
 
-  <div class="col-sm-6">
+  <div class="col-sm-7">
     <table class="table table-striped" id="table2">
       <thead class="thead-dark">
         <tr>

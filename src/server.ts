@@ -39,7 +39,7 @@ app.get("/main", (req, res) => {
         res.render("pages/main", {
           account: obj.account,
           phone: obj.phone,
-          template: "../partials/shop-info.ejs",
+          isManager: obj.isManager,
           shop: obj.manages,
           clerks: obj.clerks,
           cities: obj.cities,
@@ -48,7 +48,7 @@ app.get("/main", (req, res) => {
         res.render("pages/main", {
           account: obj.account,
           phone: obj.phone,
-          template: "../partials/shop-form.ejs",
+          isManager: obj.isManager,
           cities: obj.cities,
         });
       }

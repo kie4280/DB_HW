@@ -7,13 +7,13 @@ function sortTable(i) {
     for (let k = 1; k <= $("#table1 tbody tr").length - j; k++) {
       let td1 = $(
         `#table1 
-             tbody tr:nth-child(${k}) 
-             td:nth-child(${i})`
+         tbody tr:nth-child(${k}) 
+         td:nth-child(${i})`
       );
       let td2 = $(
         `#table1 
-             tbody tr:nth-child(${k + 1}) 
-             td:nth-child(${i})`
+         tbody tr:nth-child(${k + 1}) 
+         td:nth-child(${i})`
       );
       if (asc && td1.html().toLowerCase() > td2.html().toLowerCase()) {
         td1.parent().insertAfter(td2.parent());
