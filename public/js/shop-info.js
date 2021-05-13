@@ -42,7 +42,7 @@ function addClerk() {
   posting.done(function (data) {
     $("#mys6 span").css("display", "none");
     if (data.status) {
-      clearInput(1);
+      clearInput(2);
       $("#table2").DataTable().row.add(data).draw();
     } else {
       $("#mys-err5").html(data.err).parent().show();

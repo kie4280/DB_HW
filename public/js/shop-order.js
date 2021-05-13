@@ -1,3 +1,17 @@
+"use strict";
+
+function searchShopOrder(event) {
+  event.preventDefault();
+
+  $("#sor3 span").css("display", "inline-block");
+  let posting = $.post("/search-shop-order", $("#sor").serialize());
+
+  posting.done(function (data) {
+    $("#sor3 span").css("display", "none");
+    $("#table4").DataTable().clear().rows.add(data).draw();
+  });
+}
+
 $(document).ready(function () {
   $("#table4").DataTable({
     lengthChange: false,
@@ -20,7 +34,7 @@ $(document).ready(function () {
       { data: "shop" },
       { data: "total_price" },
       {
-        data: "action",
+        data: "button",
         defaultContent: [
           `<button type="button" class="btn btn-success">Done</button>
            <button type="button" class="btn btn-danger">x</button>`,
@@ -28,4 +42,6 @@ $(document).ready(function () {
       },
     ],
   });
+
+  $("#sor").submit(searchShopOrder);
 });

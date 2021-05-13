@@ -44,10 +44,10 @@ function checkInput(i) {
 function clearInput(i) {
   // 1: register, 2: login
   if (i == 1) {
+    $("#log input").val("");
+  } else {
     $("#reg input").val("");
     $("#reg label span").html("").parent().hide();
-  } else {
-    $("#log input").val("");
   }
 }
 
@@ -70,7 +70,7 @@ function register(event) {
     if (data.status) {
       window.alert("Register Success!");
       $(".nav-tabs a[href='#login']").tab("show");
-      clearInput(1);
+      clearInput(2);
     } else {
       $("#reg-err1").html("*Account has been registered! QAQ").parent().show();
     }
@@ -89,7 +89,7 @@ function login(event) {
     } else {
       $("#log3 span").css("display", "none");
       window.alert("Login Failed! QAQ");
-      clearInput(2);
+      clearInput(1);
     }
   });
 }

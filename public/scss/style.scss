@@ -59,14 +59,12 @@
       &:last-child:not(:first-child) {
         text-align: right;
       }
-
       .form-group {
         margin-bottom: 0;
       }
       .form-control {
         height: auto;
       }
-
       input,
       button {
         padding-top: 0.15rem;
@@ -95,7 +93,6 @@
       &:last-child:not(:first-child) {
         text-align: right;
       }
-
       button {
         padding-top: 0.15rem;
         padding-bottom: 0.15rem;
@@ -140,7 +137,6 @@
       &:last-child:not(:first-child) {
         text-align: right;
       }
-
       button {
         padding-top: 0.15rem;
         padding-bottom: 0.15rem;
@@ -158,13 +154,11 @@
       margin-left: 0;
     }
   }
-
   #index {
     .text-right {
       text-align: left !important;
     }
   }
-
   #main {
     h4 {
       margin-left: 0;
