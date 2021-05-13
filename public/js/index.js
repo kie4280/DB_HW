@@ -33,6 +33,8 @@ function checkInput(i) {
         .parent()
         .show();
       return false;
+    } else if (value.length > 10) {
+      $("#reg-err4").html("*Invalid format (Max Length: 10)").parent().show();
     }
   }
   return true;
