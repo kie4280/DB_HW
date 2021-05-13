@@ -70,7 +70,7 @@
               <div class="col-sm-12"><h4>Shop List</h4></div>
             </div>
 
-            <form action="/get-info" method="POST" id="sho">
+            <form action="/search-shop" method="POST" id="sho">
               <div class="form-group row">
                 <div class="col-sm-4 col-lg-2">
                   <label for="sho1">Shop</label>
@@ -181,12 +181,59 @@
 
       <div class="tab-pane container-fluid fade" id="my-order">
         <div class="row">
-          <div class="col-sm-12">
-            <div class="row">
-              <div class="col-sm-12"><h4>My Order</h4></div>
+          <div class="col-sm-12"><h4>My Order</h4></div>
+        </div>
+
+        <form action="/search-my-order" method="POST" id="mor">
+          <div class="form-group row">
+            <div class="col-sm-1 col-lg-1">
+              <label for="mor1">Status</label>
+            </div>
+            <div class="col-sm-4 col-lg-3">
+              <select class="form-control" name="status" id="mor1">
+                <option selected>All</option>
+                <option>Not finished</option>
+                <option>Finished</option>
+                <option>Cancelled</option>
+              </select>
+            </div>
+            <div class="col-sm-7 col-lg-8">
+              <button type="submit" class="btn btn-primary" id="mor2">
+                <span class="spinner-border spinner-border-sm"></span>
+                Search
+              </button>
             </div>
           </div>
-        </div>
+        </form>
+
+        <table class="table table-striped" id="table3">
+          <thead class="thead-dark">
+            <tr>
+              <th></th>
+              <th>OID</th>
+              <th>Status</th>
+              <th>Start</th>
+              <th>End</th>
+              <th>Shop</th>
+              <th>Total Price</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <td>
+              <input type="checkbox" />
+            </td>
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+            <td>4</td>
+            <td>5</td>
+            <td>6</td>
+            <td>
+              <button type="button" class="btn btn-danger">x</button>
+            </td>
+          </tbody>
+        </table>
       </div>
 
       <div class="tab-pane container-fluid fade" id="shop-order">
@@ -206,6 +253,7 @@
 
     <script type="text/javascript" src="./js/shop-form.js"></script>
     <script type="text/javascript" src="./js/shop-info.js"></script>
+    <script type="text/javascript" src="./js/shop-order.js"></script>
     <script type="text/javascript" src="./js/main.js"></script>
   </body>
 </html>

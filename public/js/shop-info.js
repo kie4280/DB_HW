@@ -70,6 +70,7 @@ $(document).ready(function () {
   $("#table2").DataTable({
     lengthChange: false,
     searching: false,
+    autoWidth: false,
     pageLength: 5,
     columnDefs: [{ orderable: false, targets: 2 }],
     columns: [

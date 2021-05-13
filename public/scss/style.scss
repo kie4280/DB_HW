@@ -71,13 +71,24 @@
       button {
         padding-top: 0.15rem;
         padding-bottom: 0.15rem;
-        padding-left: 0.3rem;
-        padding-right: 0.3rem;
+        padding-left: 0.45rem;
+        padding-right: 0.45rem;
       }
     }
   }
 
   #shop {
+    th {
+      &:nth-child(1) {
+        width: 30%;
+      }
+      &:nth-child(2) {
+        width: 50%;
+      }
+      &:nth-child(3) {
+        width: 20%;
+      }
+    }
     td {
       vertical-align: middle;
 
@@ -88,12 +99,54 @@
       button {
         padding-top: 0.15rem;
         padding-bottom: 0.15rem;
-        padding-left: 0.3rem;
-        padding-right: 0.3rem;
+        padding-left: 0.45rem;
+        padding-right: 0.45rem;
       }
     }
     #mys p {
       margin-left: 0;
+    }
+  }
+
+  #my-order,
+  #shop-order {
+    .dataTables_wrapper {
+      width: 97%;
+      margin: 0 auto;
+    }
+    th {
+      &:nth-child(4),
+      &:nth-child(5) {
+        width: 20%;
+      }
+      &:nth-child(3),
+      &:nth-child(6) {
+        width: 15%;
+      }
+      &:nth-child(1) {
+        width: 4%;
+      }
+      &:nth-child(7) {
+        width: 10%;
+      }
+      &:nth-child(2),
+      &:nth-child(8) {
+        width: 8%;
+      }
+    }
+    td {
+      vertical-align: middle;
+
+      &:last-child:not(:first-child) {
+        text-align: right;
+      }
+
+      button {
+        padding-top: 0.15rem;
+        padding-bottom: 0.15rem;
+        padding-left: 0.45rem;
+        padding-right: 0.45rem;
+      }
     }
   }
 }

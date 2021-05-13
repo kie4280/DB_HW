@@ -79,8 +79,20 @@
 #main #home td button {
   padding-top: 0.15rem;
   padding-bottom: 0.15rem;
-  padding-left: 0.3rem;
-  padding-right: 0.3rem;
+  padding-left: 0.45rem;
+  padding-right: 0.45rem;
+}
+
+#main #shop th:nth-child(1) {
+  width: 30%;
+}
+
+#main #shop th:nth-child(2) {
+  width: 50%;
+}
+
+#main #shop th:nth-child(3) {
+  width: 20%;
 }
 
 #main #shop td {
@@ -94,12 +106,64 @@
 #main #shop td button {
   padding-top: 0.15rem;
   padding-bottom: 0.15rem;
-  padding-left: 0.3rem;
-  padding-right: 0.3rem;
+  padding-left: 0.45rem;
+  padding-right: 0.45rem;
 }
 
 #main #shop #mys p {
   margin-left: 0;
+}
+
+#main #my-order .dataTables_wrapper,
+#main #shop-order .dataTables_wrapper {
+  width: 97%;
+  margin: 0 auto;
+}
+
+#main #my-order th:nth-child(4), #main #my-order th:nth-child(5),
+#main #shop-order th:nth-child(4),
+#main #shop-order th:nth-child(5) {
+  width: 20%;
+}
+
+#main #my-order th:nth-child(3), #main #my-order th:nth-child(6),
+#main #shop-order th:nth-child(3),
+#main #shop-order th:nth-child(6) {
+  width: 15%;
+}
+
+#main #my-order th:nth-child(1),
+#main #shop-order th:nth-child(1) {
+  width: 4%;
+}
+
+#main #my-order th:nth-child(7),
+#main #shop-order th:nth-child(7) {
+  width: 10%;
+}
+
+#main #my-order th:nth-child(2), #main #my-order th:nth-child(8),
+#main #shop-order th:nth-child(2),
+#main #shop-order th:nth-child(8) {
+  width: 8%;
+}
+
+#main #my-order td,
+#main #shop-order td {
+  vertical-align: middle;
+}
+
+#main #my-order td:last-child:not(:first-child),
+#main #shop-order td:last-child:not(:first-child) {
+  text-align: right;
+}
+
+#main #my-order td button,
+#main #shop-order td button {
+  padding-top: 0.15rem;
+  padding-bottom: 0.15rem;
+  padding-left: 0.45rem;
+  padding-right: 0.45rem;
 }
 
 @media screen and (max-width: 576px) {
