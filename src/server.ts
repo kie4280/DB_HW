@@ -69,14 +69,30 @@ app.post("/place-order", (req, res) => {
 app.post("/search-my-order", (req, res) => {
   setTimeout(function() {
     res.status(200).send([
-      {
-        "oid": 1,
-        "status": "Not finished",
-        "start": 0,
-        "end": 0,
-        "shop": "shop",
-        "total_price": 0,
-      }
+    {
+      "oid": 1,
+      "status": "Finished",
+      "start": 0,
+      "end": 0,
+      "shop": "shop",
+      "total_price": 0,
+    },
+    {
+      "oid": 1,
+      "status": "Not finished",
+      "start": 1,
+      "end": 0,
+      "shop": "shop",
+      "total_price": 0,
+    },
+    {
+      "oid": 1,
+      "status": "Cancelled",
+      "start": 2,
+      "end": 0,
+      "shop": "shop",
+      "total_price": 0,
+    }
     ]);
   }, 1000);
 });
@@ -88,6 +104,22 @@ app.post("/search-shop-order", (req, res) => {
         "oid": 1,
         "status": "Not finished",
         "start": 0,
+        "end": 0,
+        "shop": "shop",
+        "total_price": 0,
+      },
+      {
+        "oid": 1,
+        "status": "Not finished",
+        "start": 1,
+        "end": 0,
+        "shop": "shop",
+        "total_price": 0,
+      },
+      {
+        "oid": 1,
+        "status": "Not finished",
+        "start": 2,
         "end": 0,
         "shop": "shop",
         "total_price": 0,

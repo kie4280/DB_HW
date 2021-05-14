@@ -24,6 +24,9 @@ function finishOrder() {
   posting.done(function (data) {
     if (data.status) {
       form.trigger("submit");
+    } else {
+      window.alert("Finish order failed!");
+      tr.find("button:first-child span").css("display", "none");
     }
   });
 }
@@ -41,6 +44,9 @@ function cancelOrder() {
     if (data.status) {
       form.trigger("submit");
       $("#sho").trigger("submit");
+    } else {
+      window.alert("Cancel order failed!");
+      tr.find("button:last-child span").css("display", "none");
     }
   });
 }
