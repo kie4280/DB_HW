@@ -45,7 +45,6 @@ function searchShop(event) {
 function placeOrder() {
   let tr = $(this).parents("tr");
   let value = parseFloat(tr.find("input").val());
-  let amount = parseInt(tr.children("td:nth-last-child(2)").html());
 
   if (!Number.isInteger(value) || value <= 0) {
     window.alert("Place an order failed!\nInput should be positive integer.");
@@ -55,19 +54,19 @@ function placeOrder() {
 
   tr.find("span").css("display", "inline-block");
   let posting = $.post("/place-order", {
-    shop: tr.children("td:first").html(),
+    shop: tr.children("td:first-child").html(),
     amount: value,
   });
 
   posting.done(function (data) {
-    tr.find("span").css("display", "none");
     if (data.status) {
       window.alert("Place an order success!");
-      tr.children("td:nth-last-child(2)").html(amount - value);
+      $("#sho").trigger("submit");
     } else {
       window.alert("Place an order failed!\nInsufficient masks!");
+      tr.find("span").css("display", "none");
+      tr.find("input").val(0);
     }
-    tr.find("input").val(0);
   });
 }
 
@@ -115,15 +114,16 @@ $(document).ready(function () {
     searching: false,
     autoWidth: false,
     pageLength: 5,
-    columnDefs: [
-      { orderable: false, targets: 0 },
-      { orderable: false, targets: 7 },
-    ],
+    order: [[1, "asc"]],
+    columnDefs: [{ orderable: false, targets: [0, 7] }],
     columns: [
       {
         data: "checkbox",
         render: function (data, type, row, meta) {
-          return `<input type="checkbox">`;
+          if (row.status == "Not finished") {
+            return `<input type="checkbox">`;
+          }
+          return "";
         },
       },
       { data: "oid" },
@@ -161,6 +161,7 @@ $(document).ready(function () {
   $("#sho").trigger("submit");
   $("#mor").submit(searchMyOrder);
   $("#mor").trigger("submit");
+  $("#mor3").click(cancelSelectedOrder);
   $("#table1").on("click", "button", placeOrder);
   $("#table3").on("click", "button", cancelOrder);
 });

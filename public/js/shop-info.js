@@ -56,7 +56,7 @@ function deleteClerk() {
   tr.find("span").css("display", "inline-block");
   let posting = $.post("/edit-shop", {
     type: "delete-clerk",
-    account: tr.children("td:first").html(),
+    account: tr.children("td:first-child").html(),
   });
 
   posting.done(function (data) {

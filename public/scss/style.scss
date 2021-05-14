@@ -28,9 +28,6 @@
       display: none;
     }
   }
-  table {
-    border: 1px solid black;
-  }
 }
 
 #main {
@@ -48,25 +45,35 @@
   span {
     font-weight: normal;
   }
+  table {
+    border: 1px solid black;
+  }
+  td {
+    vertical-align: middle;
+
+    &:last-child:not(:first-child) {
+      text-align: right;
+    }
+    button {
+      padding-top: 0.15rem;
+      padding-bottom: 0.15rem;
+      padding-left: 0.45rem;
+      padding-right: 0.45rem;
+    }
+  }
 
   #home {
     th {
       width: 20%;
     }
     td {
-      vertical-align: middle;
-
-      &:last-child:not(:first-child) {
-        text-align: right;
-      }
       .form-group {
         margin-bottom: 0;
       }
       .form-control {
         height: auto;
       }
-      input,
-      button {
+      input {
         padding-top: 0.15rem;
         padding-bottom: 0.15rem;
         padding-left: 0.45rem;
@@ -85,19 +92,6 @@
       }
       &:nth-child(3) {
         width: 20%;
-      }
-    }
-    td {
-      vertical-align: middle;
-
-      &:last-child:not(:first-child) {
-        text-align: right;
-      }
-      button {
-        padding-top: 0.15rem;
-        padding-bottom: 0.15rem;
-        padding-left: 0.45rem;
-        padding-right: 0.45rem;
       }
     }
     #mys p {
@@ -129,19 +123,6 @@
       &:nth-child(7),
       &:nth-child(8) {
         width: 12%;
-      }
-    }
-    td {
-      vertical-align: middle;
-
-      &:last-child:not(:first-child) {
-        text-align: right;
-      }
-      button {
-        padding-top: 0.15rem;
-        padding-bottom: 0.15rem;
-        padding-left: 0.45rem;
-        padding-right: 0.45rem;
       }
     }
   }

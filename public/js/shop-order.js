@@ -13,6 +13,7 @@ function searchShopOrder(event) {
 }
 
 function finishOrder() {
+  let form = $(this).parents(".tab-pane").find("form");
   let tr = $(this).parents("tr");
 
   tr.find("button:first-child span").css("display", "inline-block");
@@ -21,13 +22,14 @@ function finishOrder() {
   });
 
   posting.done(function (data) {
-    tr.find("button:first-child span").css("display", "none");
-    tr.children("td:nth-child(3)").html("Finished");
-    tr.children("td:last-child").empty();
+    if (data.status) {
+      form.trigger("submit");
+    }
   });
 }
 
 function cancelOrder() {
+  let form = $(this).parents(".tab-pane").find("form");
   let tr = $(this).parents("tr");
 
   tr.find("button:last-child span").css("display", "inline-block");
@@ -36,10 +38,33 @@ function cancelOrder() {
   });
 
   posting.done(function (data) {
-    tr.find("button:last-child span").css("display", "none");
-    tr.children("td:nth-child(3)").html("Cancelled");
-    tr.children("td:last-child").empty();
+    if (data.status) {
+      form.trigger("submit");
+      $("#sho").trigger("submit");
+    }
   });
+}
+
+function finishSelectedOrder() {
+  let table = $(this).parents(".tab-pane").find("table");
+
+  for (let i = 1; i <= table.find("tbody tr").length; i++) {
+    let checkbox = table.find(`tbody tr:nth-child(${i}) td:first-child input`);
+    if (checkbox.prop("checked")) {
+      checkbox.parents("tr").find("button:first-child").trigger("click");
+    }
+  }
+}
+
+function cancelSelectedOrder() {
+  let table = $(this).parents(".tab-pane").find("table");
+
+  for (let i = 1; i <= table.find("tbody tr").length; i++) {
+    let checkbox = table.find(`tbody tr:nth-child(${i}) td:first-child input`);
+    if (checkbox.prop("checked")) {
+      checkbox.parents("tr").find("button:last-child").trigger("click");
+    }
+  }
 }
 
 $(document).ready(function () {
@@ -48,15 +73,16 @@ $(document).ready(function () {
     searching: false,
     autoWidth: false,
     pageLength: 5,
-    columnDefs: [
-      { orderable: false, targets: 0 },
-      { orderable: false, targets: 7 },
-    ],
+    order: [[1, "asc"]],
+    columnDefs: [{ orderable: false, targets: [0, 7] }],
     columns: [
       {
         data: "checkbox",
         render: function (data, type, row, meta) {
-          return `<input type="checkbox">`;
+          if (row.status == "Not finished") {
+            return `<input type="checkbox">`;
+          }
+          return "";
         },
       },
       { data: "oid" },
@@ -84,6 +110,8 @@ $(document).ready(function () {
 
   $("#sor").submit(searchShopOrder);
   $("#sor").trigger("submit");
+  $("#sor4").click(finishSelectedOrder);
+  $("#sor5").click(cancelSelectedOrder);
   $("#table4").on("click", "button:first-child", finishOrder);
   $("#table4").on("click", "button:last-child", cancelOrder);
 });

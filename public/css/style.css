@@ -33,11 +33,6 @@
   display: none;
 }
 
-#main table,
-#index table {
-  border: 1px solid black;
-}
-
 #main h4 {
   text-decoration: underline;
   font-weight: bold;
@@ -55,16 +50,27 @@
   font-weight: normal;
 }
 
-#main #home th {
-  width: 20%;
+#main table {
+  border: 1px solid black;
 }
 
-#main #home td {
+#main td {
   vertical-align: middle;
 }
 
-#main #home td:last-child:not(:first-child) {
+#main td:last-child:not(:first-child) {
   text-align: right;
+}
+
+#main td button {
+  padding-top: 0.15rem;
+  padding-bottom: 0.15rem;
+  padding-left: 0.45rem;
+  padding-right: 0.45rem;
+}
+
+#main #home th {
+  width: 20%;
 }
 
 #main #home td .form-group {
@@ -75,8 +81,7 @@
   height: auto;
 }
 
-#main #home td input,
-#main #home td button {
+#main #home td input {
   padding-top: 0.15rem;
   padding-bottom: 0.15rem;
   padding-left: 0.45rem;
@@ -93,21 +98,6 @@
 
 #main #shop th:nth-child(3) {
   width: 20%;
-}
-
-#main #shop td {
-  vertical-align: middle;
-}
-
-#main #shop td:last-child:not(:first-child) {
-  text-align: right;
-}
-
-#main #shop td button {
-  padding-top: 0.15rem;
-  padding-bottom: 0.15rem;
-  padding-left: 0.45rem;
-  padding-right: 0.45rem;
 }
 
 #main #shop #mys p {
@@ -146,24 +136,6 @@
 #main #shop-order th:nth-child(7),
 #main #shop-order th:nth-child(8) {
   width: 12%;
-}
-
-#main #my-order td,
-#main #shop-order td {
-  vertical-align: middle;
-}
-
-#main #my-order td:last-child:not(:first-child),
-#main #shop-order td:last-child:not(:first-child) {
-  text-align: right;
-}
-
-#main #my-order td button,
-#main #shop-order td button {
-  padding-top: 0.15rem;
-  padding-bottom: 0.15rem;
-  padding-left: 0.45rem;
-  padding-right: 0.45rem;
 }
 
 @media screen and (max-width: 576px) {
