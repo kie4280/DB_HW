@@ -189,10 +189,12 @@ $(document).ready(function () {
 
   $("#tab5").click(logout);
   $("#sho").submit(searchShop);
-  $("#sho").trigger("submit");
   $("#mor").submit(searchMyOrder);
-  $("#mor").trigger("submit");
   $("#mor3").click(cancelSelectedOrder);
+
   $("#table1").on("click", "button", placeOrder);
   $("#table3").on("click", "button", cancelOrder);
+
+  $("#sho").trigger("submit");
+  $("#mor").trigger("submit");
 });

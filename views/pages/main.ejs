@@ -42,9 +42,7 @@
       </li>
       <% } %>
       <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#logout" id="tab5"
-          >Logout</a
-        >
+        <a class="nav-link" data-toggle="tab" href="#" id="tab5">Logout</a>
       </li>
     </ul>
 
@@ -183,11 +181,6 @@
         </div>
       </div>
 
-      <div class="tab-pane container-fluid fade" id="shop">
-        <% if (isManager) { %> <%- include("../partials/shop-info.ejs")%> <% }
-        else { %> <%- include("../partials/shop-form.ejs")%> <% } %>
-      </div>
-
       <div class="tab-pane container-fluid fade" id="my-order">
         <div class="row">
           <div class="col-sm-12">
@@ -241,12 +234,8 @@
         </table>
       </div>
 
-      <div class="tab-pane container-fluid fade" id="shop-order">
-        <% if (isManager) { %> <%- include("../partials/shop-order.ejs") %> <% }
-        %>
-      </div>
-
-      <div class="tab-pane container-fluid fade" id="logout"></div>
+      <% if (isManager) { %> <%- include("../partials/manager"); %> <% } else {
+      %> <%- include("../partials/clerk"); %> <% } %>
     </div>
 
     <!-- jQuery library -->
@@ -257,10 +246,9 @@
     <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
 
     <% if (isManager) { %>
-    <script type="text/javascript" src="./js/shop-info.js"></script>
-    <script type="text/javascript" src="./js/shop-order.js"></script>
+    <script type="text/javascript" src="./js/manager.js"></script>
     <% } else { %>
-    <script type="text/javascript" src="./js/shop-form.js"></script>
+    <script type="text/javascript" src="./js/clerk.js"></script>
     <% } %>
 
     <script type="text/javascript" src="./js/main.js"></script>
