@@ -31,26 +31,6 @@ function finishOrder() {
   });
 }
 
-function cancelOrder() {
-  let form = $(this).parents(".tab-pane").find("form");
-  let tr = $(this).parents("tr");
-
-  tr.find("button:last-child span").css("display", "inline-block");
-  let posting = $.post("/finish-order", {
-    oid: tr.children("td:nth-child(2)").html(),
-  });
-
-  posting.done(function (data) {
-    if (data.status) {
-      form.trigger("submit");
-      $("#sho").trigger("submit");
-    } else {
-      window.alert("Cancel order failed!");
-      tr.find("button:last-child span").css("display", "none");
-    }
-  });
-}
-
 function finishSelectedOrder() {
   let table = $(this).parents(".tab-pane").find("table");
 
@@ -58,17 +38,6 @@ function finishSelectedOrder() {
     let checkbox = table.find(`tbody tr:nth-child(${i}) td:first-child input`);
     if (checkbox.prop("checked")) {
       checkbox.parents("tr").find("button:first-child").trigger("click");
-    }
-  }
-}
-
-function cancelSelectedOrder() {
-  let table = $(this).parents(".tab-pane").find("table");
-
-  for (let i = 1; i <= table.find("tbody tr").length; i++) {
-    let checkbox = table.find(`tbody tr:nth-child(${i}) td:first-child input`);
-    if (checkbox.prop("checked")) {
-      checkbox.parents("tr").find("button:last-child").trigger("click");
     }
   }
 }
