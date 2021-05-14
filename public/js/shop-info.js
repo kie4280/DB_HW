@@ -43,7 +43,7 @@ function addClerk() {
     $("#mys6 span").css("display", "none");
     if (data.status) {
       clearInput(2);
-      $("#table2").DataTable().row.add(data).draw();
+      $("#table2").DataTable().clear().rows.add(data.clerks).draw();
     } else {
       $("#mys-err5").html(data.err).parent().show();
     }
@@ -62,7 +62,7 @@ function deleteClerk() {
   posting.done(function (data) {
     tr.find("span").css("display", "none");
     if (data.status) {
-      $("#table2").DataTable().row(tr).remove().draw();
+      $("#table2").DataTable().clear().rows.add(data.clerks).draw();
     }
   });
 }
