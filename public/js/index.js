@@ -42,10 +42,10 @@ function checkInput(i) {
 }
 
 function clearInput(i) {
-  // 1: register, 2: login
+  // 1: login, 2: register
   if (i == 1) {
     $("#log input").val("");
-  } else {
+  } else if (i == 2) {
     $("#reg input").val("");
     $("#reg label span").html("").parent().hide();
   }

@@ -102,9 +102,9 @@ function finishSelectedOrder() {
   let table = $(this).parents(".tab-pane").find("table");
 
   for (let i = 1; i <= table.find("tbody tr").length; i++) {
-    let checkbox = table.find(`tbody tr:nth-child(${i}) td:first-child input`);
-    if (checkbox.prop("checked")) {
-      checkbox.parents("tr").find("button:first-child").trigger("click");
+    let tr = table.find(`tbody tr:nth-child(${i})`);
+    if (tr.find("td:first-child input").prop("checked")) {
+      tr.find("button:first-child").trigger("click");
     }
   }
 }

@@ -1,7 +1,7 @@
 "use strict";
 
 function clearInput(i) {
-  // 1: my shop / register shop, 2: shop list, 3: my order, 4: shop order
+  // 1: home, 2: shop, 3: my order, 4: shop order
   if (i == 1) {
     $("#sho input:not([type=checkbox])").val("");
     $("#sho input[type=checkbox]").prop("checked", false);
@@ -15,7 +15,7 @@ function clearInput(i) {
     $("#regs label span").html("").parent().hide();
   } else if (i == 3) {
     $("#mor select").val("All");
-  } else {
+  } else if (i == 4) {
     $("#sor select").val("All");
   }
 }
@@ -106,9 +106,9 @@ function cancelSelectedOrder() {
   let table = $(this).parents(".tab-pane").find("table");
 
   for (let i = 1; i <= table.find("tbody tr").length; i++) {
-    let checkbox = table.find(`tbody tr:nth-child(${i}) td:first-child input`);
-    if (checkbox.prop("checked")) {
-      checkbox.parents("tr").find("button:last-child").trigger("click");
+    let tr = table.find(`tbody tr:nth-child(${i})`);
+    if (tr.find("td:first-child input").prop("checked")) {
+      tr.find("button:last-child").trigger("click");
     }
   }
 }
