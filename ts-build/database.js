@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Database = void 0;
-const mysql = require("mysql2");
 const crypto = require("crypto");
+const mysql = require("mysql2");
 function genHash(password) {
     var hash = crypto.createHash("sha256").update(password).digest("hex");
     return hash;
@@ -14,9 +14,12 @@ class Database {
             user: "mask",
             password: "mask",
             database: "maskDB",
-            connectionLimit: 10
+            connectionLimit: 10,
         });
         this.createTables();
+    }
+    close() {
+        this.database.end();
     }
     createTables() {
         this.database.query(`CREATE TABLE IF NOT EXISTS user(
@@ -34,11 +37,19 @@ class Database {
           CONSTRAINT chk_s CHECK(mask_amount >= 0 AND mask_price >= 0)
       );`);
         // status 'c': canceled, 'p': pending, 'f': finished
-        this.database.query(`CREATE TABLE IF NOT EXISTS \`order\` (
+        this.database.query(`CREATE TABLE IF NOT EXISTS orders(
           OID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+          SID INTEGER NOT NULL, 
           status char(1) NOT NULL,
-          create_time datetime NOT NULL,
-          finish_time datetime NOT NULL,
+          UID_create INTEGER NOT NULL,
+          create_time DATETIME,
+          UID_finish INTEGER,
+          finish_time DATETIME,
+          price INTEGER NOT NULL,
+          amount INTEGER NOT NULL,
+          FOREIGN KEY(UID_create) REFERENCES user(UID) ON DELETE CASCADE,
+          FOREIGN KEY(UID_finish) REFERENCES user(UID) ON DELETE CASCADE,
+          FOREIGN KEY(SID) REFERENCES shop(SID) ON DELETE CASCADE,
           CONSTRAINT chk_o CHECK(status in ('c', 'p', 'f'))
       );`);
         // role 'c': clerk, 'm': manager
@@ -53,16 +64,13 @@ class Database {
       );`);
     }
     async registerUser(account, password, phone) {
-        let [results, _,] = await this.database
+        let [results, _] = await this.database
             .promise()
             .execute("SELECT * FROM user WHERE account = ?", [account]);
         if (results.length == 1) {
             return false;
         }
-        [
-            results,
-            _,
-        ] = await this.database
+        [results, _] = await this.database
             .promise()
             .execute("INSERT INTO user VALUES (0, ?, ?, ?)", [
             account,
@@ -120,11 +128,11 @@ class Database {
             };
         }
         else {
-            return { account, phone, isManager, cities };
+            return { account, phone, isManager, cities, manages: null, clerks };
         }
     }
     async registerShop(shop, city, price, amount, account) {
-        let [results, _,] = await this.database
+        let [results, _] = await this.database
             .promise()
             .execute(`SELECT * FROM shop where shop_name = ?`, [shop]);
         if (results.length > 0) {
@@ -216,7 +224,7 @@ class Database {
         if (Number.isNaN(price_) || !Number.isInteger(price_) || price_ < 0) {
             return { status: false, price: old_price };
         }
-        let [results, _,] = await this.database
+        let [results, _] = await this.database
             .promise()
             .execute(`UPDATE shop SET mask_price = ? WHERE shop_name = ?;`, [
             price,
@@ -238,7 +246,7 @@ class Database {
         if (Number.isNaN(amount_) || !Number.isInteger(amount_) || amount_ < 0) {
             return { status: false, amount: old_amount };
         }
-        let [results, _,] = await this.database
+        let [results, _] = await this.database
             .promise()
             .execute(`UPDATE shop SET mask_amount = ? WHERE shop_name = ?;`, [
             amount,
@@ -301,7 +309,7 @@ class Database {
         results = results;
         results.forEach((val, index, raw) => {
             let s = {
-                shop: val.shop_name,
+                name: val.shop_name,
                 city: val.shop_city,
                 price: val.mask_price,
                 amount: val.mask_amount,
@@ -310,10 +318,62 @@ class Database {
         });
         return shops;
     }
-    close() {
-        this.database.end();
+    async placeOrder(account, shop, buy_amount) {
+        let aq = this.database
+            .promise()
+            .query(`SELECT SID, mask_amount, mask_price FROM shop WHERE shop_name = ?`, [shop]);
+        let uq = this.database
+            .promise()
+            .query(`SELECT UID FROM user WHERE account = ?`, [account]);
+        let [ar, ur] = await Promise.all([aq, uq]);
+        let arr = ar[0];
+        let urr = ur[0];
+        if (arr.length == 0 || urr.length == 0) {
+            return false;
+        }
+        let mask_amount = Number.parseInt(arr[0].mask_amount);
+        let mask_price = Number.parseInt(arr[0].mask_price);
+        let sid = Number.parseInt(arr[0].SID);
+        let uid = Number.parseInt(urr[0].UID);
+        if (mask_amount < buy_amount) {
+            return false;
+        }
+        let conn = await this.database.promise().getConnection();
+        try {
+            await conn.beginTransaction();
+            let now = new Date();
+            let year = now.getFullYear();
+            let month = now
+                .getMonth()
+                .toLocaleString("en-US", { minimumIntegerDigits: 2 });
+            let date = now
+                .getDate()
+                .toLocaleString("en-US", { minimumIntegerDigits: 2 });
+            let hour = now
+                .getHours()
+                .toLocaleString("en-US", { minimumIntegerDigits: 2 });
+            let minute = now
+                .getMinutes()
+                .toLocaleString("en-US", { minimumIntegerDigits: 2 });
+            let second = now
+                .getSeconds()
+                .toLocaleString("en-US", { minimumIntegerDigits: 2 });
+            let date_ = `${year}/${month}/${date} ${hour}:${minute}:${second}`;
+            console.log("now: ", date_);
+            let order_r = (await conn.execute(`INSERT INTO orders VALUES (0, ?, 'p', ?, ?, NULL, NULL, ?, ?)`, [sid, uid, date_, mask_price, buy_amount]));
+            if (order_r.affectedRows == 0) {
+                throw Error("cannot insert into orders");
+            }
+            await conn.commit();
+            conn.release();
+        }
+        catch (error) {
+            await conn.rollback();
+            conn.release();
+            return false;
+        }
+        return true;
     }
 }
 exports.Database = Database;
-function test() { }
 //# sourceMappingURL=database.js.map

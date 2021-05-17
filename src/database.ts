@@ -1,5 +1,5 @@
-import * as mysql from "mysql2";
 import * as crypto from "crypto";
+import * as mysql from "mysql2";
 
 function genHash(password: string): string {
   var hash = crypto.createHash("sha256").update(password).digest("hex");
@@ -7,7 +7,7 @@ function genHash(password: string): string {
 }
 
 type SHOP = {
-  shop: string;
+  name: string;
   city: string;
   price: number;
   amount: number;
@@ -21,9 +21,13 @@ export class Database {
       user: "mask",
       password: "mask",
       database: "maskDB",
-      connectionLimit: 10
+      connectionLimit: 10,
     });
     this.createTables();
+  }
+
+  public close() {
+    this.database.end();
   }
 
   private createTables(): void {
@@ -49,11 +53,19 @@ export class Database {
 
     // status 'c': canceled, 'p': pending, 'f': finished
     this.database.query(
-      `CREATE TABLE IF NOT EXISTS \`order\` (
+      `CREATE TABLE IF NOT EXISTS orders(
           OID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+          SID INTEGER NOT NULL, 
           status char(1) NOT NULL,
-          create_time datetime NOT NULL,
-          finish_time datetime NOT NULL,
+          UID_create INTEGER NOT NULL,
+          create_time DATETIME,
+          UID_finish INTEGER,
+          finish_time DATETIME,
+          price INTEGER NOT NULL,
+          amount INTEGER NOT NULL,
+          FOREIGN KEY(UID_create) REFERENCES user(UID) ON DELETE CASCADE,
+          FOREIGN KEY(UID_finish) REFERENCES user(UID) ON DELETE CASCADE,
+          FOREIGN KEY(SID) REFERENCES shop(SID) ON DELETE CASCADE,
           CONSTRAINT chk_o CHECK(status in ('c', 'p', 'f'))
       );`
     );
@@ -73,10 +85,7 @@ export class Database {
   }
 
   public async registerUser(account: string, password: string, phone: string) {
-    let [
-      results,
-      _,
-    ] = await this.database
+    let [results, _] = await this.database
       .promise()
       .execute("SELECT * FROM user WHERE account = ?", [account]);
 
@@ -84,10 +93,7 @@ export class Database {
       return false;
     }
 
-    [
-      results,
-      _,
-    ] = await this.database
+    [results, _] = await this.database
       .promise()
       .execute("INSERT INTO user VALUES (0, ?, ?, ?)", [
         account,
@@ -107,20 +113,13 @@ export class Database {
     return (results as any).length == 1;
   }
 
-  public async getInfo(
-    account: string
-  ): Promise<{
+  public async getInfo(account: string): Promise<{
     account: string;
     phone: string;
     isManager: boolean;
     cities: string[];
-    manages?: {
-      shop_name: string;
-      shop_city: string;
-      mask_amount: number;
-      mask_price: number;
-    };
-    clerks?: Array<{ id: number; account: string; phone: string }>;
+    manages: SHOP;
+    clerks: Array<{ id: number; account: string; phone: string }>;
   }> {
     let Q_userInfo = this.database.promise().execute(
       `SELECT phone FROM user
@@ -181,7 +180,7 @@ export class Database {
         clerks,
       };
     } else {
-      return { account, phone, isManager, cities };
+      return { account, phone, isManager, cities, manages: null, clerks };
     }
   }
 
@@ -192,10 +191,7 @@ export class Database {
     amount: number,
     account: string
   ) {
-    let [
-      results,
-      _,
-    ] = await this.database
+    let [results, _] = await this.database
       .promise()
       .execute(`SELECT * FROM shop where shop_name = ?`, [shop]);
 
@@ -328,10 +324,7 @@ export class Database {
       return { status: false, price: old_price };
     }
 
-    let [
-      results,
-      _,
-    ] = await this.database
+    let [results, _] = await this.database
       .promise()
       .execute(`UPDATE shop SET mask_price = ? WHERE shop_name = ?;`, [
         price,
@@ -359,10 +352,7 @@ export class Database {
     if (Number.isNaN(amount_) || !Number.isInteger(amount_) || amount_ < 0) {
       return { status: false, amount: old_amount };
     }
-    let [
-      results,
-      _,
-    ] = await this.database
+    let [results, _] = await this.database
       .promise()
       .execute(`UPDATE shop SET mask_amount = ? WHERE shop_name = ?;`, [
         amount,
@@ -450,7 +440,7 @@ export class Database {
     results = results as mysql.RowDataPacket[];
     results.forEach((val, index, raw) => {
       let s: SHOP = {
-        shop: val.shop_name,
+        name: val.shop_name,
         city: val.shop_city,
         price: val.mask_price,
         amount: val.mask_amount,
@@ -461,9 +451,73 @@ export class Database {
     return shops;
   }
 
-  public close() {
-    this.database.end();
+  public async placeOrder(
+    account: string,
+    shop: string,
+    buy_amount: number
+  ): Promise<boolean> {
+    let aq = this.database
+      .promise()
+      .query(
+        `SELECT SID, mask_amount, mask_price FROM shop WHERE shop_name = ?`,
+        [shop]
+      );
+    let uq = this.database
+      .promise()
+      .query(`SELECT UID FROM user WHERE account = ?`, [account]);
+    let [ar, ur] = await Promise.all([aq, uq]);
+    let arr = ar[0] as mysql.RowDataPacket[];
+    let urr = ur[0] as mysql.RowDataPacket[];
+    if (arr.length == 0 || urr.length == 0) {
+      return false;
+    }
+    let mask_amount: number = Number.parseInt(arr[0].mask_amount as string);
+    let mask_price: number = Number.parseInt(arr[0].mask_price as string);
+    let sid = Number.parseInt(arr[0].SID as string);
+    let uid = Number.parseInt(urr[0].UID as string);
+    if (mask_amount < buy_amount) {
+      return false;
+    }
+
+    let conn = await this.database.promise().getConnection();
+    try {
+      await conn.beginTransaction();
+      let now = new Date();
+      let year = now.getFullYear();
+      let month = now
+        .getMonth()
+        .toLocaleString("en-US", { minimumIntegerDigits: 2 });
+      let date = now
+        .getDate()
+        .toLocaleString("en-US", { minimumIntegerDigits: 2 });
+      let hour = now
+        .getHours()
+        .toLocaleString("en-US", { minimumIntegerDigits: 2 });
+      let minute = now
+        .getMinutes()
+        .toLocaleString("en-US", { minimumIntegerDigits: 2 });
+      let second = now
+        .getSeconds()
+        .toLocaleString("en-US", { minimumIntegerDigits: 2 });
+
+      let date_: string = `${year}/${month}/${date} ${hour}:${minute}:${second}`;
+      console.log("now: ", date_);
+
+      let order_r = (await conn.execute(
+        `INSERT INTO orders VALUES (0, ?, 'p', ?, ?, NULL, NULL, ?, ?)`,
+        [sid, uid, date_, mask_price, buy_amount]
+      )) as any;
+      if ((order_r as mysql.OkPacket).affectedRows == 0) {
+        throw Error("cannot insert into orders");
+      }
+      await conn.commit();
+      conn.release();
+    } catch (error) {
+      await conn.rollback();
+      conn.release();
+      return false;
+    }
+
+    return true;
   }
 }
-
-function test() {}

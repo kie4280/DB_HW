@@ -35,23 +35,16 @@ app.get("/main", (req, res) => {
     w.then((obj) => {
       console.log(obj);
       if (obj.isManager) {
-        req.session.shop_name = obj.manages.shop_name;
-        res.render("pages/main", {
-          account: obj.account,
-          phone: obj.phone,
-          isManager: obj.isManager,
-          shop: obj.manages,
-          clerks: obj.clerks,
-          cities: obj.cities,
-        });
-      } else {
-        res.render("pages/main", {
-          account: obj.account,
-          phone: obj.phone,
-          isManager: obj.isManager,
-          cities: obj.cities,
-        });
+        req.session.shop_name = obj.manages.name;
       }
+      res.render("pages/main", {
+        account: obj.account,
+        phone: obj.phone,
+        isManager: obj.isManager,
+        shop: obj.manages,
+        clerks: obj.clerks,
+        cities: obj.cities,
+      });
     });
   } else {
     res.render("pages/index");
@@ -61,82 +54,96 @@ app.get("/main", (req, res) => {
 // --------------- start test ---------------
 
 app.post("/place-order", (req, res) => {
-  setTimeout(function() {
-    res.status(200).send({status: true});
-  }, 1000);
+  console.log(req.body);
+  if (req.session.account == undefined) {
+    res.sendStatus(403);
+    return;
+  }
+  let po = db.placeOrder(
+    req.session.account,
+    req.body.shop,
+    Number.parseInt(req.body.amount)
+  );
+  
+  po.then((r) => {
+    res.status(200).send({ status: r });
+  });
+  // setTimeout(function () {
+  //   res.status(200).send({ status: true });
+  // }, 1000);
 });
 
 app.post("/search-my-order", (req, res) => {
-  setTimeout(function() {
+  setTimeout(function () {
     res.status(200).send([
-    {
-      "oid": 1,
-      "status": "Finished",
-      "start": 0,
-      "end": 0,
-      "shop": "shop",
-      "total_price": 0,
-    },
-    {
-      "oid": 1,
-      "status": "Not finished",
-      "start": 1,
-      "end": 0,
-      "shop": "shop",
-      "total_price": 0,
-    },
-    {
-      "oid": 1,
-      "status": "Cancelled",
-      "start": 2,
-      "end": 0,
-      "shop": "shop",
-      "total_price": 0,
-    }
+      {
+        oid: 1,
+        status: "Finished",
+        start: 0,
+        end: 0,
+        shop: "shop",
+        total_price: 0,
+      },
+      {
+        oid: 1,
+        status: "Not finished",
+        start: 1,
+        end: 0,
+        shop: "shop",
+        total_price: 0,
+      },
+      {
+        oid: 1,
+        status: "Cancelled",
+        start: 2,
+        end: 0,
+        shop: "shop",
+        total_price: 0,
+      },
     ]);
   }, 1000);
 });
 
 app.post("/search-shop-order", (req, res) => {
-  setTimeout(function() {
+  setTimeout(function () {
     res.status(200).send([
       {
-        "oid": 1,
-        "status": "Not finished",
-        "start": 0,
-        "end": 0,
-        "shop": "shop",
-        "total_price": 0,
+        oid: 1,
+        status: "Not finished",
+        start: 0,
+        end: 0,
+        shop: "shop",
+        total_price: 0,
       },
       {
-        "oid": 1,
-        "status": "Not finished",
-        "start": 1,
-        "end": 0,
-        "shop": "shop",
-        "total_price": 0,
+        oid: 1,
+        status: "Not finished",
+        start: 1,
+        end: 0,
+        shop: "shop",
+        total_price: 0,
       },
       {
-        "oid": 1,
-        "status": "Not finished",
-        "start": 2,
-        "end": 0,
-        "shop": "shop",
-        "total_price": 0,
-      }
+        oid: 1,
+        status: "Not finished",
+        start: 2,
+        end: 0,
+        shop: "shop",
+        total_price: 0,
+      },
     ]);
   }, 1000);
 });
 
 app.post("/finish-order", (req, res) => {
-  setTimeout(function() {
-    res.status(200).send({status: true});
+  setTimeout(function () {
+    res.status(200).send({ status: true });
   }, 1000);
 });
 
 app.post("/cancel-order", (req, res) => {
-  setTimeout(function() {
-    res.status(200).send({status: true});
+  setTimeout(function () {
+    res.status(200).send({ status: true });
   }, 1000);
 });
 
@@ -168,6 +175,7 @@ app.post("/search-shop", (req, res) => {
   const ac: string = req.session.account;
   if (ac == undefined) {
     res.sendStatus(403);
+    return;
   }
   let sp = db.searchShop(
     ac,
@@ -188,6 +196,7 @@ app.post("/search-shop", (req, res) => {
 app.post("/edit-shop", (req, res) => {
   if (req.session.account == undefined || req.session.shop_name == undefined) {
     res.sendStatus(403);
+    return;
   }
   console.log(req.body);
   switch (req.body.type) {
@@ -240,6 +249,7 @@ app.post("/register-shop", (req, res) => {
   const ac: string = req.session.account;
   if (ac == undefined) {
     res.sendStatus(403);
+    return;
   }
 
   let q = db.registerShop(
