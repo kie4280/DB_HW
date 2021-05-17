@@ -359,9 +359,15 @@ class Database {
                 .getSeconds()
                 .toLocaleString("en-US", { minimumIntegerDigits: 2 });
             let date_ = `${year}/${month}/${date} ${hour}:${minute}:${second}`;
-            console.log("now: ", date_);
-            let order_r = (await conn.execute(`INSERT INTO orders VALUES (0, ?, 'p', ?, ?, NULL, NULL, ?, ?)`, [sid, uid, date_, mask_price, buy_amount]));
-            if (order_r.affectedRows == 0) {
+            console.log("order placed at:", date_);
+            let ao = conn.execute(`INSERT INTO orders VALUES (0, ?, 'p', ?, ?, NULL, NULL, ?, ?)`, [sid, uid, date_, mask_price, buy_amount]);
+            let ms = conn.execute(`UPDATE shop SET mask_amount = ? WHERE SID = ?`, [
+                mask_amount - buy_amount,
+                sid,
+            ]);
+            let [order_r, shop_u] = (await Promise.all([ao, ms]));
+            if (order_r.affectedRows == 0 ||
+                shop_u.affectedRows == 0) {
                 throw Error("cannot insert into orders");
             }
             await conn.commit();

@@ -501,13 +501,20 @@ export class Database {
         .toLocaleString("en-US", { minimumIntegerDigits: 2 });
 
       let date_: string = `${year}/${month}/${date} ${hour}:${minute}:${second}`;
-      console.log("now: ", date_);
-
-      let order_r = (await conn.execute(
+      console.log("order placed at:", date_);
+      let ao = conn.execute(
         `INSERT INTO orders VALUES (0, ?, 'p', ?, ?, NULL, NULL, ?, ?)`,
         [sid, uid, date_, mask_price, buy_amount]
-      )) as any;
-      if ((order_r as mysql.OkPacket).affectedRows == 0) {
+      );
+      let ms = conn.execute(`UPDATE shop SET mask_amount = ? WHERE SID = ?`, [
+        mask_amount - buy_amount,
+        sid,
+      ]);
+      let [order_r, shop_u] = (await Promise.all([ao, ms])) as [any, any];
+      if (
+        (order_r as mysql.OkPacket).affectedRows == 0 ||
+        (shop_u as mysql.OkPacket).affectedRows == 0
+      ) {
         throw Error("cannot insert into orders");
       }
       await conn.commit();
