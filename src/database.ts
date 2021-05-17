@@ -6,11 +6,43 @@ function genHash(password: string): string {
   return hash;
 }
 
+function formatTime(in_date: Date): string {
+  if (in_date == null) return "";
+  let year = in_date.getFullYear();
+  let month = in_date
+    .getMonth()
+    .toLocaleString("en-US", { minimumIntegerDigits: 2 });
+  let date = in_date
+    .getDate()
+    .toLocaleString("en-US", { minimumIntegerDigits: 2 });
+  let hour = in_date
+    .getHours()
+    .toLocaleString("en-US", { minimumIntegerDigits: 2 });
+  let minute = in_date
+    .getMinutes()
+    .toLocaleString("en-US", { minimumIntegerDigits: 2 });
+  let second = in_date
+    .getSeconds()
+    .toLocaleString("en-US", { minimumIntegerDigits: 2 });
+
+  let date_: string = `${year}/${month}/${date} ${hour}:${minute}:${second}`;
+  return date_;
+}
+
 type SHOP = {
   name: string;
   city: string;
   price: number;
   amount: number;
+};
+
+type ORDER = {
+  oid: number;
+  status: string;
+  start: string;
+  end: string;
+  shop: string;
+  total_price: number;
 };
 
 export class Database {
@@ -157,11 +189,17 @@ export class Database {
     let isManager: boolean = (manage_i[0] as mysql.RowDataPacket[]).length > 0;
 
     if (isManager) {
-      let shop_name = manage_i[0][0].shop_name;
+      let shop: SHOP = {
+        name: manage_i[0][0].shop_name,
+        city: manage_i[0][0].shop_city,
+        price: manage_i[0][0].mask_price,
+        amount: manage_i[0][0].mask_amount,
+      };
+
       let [result, _] = await this.database.promise().execute(
         `SELECT UID, account, phone FROM role NATURAL JOIN user
             NATURAL JOIN shop WHERE shop_name = ? AND role != 'm';`,
-        [shop_name]
+        [shop.name]
       );
       result = result as mysql.RowDataPacket[];
       for (let i = 0; i < result.length; ++i) {
@@ -171,12 +209,13 @@ export class Database {
           phone: result[i].phone,
         });
       }
+
       return {
         account,
         phone,
         isManager,
         cities,
-        manages: manage_i[0][0],
+        manages: shop,
         clerks,
       };
     } else {
@@ -482,25 +521,7 @@ export class Database {
     let conn = await this.database.promise().getConnection();
     try {
       await conn.beginTransaction();
-      let now = new Date();
-      let year = now.getFullYear();
-      let month = now
-        .getMonth()
-        .toLocaleString("en-US", { minimumIntegerDigits: 2 });
-      let date = now
-        .getDate()
-        .toLocaleString("en-US", { minimumIntegerDigits: 2 });
-      let hour = now
-        .getHours()
-        .toLocaleString("en-US", { minimumIntegerDigits: 2 });
-      let minute = now
-        .getMinutes()
-        .toLocaleString("en-US", { minimumIntegerDigits: 2 });
-      let second = now
-        .getSeconds()
-        .toLocaleString("en-US", { minimumIntegerDigits: 2 });
-
-      let date_: string = `${year}/${month}/${date} ${hour}:${minute}:${second}`;
+      let date_ = formatTime(new Date());
       console.log("order placed at:", date_);
       let ao = conn.execute(
         `INSERT INTO orders VALUES (0, ?, 'p', ?, ?, NULL, NULL, ?, ?)`,
@@ -526,5 +547,28 @@ export class Database {
     }
 
     return true;
+  }
+
+  public async getUserOrder(account: string): Promise<Array<ORDER>> {
+    let [oq, _] = await this.database.promise().query(
+      `SELECT OID, status, create_time, finish_time,  
+        mask_amount, mask_price, shop_name FROM
+        orders NATURAL JOIN shop WHERE UID_create = (SELECT UID FROM user WHERE account = ?)`,
+      [account]
+    );
+    oq = oq as mysql.RowDataPacket[];
+    let orders = new Array<ORDER>();
+    oq.forEach((val, i) => {
+      let or: ORDER = {
+        oid: val.OID,
+        shop: val.shop_name,
+        status: val.status,
+        total_price: val.amount * val.price,
+        start: formatTime(val.create_time),
+        end: formatTime(val.finish_time),
+      };
+      orders = orders.concat(or);
+    });
+    return orders;
   }
 }

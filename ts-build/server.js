@@ -61,10 +61,16 @@ app.post("/place-order", (req, res) => {
     // }, 1000);
 });
 app.post("/search-my-order", (req, res) => {
+    console.log("search my order");
     if (req.session.account == undefined) {
         res.sendStatus(403);
         return;
     }
+    let guo = db.getUserOrder(req.session.account);
+    guo.then((obj) => {
+        console.log(obj);
+        res.status(200).send(obj);
+    });
     // setTimeout(function () {
     //   res.status(200).send([
     //     {
@@ -99,34 +105,34 @@ app.post("/search-shop-order", (req, res) => {
         res.sendStatus(403);
         return;
     }
-    setTimeout(function () {
-        res.status(200).send([
-            {
-                oid: 1,
-                status: "Not finished",
-                start: 0,
-                end: 0,
-                shop: "shop",
-                total_price: 0,
-            },
-            {
-                oid: 1,
-                status: "Not finished",
-                start: 1,
-                end: 0,
-                shop: "shop",
-                total_price: 0,
-            },
-            {
-                oid: 1,
-                status: "Not finished",
-                start: 2,
-                end: 0,
-                shop: "shop",
-                total_price: 0,
-            },
-        ]);
-    }, 1000);
+    // setTimeout(function () {
+    //   res.status(200).send([
+    //     {
+    //       oid: 1,
+    //       status: "Not finished",
+    //       start: 0,
+    //       end: 0,
+    //       shop: "shop",
+    //       total_price: 0,
+    //     },
+    //     {
+    //       oid: 1,
+    //       status: "Not finished",
+    //       start: 1,
+    //       end: 0,
+    //       shop: "shop",
+    //       total_price: 0,
+    //     },
+    //     {
+    //       oid: 1,
+    //       status: "Not finished",
+    //       start: 2,
+    //       end: 0,
+    //       shop: "shop",
+    //       total_price: 0,
+    //     },
+    //   ]);
+    // }, 1000);
 });
 app.post("/finish-order", (req, res) => {
     setTimeout(function () {

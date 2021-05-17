@@ -7,6 +7,28 @@ function genHash(password) {
     var hash = crypto.createHash("sha256").update(password).digest("hex");
     return hash;
 }
+function formatTime(in_date) {
+    if (in_date == null)
+        return "";
+    let year = in_date.getFullYear();
+    let month = in_date
+        .getMonth()
+        .toLocaleString("en-US", { minimumIntegerDigits: 2 });
+    let date = in_date
+        .getDate()
+        .toLocaleString("en-US", { minimumIntegerDigits: 2 });
+    let hour = in_date
+        .getHours()
+        .toLocaleString("en-US", { minimumIntegerDigits: 2 });
+    let minute = in_date
+        .getMinutes()
+        .toLocaleString("en-US", { minimumIntegerDigits: 2 });
+    let second = in_date
+        .getSeconds()
+        .toLocaleString("en-US", { minimumIntegerDigits: 2 });
+    let date_ = `${year}/${month}/${date} ${hour}:${minute}:${second}`;
+    return date_;
+}
 class Database {
     constructor() {
         this.database = mysql.createPool({
@@ -107,9 +129,14 @@ class Database {
         let clerks = [];
         let isManager = manage_i[0].length > 0;
         if (isManager) {
-            let shop_name = manage_i[0][0].shop_name;
+            let shop = {
+                name: manage_i[0][0].shop_name,
+                city: manage_i[0][0].shop_city,
+                price: manage_i[0][0].mask_price,
+                amount: manage_i[0][0].mask_amount,
+            };
             let [result, _] = await this.database.promise().execute(`SELECT UID, account, phone FROM role NATURAL JOIN user
-            NATURAL JOIN shop WHERE shop_name = ? AND role != 'm';`, [shop_name]);
+            NATURAL JOIN shop WHERE shop_name = ? AND role != 'm';`, [shop.name]);
             result = result;
             for (let i = 0; i < result.length; ++i) {
                 clerks = clerks.concat({
@@ -123,7 +150,7 @@ class Database {
                 phone,
                 isManager,
                 cities,
-                manages: manage_i[0][0],
+                manages: shop,
                 clerks,
             };
         }
@@ -341,24 +368,7 @@ class Database {
         let conn = await this.database.promise().getConnection();
         try {
             await conn.beginTransaction();
-            let now = new Date();
-            let year = now.getFullYear();
-            let month = now
-                .getMonth()
-                .toLocaleString("en-US", { minimumIntegerDigits: 2 });
-            let date = now
-                .getDate()
-                .toLocaleString("en-US", { minimumIntegerDigits: 2 });
-            let hour = now
-                .getHours()
-                .toLocaleString("en-US", { minimumIntegerDigits: 2 });
-            let minute = now
-                .getMinutes()
-                .toLocaleString("en-US", { minimumIntegerDigits: 2 });
-            let second = now
-                .getSeconds()
-                .toLocaleString("en-US", { minimumIntegerDigits: 2 });
-            let date_ = `${year}/${month}/${date} ${hour}:${minute}:${second}`;
+            let date_ = formatTime(new Date());
             console.log("order placed at:", date_);
             let ao = conn.execute(`INSERT INTO orders VALUES (0, ?, 'p', ?, ?, NULL, NULL, ?, ?)`, [sid, uid, date_, mask_price, buy_amount]);
             let ms = conn.execute(`UPDATE shop SET mask_amount = ? WHERE SID = ?`, [
@@ -379,6 +389,25 @@ class Database {
             return false;
         }
         return true;
+    }
+    async getUserOrder(account) {
+        let [oq, _] = await this.database.promise().query(`SELECT OID, status, create_time, finish_time,  
+        mask_amount, mask_price, shop_name FROM
+        orders NATURAL JOIN shop WHERE UID_create = (SELECT UID FROM user WHERE account = ?)`, [account]);
+        oq = oq;
+        let orders = new Array();
+        oq.forEach((val, i) => {
+            let or = {
+                oid: val.OID,
+                shop: val.shop_name,
+                status: val.status,
+                total_price: val.amount * val.price,
+                start: formatTime(val.create_time),
+                end: formatTime(val.finish_time),
+            };
+            orders = orders.concat(or);
+        });
+        return orders;
     }
 }
 exports.Database = Database;
