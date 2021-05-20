@@ -13,18 +13,13 @@
             <p>Shop</p>
           </div>
           <div class="info-data col-sm-8 col-lg-10">
-            <p>
-              <span><%= shop.name %></span>
-            </p>
+            <p><span><%= shop.shop_name %></span></p>
           </div>
-          <div class="w-100"></div>
           <div class="info-title col-sm-4 col-lg-2">
             <p>City</p>
           </div>
           <div class="info-data col-sm-8 col-lg-10">
-            <p>
-              <span><%= shop.city %></span>
-            </p>
+            <p><span><%= shop.shop_city %></span></p>
           </div>
         </div>
         <div class="form-group row">
@@ -33,13 +28,7 @@
           </div>
           <div class="col-sm-8 col-lg-7">
             <div class="input-group">
-              <input
-                type="number"
-                class="form-control"
-                value="<%= shop.price %>"
-                id="mys1"
-                disabled
-              />
+              <input type="number" class="form-control" value="<%= shop.mask_price %>" id="mys1" disabled />
               <div class="input-group-append">
                 <button type="button" class="btn btn-primary" id="mys2">
                   <span class="spinner-border spinner-border-sm"></span>
@@ -55,13 +44,7 @@
           </div>
           <div class="col-sm-8 col-lg-7">
             <div class="input-group">
-              <input
-                type="number"
-                class="form-control"
-                value="<%= shop.amount %>"
-                id="mys3"
-                disabled
-              />
+              <input type="number" class="form-control" value="<%= shop.mask_amount %>" id="mys3" disabled />
               <div class="input-group-append">
                 <button type="button" class="btn btn-primary" id="mys4">
                   <span class="spinner-border spinner-border-sm"></span>
@@ -77,12 +60,7 @@
           </div>
           <div class="col-sm-8 col-lg-7">
             <div class="input-group">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Type Account"
-                id="mys5"
-              />
+              <input type="text" class="form-control" placeholder="Type Account" id="mys5" />
               <div class="input-group-append">
                 <button type="button" class="btn btn-primary" id="mys6">
                   <span class="spinner-border spinner-border-sm"></span>
@@ -92,9 +70,9 @@
             </div>
           </div>
           <div class="col-sm-12">
-            <label for="mys5"
-              ><span class="text-danger" id="mys-err5"></span
-            ></label>
+            <label for="mys5">
+              <span class="text-danger" id="mys-err5"></span>
+            </label>
           </div>
         </div>
       </form>
