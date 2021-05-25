@@ -1,32 +1,35 @@
 "use strict";
 
-function checkInput(i) {
-  // 1: shop, 3: price, 4: amount
-  let value = $(`#regs${i}`).val();
+function checkInput() {
+  // 1: shop, 2: city, 3: price, 4: amount
+  let success = true;
+  for (let i = 1; i <= 4; i++) {
+    let value = $(`#regs${i}`).val();
+    let err = $(`#regs-err${i}`);
 
-  if (value.length == 0) {
-    $(`#regs-err${i}`).html("*Required!").parent().show();
-    return false;
-  }
-  if (i == 3 || i == 4) {
-    if (value < 0) {
-      $(`#regs-err${i}`).html("*Input a non-negative number").parent().show();
-      return false;
+    if (value.length == 0) {
+      err.html("*Required!").parent().show();
+      success = false;
+    }
+    switch (i) {
+      case 3:
+      case 4:
+        if (value < 0) {
+          err.html("*Input a non-negative number").parent().show();
+          success = false;
+        }
+        break;
+      default:
+        break;
     }
   }
-  return true;
+  return success;
 }
 
 function register(event) {
   event.preventDefault();
 
-  let success = true;
-  for (let i = 1; i <= 4; i++) {
-    success &= checkInput(i);
-  }
-  if (!success) {
-    return;
-  }
+  if (!checkInput()) return;
 
   $("#regs5 span").css("display", "inline-block");
   let posting = $.post("/register-shop", $("#regs").serialize());

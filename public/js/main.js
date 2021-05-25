@@ -2,21 +2,28 @@
 
 function clearInput(i) {
   // 1: home, 2: shop, 3: my order, 4: shop order
-  if (i == 1) {
-    $("#sho input:not([type=checkbox])").val("");
-    $("#sho input[type=checkbox]").prop("checked", false);
-    $("#sho select").val("All");
-    $("#table1 input").val(0);
-  } else if (i == 2) {
-    $("#mys input:not([disabled])").val("");
-    $("#mys label span").html("").parent().hide();
-    $("#regs input").val("");
-    $("#regs select").val("Taipei");
-    $("#regs label span").html("").parent().hide();
-  } else if (i == 3) {
-    $("#mor select").val("All");
-  } else if (i == 4) {
-    $("#sor select").val("All");
+  switch (i) {
+    case 1:
+      $("#sho input:not([type=checkbox])").val("");
+      $("#sho input[type=checkbox]").prop("checked", false);
+      $("#sho select").val("All");
+      $("#table1 input").val(0);
+      break;
+    case 2:
+      $("#mys input:not([disabled])").val("");
+      $("#mys label span").html("").parent().hide();
+      $("#regs input").val("");
+      $("#regs select").val("Taipei");
+      $("#regs label span").html("").parent().hide();
+      break;
+    case 3:
+      $("#mor select").val("All");
+      break;
+    case 4:
+      $("#sor select").val("All");
+      break;
+    default:
+      break;
   }
 }
 
@@ -121,7 +128,7 @@ $(document).ready(function () {
     pageLength: 8,
     columnDefs: [{ orderable: false, targets: 4 }],
     columns: [
-      { data: "name" },
+      { data: "shop" },
       { data: "city" },
       { data: "price" },
       { data: "amount" },

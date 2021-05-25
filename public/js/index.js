@@ -1,66 +1,70 @@
 "use strict";
 
-const patt1 = new RegExp("^[a-z0-9]+$", "i");
-const patt2 = new RegExp("^[0-9]+$");
-
-function checkInput(i) {
+function checkInput() {
   // 1: account, 2: password, 3: confirm password, 4: phone
-  let value = $(`#reg${i}`).val();
+  const patt1 = new RegExp("^[a-z0-9]+$", "i");
+  const patt2 = new RegExp("^[0-9]+$");
 
-  if (value.length == 0) {
-    $(`#reg-err${i}`).html("*Required!").parent().show();
-    return false;
+  let success = true;
+  for (let i = 1; i <= 4; i++) {
+    let value = $(`#reg${i}`).val();
+    let err = $(`#reg-err${i}`);
+
+    if (value.length == 0) {
+      err.html("*Required!").parent().show();
+      success = false;
+      continue;
+    }
+    switch (i) {
+      case 1:
+      case 2:
+        if (!patt1.test(value)) {
+          err.html("*Invalid format (only upper/lower-case character and number are allowed)").parent().show();
+          success = false;
+        }
+        break;
+      case 3:
+        if (value != $("#reg2").val()) {
+          err.html("*Password mismatch").parent().show();
+          success = false;
+        }
+        break;
+      case 4:
+        if (value.length > 10) {
+          err.html("*Invalid format (Max Length: 10)").parent().show();
+          success = false;
+        }
+        if (!patt2.test(value)) {
+          err.html("*Invalid format (only number are allowed)").parent().show();
+          success = false;
+        }
+        break;
+      default:
+        break;
+    }
   }
-  if (i == 1 || i == 2) {
-    if (!patt1.test(value)) {
-      $(`#reg-err${i}`)
-        .html(
-          "*Invalid format (only upper/lower-case character and number are allowed)"
-        )
-        .parent()
-        .show();
-      return false;
-    }
-  } else if (i == 3) {
-    if (value != $("#reg2").val()) {
-      $("#reg-err3").html("*Password mismatch").parent().show();
-      return false;
-    }
-  } else if (i == 4) {
-    if (!patt2.test(value)) {
-      $("#reg-err4")
-        .html("*Invalid format (only number are allowed)")
-        .parent()
-        .show();
-      return false;
-    } else if (value.length > 10) {
-      $("#reg-err4").html("*Invalid format (Max Length: 10)").parent().show();
-      return false;
-    }
-  }
-  return true;
+  return success;
 }
 
 function clearInput(i) {
   // 1: login, 2: register
-  if (i == 1) {
-    $("#log input").val("");
-  } else if (i == 2) {
-    $("#reg input").val("");
-    $("#reg label span").html("").parent().hide();
+  switch (i) {
+    case 1:
+      $("#log input").val("");
+      break;
+    case 2:
+      $("#reg input").val("");
+      $("#reg label span").html("").parent().hide();
+      break;
+    default:
+      break;
   }
 }
 
 function register(event) {
   event.preventDefault();
 
-  let success = true;
-  for (let i = 1; i <= 4; i++) {
-    success &= checkInput(i);
-  }
-  if (!success) {
-    return;
-  }
+  if (!checkInput()) return;
 
   $("#reg5 span").css("display", "inline-block");
   let posting = $.post("/register-user", $("#reg").serialize());
