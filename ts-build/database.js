@@ -439,7 +439,7 @@ class Database {
                 oid: val.OID,
                 shop: val.shop_name,
                 status: val.status,
-                total_price: val.amount * val.price,
+                total_price: val.mask_amount * val.mask_price,
                 start: formatTime(val.create_time),
                 end: formatTime(val.finish_time),
             };
@@ -481,7 +481,7 @@ class Database {
                 oid: val.OID,
                 shop: val.shop_name,
                 status: val.status,
-                total_price: val.amount * val.price,
+                total_price: val.mask_amount * val.mask_price,
                 start: formatTime(val.create_time),
                 end: formatTime(val.finish_time),
             };
