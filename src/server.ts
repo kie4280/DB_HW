@@ -79,9 +79,9 @@ app.post("/search-my-order", (req, res) => {
     res.sendStatus(403);
     return;
   }
-  let guo = db.getUserOrder(req.session.account);
+  let guo = db.getUserOrder(req.session.account, req.body.status);
   guo.then((obj) => {
-    console.log(obj);
+    // console.log(obj);
     res.status(200).send(obj);
   });
 
@@ -121,7 +121,7 @@ app.post("/search-shop-order", (req, res) => {
     return;
   }
 
-  const gso = db.getShopOrder(req.session.account);
+  const gso = db.getShopOrder(req.session.account, req.body.status);
   gso.then((orders)=>{
     res.status(200).send(orders);
   })
