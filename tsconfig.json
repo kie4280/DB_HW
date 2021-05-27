@@ -1,12 +1,11 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "target": "ES2019",
-        "jsx": "preserve",
-        "strictFunctionTypes": true,
-        "sourceMap": true,
-        "outDir": "ts-build",
-        "sourceRoot": "src"
+    "esModuleInterop": true,
+    "target": "ES2019",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "ts-build"
     },
     "exclude": [
         "node_modules",

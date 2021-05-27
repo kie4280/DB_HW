@@ -1,8 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Database = void 0;
-const crypto = require("crypto");
-const mysql = require("mysql2");
+const crypto = __importStar(require("crypto"));
+const mysql = __importStar(require("mysql2"));
 function genHash(password) {
     var hash = crypto.createHash("sha256").update(password).digest("hex");
     return hash;
@@ -394,6 +413,32 @@ class Database {
         let [oq, _] = await this.database.promise().query(`SELECT OID, status, create_time, finish_time,  
         mask_amount, mask_price, shop_name FROM
         orders NATURAL JOIN shop WHERE UID_create = (SELECT UID FROM user WHERE account = ?)`, [account]);
+        oq = oq;
+        let orders = new Array();
+        oq.forEach((val, i) => {
+            let or = {
+                oid: val.OID,
+                shop: val.shop_name,
+                status: val.status,
+                total_price: val.amount * val.price,
+                start: formatTime(val.create_time),
+                end: formatTime(val.finish_time),
+            };
+            orders = orders.concat(or);
+        });
+        return orders;
+    }
+    async getShopOrder(account, shop_name) {
+        let query = `SELECT OID, status, create_time, finish_time,  
+    mask_amount, mask_price, shop_name FROM
+    orders NATURAL JOIN shop NATURAL JOIN role WHERE 
+    UID = (SELECT UID FROM user WHERE account = ?)`;
+        let args = [account];
+        if (shop_name != undefined) {
+            query = query + " AND shop_name = ?";
+            args = args.concat([shop_name]);
+        }
+        let [oq, _] = await this.database.promise().query(query, args);
         oq = oq;
         let orders = new Array();
         oq.forEach((val, i) => {

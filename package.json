@@ -2,7 +2,7 @@
   "name": "db_hw2",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "src/server.ts",
   "directories": {
     "test": "test"
   },
@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kie4280/DB_HW2.git"
+    "url": "git+https://github.com/kie4280/DB_HW.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/kie4280/DB_HW2/issues"
+    "url": "https://github.com/kie4280/DB_HW/issues"
   },
-  "homepage": "https://github.com/kie4280/DB_HW2#readme",
+  "homepage": "https://github.com/kie4280/DB_HW#readme",
   "dependencies": {
     "@types/express": "^4.17.11",
     "@types/express-session": "^1.17.0",
