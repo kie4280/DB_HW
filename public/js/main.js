@@ -128,7 +128,7 @@ $(document).ready(function () {
     pageLength: 8,
     columnDefs: [{ orderable: false, targets: 4 }],
     columns: [
-      { data: "shop" },
+      { data: "name" },
       { data: "city" },
       { data: "price" },
       { data: "amount" },

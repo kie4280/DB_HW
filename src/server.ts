@@ -114,7 +114,9 @@ app.post("/search-my-order", (req, res) => {
   //   ]);
   // }, 1000);
 });
-
+app.post("/get-work-at", (req, res) => {
+  res.status(200).send(["1", "2", "3"]);
+});
 app.post("/search-shop-order", (req, res) => {
   if (req.session.account == undefined || req.session.shop_name == undefined) {
     res.sendStatus(403);

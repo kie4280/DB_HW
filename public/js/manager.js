@@ -109,6 +109,16 @@ function finishSelectedOrder() {
   }
 }
 
+function getWorkAt() {
+  let posting = $.post("/get-work-at");
+
+  posting.done(function (data) {
+    data.forEach((shop) => {
+      $("#sor1").append(`<option>${shop}</option>`);
+    });
+  });
+}
+
 $(document).ready(function () {
   $("#table2").DataTable({
     lengthChange: false,
@@ -195,4 +205,6 @@ $(document).ready(function () {
   $("#table4").on("click", "button:last-child", cancelOrder);
 
   $("#sor").trigger("submit");
+
+  getWorkAt();
 });
