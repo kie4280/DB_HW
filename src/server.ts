@@ -1,5 +1,5 @@
-import * as express from "express";
-import * as express_session from "express-session";
+import express from "express";
+import express_session from "express-session";
 import { Database } from "./database";
 
 const db = new Database();
@@ -79,9 +79,9 @@ app.post("/search-my-order", (req, res) => {
     res.sendStatus(403);
     return;
   }
-  let guo = db.getUserOrder(req.session.account);
+  let guo = db.getUserOrder(req.session.account, req.body.status);
   guo.then((obj) => {
-    console.log(obj);
+    // console.log(obj);
     res.status(200).send(obj);
   });
 
@@ -118,10 +118,15 @@ app.post("/get-work-at", (req, res) => {
   res.status(200).send(["1", "2", "3"]);
 });
 app.post("/search-shop-order", (req, res) => {
-  if (req.session.account == undefined || req.session.shop_name == undefined) {
+  if (req.session.account == undefined) {
     res.sendStatus(403);
     return;
   }
+
+  const gso = db.getShopOrder(req.session.account, req.body.status);
+  gso.then((orders)=>{
+    res.status(200).send(orders);
+  })
 
   // setTimeout(function () {
   //   res.status(200).send([

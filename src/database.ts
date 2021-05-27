@@ -549,13 +549,80 @@ export class Database {
     return true;
   }
 
-  public async getUserOrder(account: string): Promise<Array<ORDER>> {
-    let [oq, _] = await this.database.promise().query(
-      `SELECT OID, status, create_time, finish_time,  
-        mask_amount, mask_price, shop_name FROM
-        orders NATURAL JOIN shop WHERE UID_create = (SELECT UID FROM user WHERE account = ?)`,
-      [account]
-    );
+  public async getUserOrder(
+    account: string,
+    status: string
+  ): Promise<Array<ORDER>> {
+    let query = `SELECT OID, status, create_time, finish_time,  
+    mask_amount, mask_price, shop_name FROM
+    orders NATURAL JOIN shop WHERE 
+    UID_create = (SELECT UID FROM user WHERE account = ?)`;
+    let args = [account];
+
+    if (status != "All") {
+      query += " AND status = ?";
+      switch (status) {
+        case "Finished":
+          args = args.concat(["f"]);
+          break;
+        case "Not finished":
+          args = args.concat(["p"]);
+          break;
+        case "Cancelled":
+          args = args.concat(["c"]);
+          break;
+        default:
+          break;
+      }
+    }
+    let [oq, _] = await this.database.promise().query(query, args);
+    oq = oq as mysql.RowDataPacket[];
+    let orders = new Array<ORDER>();
+    oq.forEach((val, i) => {
+      let or: ORDER = {
+        oid: val.OID,
+        shop: val.shop_name,
+        status: val.status,
+        total_price: val.amount * val.price,
+        start: formatTime(val.create_time),
+        end: formatTime(val.finish_time),
+      };
+      orders = orders.concat(or);
+    });
+    return orders;
+  }
+
+  public async getShopOrder(
+    account: string,
+    status: string,
+    shop_name?: string
+  ): Promise<Array<ORDER>> {
+    let query = `SELECT OID, status, create_time, finish_time,  
+    mask_amount, mask_price, shop_name FROM
+    orders NATURAL JOIN shop NATURAL JOIN role WHERE 
+    UID = (SELECT UID FROM user WHERE account = ?)`;
+    let args = [account];
+    if (shop_name != undefined) {
+      query = query + " AND shop_name = ?";
+      args = args.concat([shop_name]);
+    }
+    if (status != "All") {
+      query += " AND status = ?";
+      switch (status) {
+        case "Finished":
+          args = args.concat(["f"]);
+          break;
+        case "Not finished":
+          args = args.concat(["p"]);
+          break;
+        case "Cancelled":
+          args = args.concat(["c"]);
+          break;
+        default:
+          break;
+      }
+    }
+    let [oq, _] = await this.database.promise().query(query, args);
     oq = oq as mysql.RowDataPacket[];
     let orders = new Array<ORDER>();
     oq.forEach((val, i) => {

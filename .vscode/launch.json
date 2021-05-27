@@ -22,7 +22,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/ts-build/server.js",
+            "program": "${workspaceFolder}/src/server.ts",
             "outFiles": [
                 "${workspaceFolder}/ts-build/**/*.js"
             ],

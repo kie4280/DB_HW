@@ -1,18 +1,21 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const express = require("express");
-const express_session = require("express-session");
+const express_1 = __importDefault(require("express"));
+const express_session_1 = __importDefault(require("express-session"));
 const database_1 = require("./database");
 const db = new database_1.Database();
-const app = express();
+const app = express_1.default();
 app.listen(3000, () => {
     console.log("App is listening on port 3000");
 });
 app.set("view engine", "ejs");
 app.set("view cache", false);
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(express_session({
+app.use(express_1.default.urlencoded({ extended: true }));
+app.use(express_1.default.json());
+app.use(express_session_1.default({
     saveUninitialized: false,
     secret: "df4t3g8rybuib",
     resave: false,
@@ -66,9 +69,9 @@ app.post("/search-my-order", (req, res) => {
         res.sendStatus(403);
         return;
     }
-    let guo = db.getUserOrder(req.session.account);
+    let guo = db.getUserOrder(req.session.account, req.body.status);
     guo.then((obj) => {
-        console.log(obj);
+        // console.log(obj);
         res.status(200).send(obj);
     });
     // setTimeout(function () {
@@ -104,10 +107,14 @@ app.post("/get-work-at", (req, res) => {
     res.status(200).send(["1", "2", "3"]);
 });
 app.post("/search-shop-order", (req, res) => {
-    if (req.session.account == undefined || req.session.shop_name == undefined) {
+    if (req.session.account == undefined) {
         res.sendStatus(403);
         return;
     }
+    const gso = db.getShopOrder(req.session.account, req.body.status);
+    gso.then((orders) => {
+        res.status(200).send(orders);
+    });
     // setTimeout(function () {
     //   res.status(200).send([
     //     {
@@ -239,7 +246,7 @@ app.post("/register-user", (req, res) => {
         res.status(200).send({ status: r });
     });
 });
-app.use(express.static("public"));
+app.use(express_1.default.static("public"));
 //The 404 Route (ALWAYS Keep this as the last route)
 app.get("*", (req, res) => {
     res.status(404).send("Not found!");
