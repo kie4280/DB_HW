@@ -163,7 +163,7 @@ $(document).ready(function () {
     lengthChange: false,
     searching: false,
     autoWidth: false,
-    pageLength: 5,
+    pageLength: 4,
     order: [[1, "asc"]],
     columnDefs: [{ orderable: false, targets: [0, 7] }],
     columns: [
