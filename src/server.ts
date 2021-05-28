@@ -51,8 +51,6 @@ app.get("/main", (req, res) => {
   }
 });
 
-// --------------- start test ---------------
-
 app.post("/place-order", (req, res) => {
   console.log(req.body);
   if (req.session.account == undefined) {
@@ -68,9 +66,7 @@ app.post("/place-order", (req, res) => {
   po.then((r) => {
     res.status(200).send({ status: r });
   });
-  // setTimeout(function () {
-  //   res.status(200).send({ status: true });
-  // }, 1000);
+
 });
 
 app.post("/search-my-order", (req, res) => {
@@ -85,34 +81,6 @@ app.post("/search-my-order", (req, res) => {
     res.status(200).send(obj);
   });
 
-  // setTimeout(function () {
-  //   res.status(200).send([
-  //     {
-  //       oid: 1,
-  //       status: "Finished",
-  //       start: 0,
-  //       end: 0,
-  //       shop: "shop",
-  //       total_price: 0,
-  //     },
-  //     {
-  //       oid: 1,
-  //       status: "Not finished",
-  //       start: 1,
-  //       end: 0,
-  //       shop: "shop",
-  //       total_price: 0,
-  //     },
-  //     {
-  //       oid: 1,
-  //       status: "Cancelled",
-  //       start: 2,
-  //       end: 0,
-  //       shop: "shop",
-  //       total_price: 0,
-  //     },
-  //   ]);
-  // }, 1000);
 });
 app.post("/get-work-at", (req, res) => {
   if (req.session.account == undefined) {
@@ -124,6 +92,7 @@ app.post("/get-work-at", (req, res) => {
     res.status(200).send(obj);
   });
 });
+
 app.post("/search-shop-order", (req, res) => {
   if (req.session.account == undefined) {
     res.sendStatus(403);
@@ -137,18 +106,18 @@ app.post("/search-shop-order", (req, res) => {
 });
 
 app.post("/finish-order", (req, res) => {
+  console.log("finish order", req.body);
   setTimeout(function () {
     res.status(200).send({ status: true });
   }, 1000);
 });
 
 app.post("/cancel-order", (req, res) => {
+  console.log("cancel order", req.body);
   setTimeout(function () {
     res.status(200).send({ status: true });
   }, 1000);
 });
-
-// --------------- end test ---------------
 
 app.post("/login-user", (req, res) => {
   console.log("login");

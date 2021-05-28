@@ -7,11 +7,11 @@ function genHash(password: string): string {
 }
 
 function formatTime(in_date: Date): string {
-  if (in_date == null) return "";
+  if (in_date == null) return "-";
   let year = in_date.getFullYear();
-  let month = in_date
-    .getMonth()
-    .toLocaleString("en-US", { minimumIntegerDigits: 2 });
+  let month = (in_date.getMonth() + 1).toLocaleString("en-US", {
+    minimumIntegerDigits: 2,
+  });
   let date = in_date
     .getDate()
     .toLocaleString("en-US", { minimumIntegerDigits: 2 });
@@ -267,10 +267,11 @@ export class Database {
       await conn.commit();
     } catch (error) {
       await conn.rollback();
-      conn.release();
       return false;
+    } finally {
+      conn.release();
     }
-    conn.release();
+
     return true;
   }
 
@@ -548,11 +549,11 @@ export class Database {
         throw Error("cannot insert into orders");
       }
       await conn.commit();
-      conn.release();
     } catch (error) {
       await conn.rollback();
-      conn.release();
       return false;
+    } finally {
+      conn.release();
     }
 
     return true;
@@ -562,10 +563,17 @@ export class Database {
     account: string,
     status: string
   ): Promise<Array<ORDER>> {
-    let query = `SELECT OID, status, create_time, finish_time,  
-    mask_amount, mask_price, shop_name FROM
+    let query = `SELECT OID, status, create_time, finish_time, 
+    amount, price, shop_name, created.account AS creator,
+    finished.account AS finisher FROM
+    (SELECT OID, status, create_time, finish_time,  
+    amount, price, shop_name, UID_create, UID_finish FROM
     orders NATURAL JOIN shop WHERE 
-    UID_create = (SELECT UID FROM user WHERE account = ?)`;
+    UID_create = (SELECT UID FROM user WHERE account = ?)) AS ord
+      JOIN (SELECT UID, account FROM user) AS created
+      ON ord.UID_create = created.UID 
+      LEFT JOIN (SELECT UID, account FROM user) AS finished
+      ON (ord.UID_finish is NOT NULL AND ord.UID_finish = finished.UID)`;
     let args = [account];
 
     if (status != "All") {
@@ -580,9 +588,11 @@ export class Database {
         oid: val.OID,
         shop: val.shop_name,
         status: STATUS_DICT.get(val.status),
-        total_price: val.mask_amount * val.mask_price,
-        start: formatTime(val.create_time),
-        end: formatTime(val.finish_time),
+        total_price: Number.parseInt(val.amount) * Number.parseInt(val.price),
+        start: formatTime(val.create_time) + `<br>${val.creator}`,
+        end:
+          formatTime(val.finish_time) +
+          (val.finisher == null ? "" : `<br>${val.finisher}`),
       };
       orders = orders.concat(or);
     });
@@ -594,10 +604,18 @@ export class Database {
     status: string,
     shop_name?: string
   ): Promise<Array<ORDER>> {
-    let query = `SELECT OID, status, create_time, finish_time,  
-    mask_amount, mask_price, shop_name FROM
+    let query = `SELECT OID, status, create_time, finish_time,
+    amount, price, shop_name, created.account AS creator,
+    finished.account AS finisher FROM     
+    (SELECT OID, status, create_time, finish_time,  
+    amount, price, shop_name, UID_create, UID_finish FROM
     orders NATURAL JOIN shop NATURAL JOIN role WHERE 
-    UID = (SELECT UID FROM user WHERE account = ?)`;
+    UID = (SELECT UID FROM user WHERE account = ?)) AS ord 
+      JOIN (SELECT UID, account FROM user) AS created
+      ON ord.UID_create = created.UID 
+      LEFT JOIN (SELECT UID, account FROM user) AS finished
+      ON (ord.UID_finish is NOT NULL AND ord.UID_finish = finished.UID)
+      `;
     let args = [account];
     if (shop_name != undefined) {
       query = query + " AND shop_name = ?";
@@ -615,9 +633,11 @@ export class Database {
         oid: val.OID,
         shop: val.shop_name,
         status: STATUS_DICT.get(val.status),
-        total_price: val.mask_amount * val.mask_price,
-        start: formatTime(val.create_time),
-        end: formatTime(val.finish_time),
+        total_price: Number.parseInt(val.amount) * Number.parseInt(val.price),
+        start: formatTime(val.create_time) + `<br>${val.creator}`,
+        end:
+          formatTime(val.finish_time) +
+          (val.finisher == null ? "" : `<br>${val.finisher}`),
       };
       orders = orders.concat(or);
     });
@@ -635,5 +655,24 @@ export class Database {
       shops = shops.concat([val.shop_name]);
     });
     return shops;
+  }
+
+  public async finishOrder(account: string, OIDs: string[]): Promise<boolean> {
+    return true;
+  }
+
+  public async cancelOrder(account: string, OIDs: string[]): Promise<boolean> {
+    const conn = await this.database.promise().getConnection();
+    await conn.beginTransaction();
+
+    try {
+      conn.query(
+        `SEELCT 
+      `
+      );
+    } catch (error) {}
+    conn.release();
+
+    return true;
   }
 }

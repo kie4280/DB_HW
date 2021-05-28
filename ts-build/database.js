@@ -28,11 +28,11 @@ function genHash(password) {
 }
 function formatTime(in_date) {
     if (in_date == null)
-        return "";
+        return "-";
     let year = in_date.getFullYear();
-    let month = in_date
-        .getMonth()
-        .toLocaleString("en-US", { minimumIntegerDigits: 2 });
+    let month = (in_date.getMonth() + 1).toLocaleString("en-US", {
+        minimumIntegerDigits: 2,
+    });
     let date = in_date
         .getDate()
         .toLocaleString("en-US", { minimumIntegerDigits: 2 });
@@ -208,10 +208,11 @@ class Database {
         }
         catch (error) {
             await conn.rollback();
-            conn.release();
             return false;
         }
-        conn.release();
+        finally {
+            conn.release();
+        }
         return true;
     }
     async addClerk(account, shop) {
@@ -408,20 +409,28 @@ class Database {
                 throw Error("cannot insert into orders");
             }
             await conn.commit();
-            conn.release();
         }
         catch (error) {
             await conn.rollback();
-            conn.release();
             return false;
+        }
+        finally {
+            conn.release();
         }
         return true;
     }
     async getUserOrder(account, status) {
-        let query = `SELECT OID, status, create_time, finish_time,  
-    mask_amount, mask_price, shop_name FROM
+        let query = `SELECT OID, status, create_time, finish_time, 
+    amount, price, shop_name, created.account AS creator,
+    finished.account AS finisher FROM
+    (SELECT OID, status, create_time, finish_time,  
+    amount, price, shop_name, UID_create, UID_finish FROM
     orders NATURAL JOIN shop WHERE 
-    UID_create = (SELECT UID FROM user WHERE account = ?)`;
+    UID_create = (SELECT UID FROM user WHERE account = ?)) AS ord
+      JOIN (SELECT UID, account FROM user) AS created
+      ON ord.UID_create = created.UID 
+      LEFT JOIN (SELECT UID, account FROM user) AS finished
+      ON (ord.UID_finish is NOT NULL AND ord.UID_finish = finished.UID)`;
         let args = [account];
         if (status != "All") {
             query += " AND status = ?";
@@ -435,19 +444,28 @@ class Database {
                 oid: val.OID,
                 shop: val.shop_name,
                 status: STATUS_DICT.get(val.status),
-                total_price: val.mask_amount * val.mask_price,
-                start: formatTime(val.create_time),
-                end: formatTime(val.finish_time),
+                total_price: Number.parseInt(val.amount) * Number.parseInt(val.price),
+                start: formatTime(val.create_time) + `<br>${val.creator}`,
+                end: formatTime(val.finish_time) +
+                    (val.finisher == null ? "" : `<br>${val.finisher}`),
             };
             orders = orders.concat(or);
         });
         return orders;
     }
     async getShopOrder(account, status, shop_name) {
-        let query = `SELECT OID, status, create_time, finish_time,  
-    mask_amount, mask_price, shop_name FROM
+        let query = `SELECT OID, status, create_time, finish_time,
+    amount, price, shop_name, created.account AS creator,
+    finished.account AS finisher FROM     
+    (SELECT OID, status, create_time, finish_time,  
+    amount, price, shop_name, UID_create, UID_finish FROM
     orders NATURAL JOIN shop NATURAL JOIN role WHERE 
-    UID = (SELECT UID FROM user WHERE account = ?)`;
+    UID = (SELECT UID FROM user WHERE account = ?)) AS ord 
+      JOIN (SELECT UID, account FROM user) AS created
+      ON ord.UID_create = created.UID 
+      LEFT JOIN (SELECT UID, account FROM user) AS finished
+      ON (ord.UID_finish is NOT NULL AND ord.UID_finish = finished.UID)
+      `;
         let args = [account];
         if (shop_name != undefined) {
             query = query + " AND shop_name = ?";
@@ -465,9 +483,10 @@ class Database {
                 oid: val.OID,
                 shop: val.shop_name,
                 status: STATUS_DICT.get(val.status),
-                total_price: val.mask_amount * val.mask_price,
-                start: formatTime(val.create_time),
-                end: formatTime(val.finish_time),
+                total_price: Number.parseInt(val.amount) * Number.parseInt(val.price),
+                start: formatTime(val.create_time) + `<br>${val.creator}`,
+                end: formatTime(val.finish_time) +
+                    (val.finisher == null ? "" : `<br>${val.finisher}`),
             };
             orders = orders.concat(or);
         });
@@ -481,6 +500,20 @@ class Database {
             shops = shops.concat([val.shop_name]);
         });
         return shops;
+    }
+    async finishOrder(account, OIDs) {
+        return true;
+    }
+    async cancelOrder(account, OIDs) {
+        const conn = await this.database.promise().getConnection();
+        await conn.beginTransaction();
+        try {
+            conn.query(`SEELCT 
+      `);
+        }
+        catch (error) { }
+        conn.release();
+        return true;
     }
 }
 exports.Database = Database;
