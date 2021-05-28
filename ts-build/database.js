@@ -48,6 +48,14 @@ function formatTime(in_date) {
     let date_ = `${year}/${month}/${date} ${hour}:${minute}:${second}`;
     return date_;
 }
+const STATUS_DICT = new Map([
+    ["p", "Not finished"],
+    ["c", "Cancelled"],
+    ["f", "Finished"],
+    ["Not finished", "p"],
+    ["Cancelled", "c"],
+    ["Finished", "f"],
+]);
 class Database {
     constructor() {
         this.database = mysql.createPool({
@@ -417,19 +425,7 @@ class Database {
         let args = [account];
         if (status != "All") {
             query += " AND status = ?";
-            switch (status) {
-                case "Finished":
-                    args = args.concat(["f"]);
-                    break;
-                case "Not finished":
-                    args = args.concat(["p"]);
-                    break;
-                case "Cancelled":
-                    args = args.concat(["c"]);
-                    break;
-                default:
-                    break;
-            }
+            args = args.concat([STATUS_DICT.get(status)]);
         }
         let [oq, _] = await this.database.promise().query(query, args);
         oq = oq;
@@ -438,7 +434,7 @@ class Database {
             let or = {
                 oid: val.OID,
                 shop: val.shop_name,
-                status: val.status,
+                status: STATUS_DICT.get(val.status),
                 total_price: val.mask_amount * val.mask_price,
                 start: formatTime(val.create_time),
                 end: formatTime(val.finish_time),
@@ -459,19 +455,7 @@ class Database {
         }
         if (status != "All") {
             query += " AND status = ?";
-            switch (status) {
-                case "Finished":
-                    args = args.concat(["f"]);
-                    break;
-                case "Not finished":
-                    args = args.concat(["p"]);
-                    break;
-                case "Cancelled":
-                    args = args.concat(["c"]);
-                    break;
-                default:
-                    break;
-            }
+            args = args.concat([STATUS_DICT.get(status)]);
         }
         let [oq, _] = await this.database.promise().query(query, args);
         oq = oq;
@@ -480,7 +464,7 @@ class Database {
             let or = {
                 oid: val.OID,
                 shop: val.shop_name,
-                status: val.status,
+                status: STATUS_DICT.get(val.status),
                 total_price: val.mask_amount * val.mask_price,
                 start: formatTime(val.create_time),
                 end: formatTime(val.finish_time),
@@ -488,6 +472,15 @@ class Database {
             orders = orders.concat(or);
         });
         return orders;
+    }
+    async getWorkAt(account) {
+        let shops = new Array();
+        let [gw, _] = (await this.database.promise().query(`SELECT shop_name FROM shop NATURAL JOIN role WHERE 
+        UID = (SELECT UID FROM user WHERE account = ?)`, [account]));
+        gw.forEach((val) => {
+            shops = shops.concat([val.shop_name]);
+        });
+        return shops;
     }
 }
 exports.Database = Database;

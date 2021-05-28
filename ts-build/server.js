@@ -104,7 +104,14 @@ app.post("/search-my-order", (req, res) => {
     // }, 1000);
 });
 app.post("/get-work-at", (req, res) => {
-    res.status(200).send(["1", "2", "3"]);
+    if (req.session.account == undefined) {
+        res.sendStatus(403);
+        return;
+    }
+    let gw = db.getWorkAt(req.session.account);
+    gw.then((obj) => {
+        res.status(200).send(obj);
+    });
 });
 app.post("/search-shop-order", (req, res) => {
     if (req.session.account == undefined) {
@@ -115,34 +122,6 @@ app.post("/search-shop-order", (req, res) => {
     gso.then((orders) => {
         res.status(200).send(orders);
     });
-    // setTimeout(function () {
-    //   res.status(200).send([
-    //     {
-    //       oid: 1,
-    //       status: "Not finished",
-    //       start: 0,
-    //       end: 0,
-    //       shop: "shop",
-    //       total_price: 0,
-    //     },
-    //     {
-    //       oid: 1,
-    //       status: "Not finished",
-    //       start: 1,
-    //       end: 0,
-    //       shop: "shop",
-    //       total_price: 0,
-    //     },
-    //     {
-    //       oid: 1,
-    //       status: "Not finished",
-    //       start: 2,
-    //       end: 0,
-    //       shop: "shop",
-    //       total_price: 0,
-    //     },
-    //   ]);
-    // }, 1000);
 });
 app.post("/finish-order", (req, res) => {
     setTimeout(function () {

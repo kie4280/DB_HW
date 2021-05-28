@@ -45,6 +45,15 @@ type ORDER = {
   total_price: number;
 };
 
+const STATUS_DICT = new Map<string, string>([
+  ["p", "Not finished"],
+  ["c", "Cancelled"],
+  ["f", "Finished"],
+  ["Not finished", "p"],
+  ["Cancelled", "c"],
+  ["Finished", "f"],
+]);
+
 export class Database {
   database: mysql.Pool;
   constructor() {
@@ -561,19 +570,7 @@ export class Database {
 
     if (status != "All") {
       query += " AND status = ?";
-      switch (status) {
-        case "Finished":
-          args = args.concat(["f"]);
-          break;
-        case "Not finished":
-          args = args.concat(["p"]);
-          break;
-        case "Cancelled":
-          args = args.concat(["c"]);
-          break;
-        default:
-          break;
-      }
+      args = args.concat([STATUS_DICT.get(status)]);
     }
     let [oq, _] = await this.database.promise().query(query, args);
     oq = oq as mysql.RowDataPacket[];
@@ -582,7 +579,7 @@ export class Database {
       let or: ORDER = {
         oid: val.OID,
         shop: val.shop_name,
-        status: val.status,
+        status: STATUS_DICT.get(val.status),
         total_price: val.mask_amount * val.mask_price,
         start: formatTime(val.create_time),
         end: formatTime(val.finish_time),
@@ -608,19 +605,7 @@ export class Database {
     }
     if (status != "All") {
       query += " AND status = ?";
-      switch (status) {
-        case "Finished":
-          args = args.concat(["f"]);
-          break;
-        case "Not finished":
-          args = args.concat(["p"]);
-          break;
-        case "Cancelled":
-          args = args.concat(["c"]);
-          break;
-        default:
-          break;
-      }
+      args = args.concat([STATUS_DICT.get(status)]);
     }
     let [oq, _] = await this.database.promise().query(query, args);
     oq = oq as mysql.RowDataPacket[];
@@ -629,7 +614,7 @@ export class Database {
       let or: ORDER = {
         oid: val.OID,
         shop: val.shop_name,
-        status: val.status,
+        status: STATUS_DICT.get(val.status),
         total_price: val.mask_amount * val.mask_price,
         start: formatTime(val.create_time),
         end: formatTime(val.finish_time),
@@ -637,5 +622,18 @@ export class Database {
       orders = orders.concat(or);
     });
     return orders;
+  }
+
+  public async getWorkAt(account: string): Promise<string[]> {
+    let shops: string[] = new Array<string>();
+    let [gw, _] = (await this.database.promise().query(
+      `SELECT shop_name FROM shop NATURAL JOIN role WHERE 
+        UID = (SELECT UID FROM user WHERE account = ?)`,
+      [account]
+    )) as [mysql.RowDataPacket[], any];
+    gw.forEach((val) => {
+      shops = shops.concat([val.shop_name]);
+    });
+    return shops;
   }
 }
