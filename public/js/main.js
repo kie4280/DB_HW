@@ -100,26 +100,36 @@ function cancelOrder() {
   });
 
   posting.done(function (data) {
-    if (data.status) {
-      $("#mor").trigger("submit");
-      $("#sor").trigger("submit");
-      $("#sho").trigger("submit");
-    } else {
+    $("#mor").trigger("submit");
+    $("#sor").trigger("submit");
+    $("#sho").trigger("submit");
+    if (!data.status) {
       window.alert("Cancel order failed!");
-      tr.find("button:last-child span").css("display", "none");
     }
   });
 }
 
 function cancelSelectedOrder() {
   let table = $(this).parents(".tab-pane").find("table");
+  let array = [];
 
   for (let i = 1; i <= table.find("tbody tr").length; i++) {
     let tr = table.find(`tbody tr:nth-child(${i})`);
     if (tr.find("td:first-child input").prop("checked")) {
-      tr.find("button:last-child").trigger("click");
+      tr.find("button:last-child span").css("display", "inline-block");
+      array.push(i);
     }
   }
+
+  let posting = $.post("/cancel-selected-order", { oid: array });
+  posting.done(function (data) {
+    $("#mor").trigger("submit");
+    $("#sor").trigger("submit");
+    $("#sho").trigger("submit");
+    if (!data.status) {
+      window.alert("Cancel selected order failed!");
+    }
+  });
 }
 
 $(document).ready(function () {

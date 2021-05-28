@@ -88,25 +88,34 @@ function finishOrder() {
   });
 
   posting.done(function (data) {
-    if (data.status) {
-      $("#mor").trigger("submit");
-      $("#sor").trigger("submit");
-    } else {
+    $("#mor").trigger("submit");
+    $("#sor").trigger("submit");
+    if (!data.status) {
       window.alert("Finish order failed!");
-      tr.find("button:first-child span").css("display", "none");
     }
   });
 }
 
 function finishSelectedOrder() {
   let table = $(this).parents(".tab-pane").find("table");
+  let array = [];
 
   for (let i = 1; i <= table.find("tbody tr").length; i++) {
     let tr = table.find(`tbody tr:nth-child(${i})`);
     if (tr.find("td:first-child input").prop("checked")) {
-      tr.find("button:first-child").trigger("click");
+      tr.find("button:first-child span").css("display", "inline-block");
+      array.push(i);
     }
   }
+
+  let posting = $.post("/finish-selected-order", { oid: array });
+  posting.done(function (data) {
+    $("#mor").trigger("submit");
+    $("#sor").trigger("submit");
+    if (!data.status) {
+      window.alert("Finish selected order failed!");
+    }
+  });
 }
 
 function getWorkAt() {
