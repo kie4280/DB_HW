@@ -80,7 +80,6 @@ function searchShopOrder(event) {
 }
 
 function finishOrder() {
-  let form = $(this).parents(".tab-pane").find("form");
   let tr = $(this).parents("tr");
 
   tr.find("button:first-child span").css("display", "inline-block");
@@ -90,7 +89,8 @@ function finishOrder() {
 
   posting.done(function (data) {
     if (data.status) {
-      form.trigger("submit");
+      $("#mor").trigger("submit");
+      $("#sor").trigger("submit");
     } else {
       window.alert("Finish order failed!");
       tr.find("button:first-child span").css("display", "none");

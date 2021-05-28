@@ -69,6 +69,8 @@ function placeOrder() {
     if (data.status) {
       window.alert("Place an order success!");
       $("#sho").trigger("submit");
+      $("#mor").trigger("submit");
+      $("#sor").trigger("submit");
     } else {
       window.alert("Place an order failed!\nInsufficient masks!");
       tr.find("span").css("display", "none");
@@ -90,7 +92,6 @@ function searchMyOrder(event) {
 }
 
 function cancelOrder() {
-  let form = $(this).parents(".tab-pane").find("form");
   let tr = $(this).parents("tr");
 
   tr.find("button:last-child span").css("display", "inline-block");
@@ -100,7 +101,8 @@ function cancelOrder() {
 
   posting.done(function (data) {
     if (data.status) {
-      form.trigger("submit");
+      $("#mor").trigger("submit");
+      $("#sor").trigger("submit");
       $("#sho").trigger("submit");
     } else {
       window.alert("Cancel order failed!");
