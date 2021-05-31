@@ -84,7 +84,7 @@ function finishOrder() {
 
   tr.find("button:first-child span").css("display", "inline-block");
   let posting = $.post("/finish-order", {
-    oid: tr.children("td:nth-child(2)").html(),
+    oid: new Array(tr.children("td:nth-child(2)").html()),
   });
 
   posting.done(function (data) {

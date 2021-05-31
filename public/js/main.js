@@ -96,7 +96,7 @@ function cancelOrder() {
 
   tr.find("button:last-child span").css("display", "inline-block");
   let posting = $.post("/cancel-order", {
-    oid: tr.children("td:nth-child(2)").html(),
+    oid: new Array(tr.children("td:nth-child(2)").html()),
   });
 
   posting.done(function (data) {
@@ -121,7 +121,7 @@ function cancelSelectedOrder() {
     }
   }
 
-  let posting = $.post("/cancel-selected-order", { oid: array });
+  let posting = $.post("/cancel-order", { oid: array });
   posting.done(function (data) {
     $("#mor").trigger("submit");
     $("#sor").trigger("submit");
