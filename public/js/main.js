@@ -117,7 +117,7 @@ function cancelSelectedOrder() {
     let tr = table.find(`tbody tr:nth-child(${i})`);
     if (tr.find("td:first-child input").prop("checked")) {
       tr.find("button:last-child span").css("display", "inline-block");
-      array.push(i);
+      array.push(tr.children("td:nth-child(2)").html());
     }
   }
 
