@@ -64,6 +64,7 @@ class Database {
             password: "mask",
             database: "maskDB",
             connectionLimit: 10,
+            multipleStatements: false, // beware of SQL injection if true
         });
         this.createTables();
     }
@@ -130,18 +131,18 @@ class Database {
     }
     async checkpassword(account, password) {
         let [results, _] = await this.database.promise().execute(`SELECT account, password FROM user
-          where account = ? and password = ?`, [account, genHash(password)]);
+          where account = ? and password = ?;`, [account, genHash(password)]);
         return results.length == 1;
     }
     async getInfo(account) {
         let Q_userInfo = this.database.promise().execute(`SELECT phone FROM user
-          WHERE account = ?`, [account]);
+          WHERE account = ?;`, [account]);
         let Q_manageShopInfo = this.database.promise().execute(`SELECT shop_name, shop_city, mask_amount, mask_price
        FROM role NATURAL JOIN user NATURAL JOIN shop
-       WHERE account = ? AND role = 'm'`, [account]);
+       WHERE account = ? AND role = 'm';`, [account]);
         let Q_cityInfo = this.database
             .promise()
-            .query(`SELECT DISTINCT shop_city FROM shop`);
+            .query(`SELECT DISTINCT shop_city FROM shop;`);
         let [user_i, manage_i, city_i] = await Promise.all([
             Q_userInfo,
             Q_manageShopInfo,
@@ -188,7 +189,7 @@ class Database {
     async registerShop(shop, city, price, amount, account) {
         let [results, _] = await this.database
             .promise()
-            .execute(`SELECT * FROM shop where shop_name = ?`, [shop]);
+            .execute(`SELECT * FROM shop where shop_name = ?;`, [shop]);
         if (results.length > 0) {
             return false;
         }
@@ -221,7 +222,7 @@ class Database {
         WHERE account = ? AND shop_name = ?;
       `, [account, shop]);
         let checkUser = this.database.promise().execute(`SELECT UID, account, phone 
-        FROM user WHERE account = ?`, [account]);
+        FROM user WHERE account = ?;`, [account]);
         let [role_i, user_i] = await Promise.all([checkRole, checkUser]);
         const alreadyWorking = role_i[0].length > 0;
         const user = user_i[0];
@@ -254,7 +255,7 @@ class Database {
     async deleteClerk(account, shop) {
         let [userinfo, _1] = await this.database.promise().execute(`SELECT UID, account, SID FROM 
         user NATURAL JOIN role NATURAL JOIN shop
-        WHERE account = ? AND shop_name = ?`, [account, shop]);
+        WHERE account = ? AND shop_name = ?;`, [account, shop]);
         userinfo = userinfo;
         if (userinfo.length == 0) {
             return { status: false };
@@ -262,7 +263,7 @@ class Database {
         const UID = userinfo[0].UID;
         const SID = userinfo[0].SID;
         let [deleteOP, _2] = await this.database.promise().execute(`DELETE FROM role 
-        WHERE UID = ? AND SID = ? AND role = 'c'`, [UID, SID]);
+        WHERE UID = ? AND SID = ? AND role = 'c';`, [UID, SID]);
         deleteOP = deleteOP;
         return { status: deleteOP.affectedRows > 0, id: UID };
     }
@@ -360,7 +361,8 @@ class Database {
             .promise()
             .execute(`SELECT shop_name, shop_city, mask_price, mask_amount FROM shop` +
             (q.length > 0 ? " WHERE " : "") +
-            q, args);
+            q +
+            ";", args);
         results = results;
         results.forEach((val, index, raw) => {
             let s = {
@@ -376,10 +378,10 @@ class Database {
     async placeOrder(account, shop, buy_amount) {
         let aq = this.database
             .promise()
-            .query(`SELECT SID, mask_amount, mask_price FROM shop WHERE shop_name = ?`, [shop]);
+            .query(`SELECT SID, mask_amount, mask_price FROM shop WHERE shop_name = ?;`, [shop]);
         let uq = this.database
             .promise()
-            .query(`SELECT UID FROM user WHERE account = ?`, [account]);
+            .query(`SELECT UID FROM user WHERE account = ?;`, [account]);
         let [ar, ur] = await Promise.all([aq, uq]);
         let arr = ar[0];
         let urr = ur[0];
@@ -398,8 +400,8 @@ class Database {
             await conn.beginTransaction();
             let date_ = formatTime(new Date());
             console.log("order placed at:", date_);
-            let ao = conn.execute(`INSERT INTO orders VALUES (0, ?, 'p', ?, ?, NULL, NULL, ?, ?)`, [sid, uid, date_, mask_price, buy_amount]);
-            let ms = conn.execute(`UPDATE shop SET mask_amount = ? WHERE SID = ?`, [
+            let ao = conn.execute(`INSERT INTO orders VALUES (0, ?, 'p', ?, ?, NULL, NULL, ?, ?);`, [sid, uid, date_, mask_price, buy_amount]);
+            let ms = conn.execute(`UPDATE shop SET mask_amount = ? WHERE SID = ?;`, [
                 mask_amount - buy_amount,
                 sid,
             ]);
@@ -436,6 +438,7 @@ class Database {
             query += " AND status = ?";
             args = args.concat([STATUS_DICT.get(status)]);
         }
+        query += ";";
         let [oq, _] = await this.database.promise().query(query, args);
         oq = oq;
         let orders = new Array();
@@ -444,7 +447,8 @@ class Database {
                 oid: val.OID,
                 shop: val.shop_name,
                 status: STATUS_DICT.get(val.status),
-                total_price: Number.parseInt(val.amount) * Number.parseInt(val.price),
+                total_price: `$${Number.parseInt(val.amount) * Number.parseInt(val.price)}<br>
+        (${val.amount} * $${val.price})`,
                 start: formatTime(val.create_time) + `<br>${val.creator}`,
                 end: formatTime(val.finish_time) +
                     (val.finisher == null ? "" : `<br>${val.finisher}`),
@@ -464,8 +468,7 @@ class Database {
       JOIN (SELECT UID, account FROM user) AS created
       ON ord.UID_create = created.UID 
       LEFT JOIN (SELECT UID, account FROM user) AS finished
-      ON (ord.UID_finish is NOT NULL AND ord.UID_finish = finished.UID)
-      `;
+      ON (ord.UID_finish is NOT NULL AND ord.UID_finish = finished.UID)`;
         let args = [account];
         if (shop_name != undefined) {
             query = query + " AND shop_name = ?";
@@ -475,6 +478,7 @@ class Database {
             query += " AND status = ?";
             args = args.concat([STATUS_DICT.get(status)]);
         }
+        query += ";";
         let [oq, _] = await this.database.promise().query(query, args);
         oq = oq;
         let orders = new Array();
@@ -483,7 +487,8 @@ class Database {
                 oid: val.OID,
                 shop: val.shop_name,
                 status: STATUS_DICT.get(val.status),
-                total_price: Number.parseInt(val.amount) * Number.parseInt(val.price),
+                total_price: `$${Number.parseInt(val.amount) * Number.parseInt(val.price)}<br>
+        (${val.amount} * $${val.price})`,
                 start: formatTime(val.create_time) + `<br>${val.creator}`,
                 end: formatTime(val.finish_time) +
                     (val.finisher == null ? "" : `<br>${val.finisher}`),
@@ -495,7 +500,7 @@ class Database {
     async getWorkAt(account) {
         let shops = new Array();
         let [gw, _] = (await this.database.promise().query(`SELECT shop_name FROM shop NATURAL JOIN role WHERE 
-        UID = (SELECT UID FROM user WHERE account = ?)`, [account]));
+        UID = (SELECT UID FROM user WHERE account = ?);`, [account]));
         gw.forEach((val) => {
             shops = shops.concat([val.shop_name]);
         });
@@ -506,14 +511,41 @@ class Database {
     }
     async cancelOrder(account, OIDs) {
         const conn = await this.database.promise().getConnection();
-        await conn.beginTransaction();
-        try {
-            conn.query(`SEELCT 
-      `);
+        let escaped = new Array();
+        OIDs.forEach((val) => {
+            escaped = escaped.concat([mysql.escape(val)]);
+        });
+        let total = 0;
+        for (let i = 0; i <= Math.floor(escaped.length / 10); ++i) {
+            let cur = escaped.slice(10 * i, 10 * (i + 1));
+            let joined = "(" + cur.join(", ") + ")";
+            await conn.beginTransaction();
+            try {
+                let [va, _1] = (await conn.query(`
+        WITH 
+          old AS (SELECT * FROM 
+            (SELECT OID, SID, amount FROM orders FOR UPDATE
+            WHERE status = 'p' AND OID in ${joined}) NATURAL JOIN
+            (SELECT SID, mask_amount FROM shop))
+          
+        UPDATE shop SET mask_amount = old.mask_amount + old.amount
+        WHERE SID = old.SID`));
+                total += va.length;
+                let uo = new Array();
+                va.forEach((val) => {
+                    uo = uo.concat([val.OID]);
+                });
+                // let [uc, _2] = await conn.query(`WITH SELECT`);
+            }
+            catch (error) {
+                await conn.rollback();
+                return false;
+            }
+            finally {
+                conn.release();
+            }
         }
-        catch (error) { }
-        conn.release();
-        return true;
+        return total == escaped.length;
     }
 }
 exports.Database = Database;

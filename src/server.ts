@@ -66,7 +66,6 @@ app.post("/place-order", (req, res) => {
   po.then((r) => {
     res.status(200).send({ status: r });
   });
-
 });
 
 app.post("/search-my-order", (req, res) => {
@@ -80,7 +79,6 @@ app.post("/search-my-order", (req, res) => {
     // console.log(obj);
     res.status(200).send(obj);
   });
-
 });
 app.post("/get-work-at", (req, res) => {
   if (req.session.account == undefined) {
@@ -114,9 +112,17 @@ app.post("/finish-order", (req, res) => {
 
 app.post("/cancel-order", (req, res) => {
   console.log("cancel order", req.body);
-  setTimeout(function () {
-    res.status(200).send({ status: true });
-  }, 1000);
+  if (req.session.account == undefined) {
+    res.sendStatus(403);
+    return;
+  }
+  // setTimeout(function () {
+  //   res.status(200).send({ status: true });
+  // }, 1000);
+  let co = db.cancelOrder(req.session.account, req.body);
+  co.then((r) => {
+    res.status(200).send({ status: r });
+  });
 });
 
 app.post("/login-user", (req, res) => {

@@ -99,9 +99,17 @@ app.post("/finish-order", (req, res) => {
 });
 app.post("/cancel-order", (req, res) => {
     console.log("cancel order", req.body);
-    setTimeout(function () {
-        res.status(200).send({ status: true });
-    }, 1000);
+    if (req.session.account == undefined) {
+        res.sendStatus(403);
+        return;
+    }
+    // setTimeout(function () {
+    //   res.status(200).send({ status: true });
+    // }, 1000);
+    let co = db.cancelOrder(req.session.account, req.body);
+    co.then((r) => {
+        res.status(200).send({ status: r });
+    });
 });
 app.post("/login-user", (req, res) => {
     console.log("login");

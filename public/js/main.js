@@ -95,7 +95,7 @@ function cancelOrder() {
   let tr = $(this).parents("tr");
 
   tr.find("button:last-child span").css("display", "inline-block");
-  let posting = $.post("/finish-order", {
+  let posting = $.post("/cancel-order", {
     oid: tr.children("td:nth-child(2)").html(),
   });
 
