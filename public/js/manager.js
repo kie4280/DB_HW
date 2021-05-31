@@ -108,7 +108,7 @@ function finishSelectedOrder() {
     }
   }
 
-  let posting = $.post("/finish-selected-order", { oid: array });
+  let posting = $.post("/finish-order", { oid: array });
   posting.done(function (data) {
     $("#mor").trigger("submit");
     $("#sor").trigger("submit");
