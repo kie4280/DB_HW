@@ -562,24 +562,24 @@ export class Database {
     account: string,
     status: string
   ): Promise<Array<ORDER>> {
+    let args = [account];
+    let filters: string = "";
+    if (status != "All") {
+      filters += " AND status = ?";
+      args = args.concat([STATUS_DICT.get(status)]);
+    }
     let query = `SELECT OID, status, create_time, finish_time, 
     amount, price, shop_name, created.account AS creator,
     finished.account AS finisher FROM
     (SELECT OID, status, create_time, finish_time,  
     amount, price, shop_name, UID_create, UID_finish FROM
     orders NATURAL JOIN shop WHERE 
-    UID_create = (SELECT UID FROM user WHERE account = ?)) AS ord
+    UID_create = (SELECT UID FROM user WHERE account = ?) ${filters}) AS ord
       JOIN (SELECT UID, account FROM user) AS created
       ON ord.UID_create = created.UID 
       LEFT JOIN (SELECT UID, account FROM user) AS finished
-      ON (ord.UID_finish is NOT NULL AND ord.UID_finish = finished.UID)`;
-    let args = [account];
+      ON (ord.UID_finish is NOT NULL AND ord.UID_finish = finished.UID);`;
 
-    if (status != "All") {
-      query += " AND status = ?";
-      args = args.concat([STATUS_DICT.get(status)]);
-    }
-    query += ";";
     let [oq, _] = await this.database.promise().query(query, args);
     oq = oq as mysql.RowDataPacket[];
     let orders = new Array<ORDER>();
@@ -605,29 +605,31 @@ export class Database {
   public async getShopOrder(
     account: string,
     status: string,
-    shop_name?: string
+    shop_name: string
   ): Promise<Array<ORDER>> {
+
+    let args = [account];
+    let filters:string = "";
+    if (shop_name != "All") {
+      filters += " AND shop_name = ?";
+      args = args.concat([shop_name]);
+    }
+    if (status != "All") {
+      filters += " AND status = ?";
+      args = args.concat([STATUS_DICT.get(status)]);
+    }
     let query = `SELECT OID, status, create_time, finish_time,
     amount, price, shop_name, created.account AS creator,
     finished.account AS finisher FROM     
     (SELECT OID, status, create_time, finish_time,  
     amount, price, shop_name, UID_create, UID_finish FROM
     orders NATURAL JOIN shop NATURAL JOIN role WHERE 
-    UID = (SELECT UID FROM user WHERE account = ?)) AS ord 
+    UID = (SELECT UID FROM user WHERE account = ?) ${filters}) AS ord 
       JOIN (SELECT UID, account FROM user) AS created
       ON ord.UID_create = created.UID 
       LEFT JOIN (SELECT UID, account FROM user) AS finished
-      ON (ord.UID_finish is NOT NULL AND ord.UID_finish = finished.UID)`;
-    let args = [account];
-    if (shop_name != undefined) {
-      query = query + " AND shop_name = ?";
-      args = args.concat([shop_name]);
-    }
-    if (status != "All") {
-      query += " AND status = ?";
-      args = args.concat([STATUS_DICT.get(status)]);
-    }
-    query += ";";
+      ON (ord.UID_finish is NOT NULL AND ord.UID_finish = finished.UID);`;
+
     let [oq, _] = await this.database.promise().query(query, args);
     oq = oq as mysql.RowDataPacket[];
     let orders = new Array<ORDER>();

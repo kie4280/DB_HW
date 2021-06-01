@@ -86,7 +86,7 @@ app.post("/search-shop-order", (req, res) => {
         res.sendStatus(403);
         return;
     }
-    const gso = db.getShopOrder(req.session.account, req.body.status);
+    const gso = db.getShopOrder(req.session.account, req.body.status, req.body.shop);
     gso.then((orders) => {
         res.status(200).send(orders);
     });
