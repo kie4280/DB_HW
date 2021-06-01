@@ -68,9 +68,7 @@ function placeOrder() {
   posting.done(function (data) {
     if (data.status) {
       window.alert("Place an order success!");
-      $("#sho").trigger("submit");
-      $("#mor").trigger("submit");
-      $("#sor").trigger("submit");
+      window.location.replace("/main");
     } else {
       window.alert("Place an order failed!\nInsufficient masks!");
       tr.find("span").css("display", "none");
@@ -100,11 +98,10 @@ function cancelOrder() {
   });
 
   posting.done(function (data) {
-    $("#mor").trigger("submit");
-    $("#sor").trigger("submit");
-    $("#sho").trigger("submit");
     if (!data.status) {
       window.alert("Cancel order failed!");
+    } else {
+      window.location.replace("/main");
     }
   });
 }
@@ -123,11 +120,10 @@ function cancelSelectedOrder() {
 
   let posting = $.post("/cancel-order", { oid: array });
   posting.done(function (data) {
-    $("#mor").trigger("submit");
-    $("#sor").trigger("submit");
-    $("#sho").trigger("submit");
     if (!data.status) {
       window.alert("Cancel selected order failed!");
+    } else {
+      window.location.replace("/main");
     }
   });
 }

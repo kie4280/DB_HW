@@ -88,10 +88,10 @@ function finishOrder() {
   });
 
   posting.done(function (data) {
-    $("#mor").trigger("submit");
-    $("#sor").trigger("submit");
     if (!data.status) {
       window.alert("Finish order failed!");
+    } else {
+      window.location.replace("/main");
     }
   });
 }
@@ -110,10 +110,10 @@ function finishSelectedOrder() {
 
   let posting = $.post("/finish-order", { oid: array });
   posting.done(function (data) {
-    $("#mor").trigger("submit");
-    $("#sor").trigger("submit");
     if (!data.status) {
       window.alert("Finish selected order failed!");
+    } else {
+      window.location.replace("/main");
     }
   });
 }
