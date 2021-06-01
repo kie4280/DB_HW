@@ -59,7 +59,7 @@ const STATUS_DICT = new Map([
 class Database {
     constructor() {
         this.database = mysql.createPool({
-            host: "localhost",
+            host: "eecsvm1.eastasia.cloudapp.azure.com",
             user: "mask",
             password: "mask",
             database: "maskDB",
@@ -507,7 +507,33 @@ class Database {
         return shops;
     }
     async finishOrder(account, OIDs) {
-        return true;
+        const conn = await this.database.promise().getConnection();
+        let total = 0;
+        for (let i = 0; i <= Math.floor(OIDs.length / 10); ++i) {
+            try {
+                let cur = OIDs.slice(10 * i, 10 * (i + 1));
+                let joined = "(" + cur.join(", ") + ")";
+                await conn.beginTransaction();
+                let date_ = formatTime(new Date());
+                let [uo, _2] = (await conn.query(`
+        UPDATE orders SET status = 'f', finish_time = ?,
+        UID_finish = (SELECT UID FROM user WHERE account = ?)
+        WHERE OID IN ${joined} AND status = 'p' AND 
+          SID IN (SELECT SID FROM role NATURAL JOIN user 
+            WHERE account = ?);`, [date_, account, account, account]));
+                total += uo.affectedRows;
+                await conn.commit();
+            }
+            catch (error) {
+                await conn.rollback();
+                console.log(error);
+                return false;
+            }
+            finally {
+                conn.release();
+            }
+        }
+        return total == OIDs.length;
     }
     async cancelOrder(account, OIDs) {
         const conn = await this.database.promise().getConnection();

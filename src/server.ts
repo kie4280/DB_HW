@@ -105,9 +105,25 @@ app.post("/search-shop-order", (req, res) => {
 
 app.post("/finish-order", (req, res) => {
   console.log("finish order", req.body);
-  setTimeout(function () {
-    res.status(200).send({ status: true });
-  }, 1000);
+  // setTimeout(function () {
+  //   res.status(200).send({ status: true });
+  // }, 1000);
+  let oids_s: Array<string> = req.body.oid as Array<string>;
+  let oids: Array<number> = new Array<number>();
+  oids_s.forEach((val) => {
+    let conv = Number.parseInt(val);
+    if (Number.isNaN(conv)) {
+      res.status(200).send({ status: false });
+      console.log("someone is trying to hack this system!!");
+      return;
+    }
+    oids = oids.concat([conv]);
+  });
+
+  let fo = db.finishOrder(req.session.account, oids);
+  fo.then((r) => {
+    res.status(200).send({ status: r });
+  });
 });
 
 app.post("/cancel-order", (req, res) => {
