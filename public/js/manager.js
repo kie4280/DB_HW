@@ -12,6 +12,8 @@ function editPrice() {
     $("#mys2 span").css("display", "none");
     if (!data.status) {
       $("#mys1").val(data.price);
+    } else {
+      $("#sho").trigger("submit");
     }
   });
 }
@@ -28,6 +30,8 @@ function editAmount() {
     $("#mys4 span").css("display", "none");
     if (!data.status) {
       $("#mys3").val(data.amount);
+    } else {
+      $("#sho").trigger("submit");
     }
   });
 }
