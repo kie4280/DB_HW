@@ -507,34 +507,31 @@ export class Database {
     shop: string,
     buy_amount: number
   ): Promise<boolean> {
-    let aq = this.database
-      .promise()
-      .query(
-        `SELECT SID, mask_amount, mask_price FROM shop WHERE shop_name = ?;`,
-        [shop]
-      );
-    let uq = this.database
-      .promise()
-      .query(`SELECT UID FROM user WHERE account = ?;`, [account]);
-    let [ar, ur] = await Promise.all([aq, uq]);
-    let arr = ar[0] as mysql.RowDataPacket[];
-    let urr = ur[0] as mysql.RowDataPacket[];
-    if (arr.length == 0 || urr.length == 0) {
-      return false;
-    }
-    let mask_amount: number = Number.parseInt(arr[0].mask_amount as string);
-    let mask_price: number = Number.parseInt(arr[0].mask_price as string);
-    let sid = Number.parseInt(arr[0].SID as string);
-    let uid = Number.parseInt(urr[0].UID as string);
-    if (mask_amount < buy_amount) {
-      return false;
-    }
-
     let conn = await this.database.promise().getConnection();
     try {
       await conn.beginTransaction();
       let date_ = formatTime(new Date());
-      console.log("order placed at:", date_);
+
+      let aq = conn.query(
+        `SELECT SID, mask_amount, mask_price FROM shop 
+          WHERE shop_name = ? FOR UPDATE;`,
+        [shop]
+      );
+      let uq = conn.query(`SELECT UID FROM user WHERE account = ?;`, [account]);
+      let [ar, ur] = await Promise.all([aq, uq]);
+      let arr = ar[0] as mysql.RowDataPacket[];
+      let urr = ur[0] as mysql.RowDataPacket[];
+      if (arr.length == 0 || urr.length == 0) {
+        return false;
+      }
+      let mask_amount: number = Number.parseInt(arr[0].mask_amount as string);
+      let mask_price: number = Number.parseInt(arr[0].mask_price as string);
+      let sid = Number.parseInt(arr[0].SID as string);
+      let uid = Number.parseInt(urr[0].UID as string);
+      if (mask_amount < buy_amount) {
+        return false;
+      }
+
       let ao = conn.execute(
         `INSERT INTO orders VALUES (0, ?, 'p', ?, ?, NULL, NULL, ?, ?);`,
         [sid, uid, date_, mask_price, buy_amount]
@@ -705,34 +702,32 @@ export class Database {
     const conn = await this.database.promise().getConnection();
 
     let total = 0;
-    for (let i = 0; i <= Math.floor(OIDs.length / 10); ++i) {
+    for (let i = 0; i < OIDs.length; ++i) {
       try {
-        let cur = OIDs.slice(10 * i, 10 * (i + 1));
-        let joined = "(" + cur.join(", ") + ")";
         await conn.beginTransaction();
 
-        let [va, _1] = (await conn.execute(`
+        let [va, _1] = (await conn.execute(
+          `
         WITH 
           old(OID, SID, amount, mask_amount) AS 
           (SELECT aa.OID, aa.SID, aa.amount, bb.mask_amount
             FROM orders AS aa NATURAL JOIN
           (SELECT SID, mask_amount FROM shop FOR UPDATE) AS bb
-            WHERE status = 'p' AND OID IN ${joined} FOR UPDATE) 
+            WHERE status = 'p' AND OID = ? FOR UPDATE) 
         UPDATE shop NATURAL JOIN old
-        SET shop.mask_amount = old.mask_amount + old.amount;`)) as [
-          mysql.OkPacket,
-          any
-        ];
+        SET shop.mask_amount = old.mask_amount + old.amount;`,
+          [OIDs[i]]
+        )) as [mysql.OkPacket, any];
         let date_ = formatTime(new Date());
         let [uc, _2] = (await conn.query(
           `
         UPDATE orders SET status = 'c', finish_time = ?,
         UID_finish = (SELECT UID FROM user WHERE account = ?)
-        WHERE OID IN ${joined} AND (
+        WHERE OID = ? AND status = 'p' AND (
           (UID_create IN (SELECT UID FROM user WHERE account = ?)) OR
           (SID IN (SELECT SID FROM role NATURAL JOIN user WHERE account = ?))          
         );`,
-          [date_, account, account, account]
+          [date_, account, OIDs[i], account, account]
         )) as [mysql.OkPacket, any];
 
         if (va.affectedRows != uc.affectedRows) {
@@ -743,11 +738,9 @@ export class Database {
       } catch (error) {
         await conn.rollback();
         console.log(error);
-        return false;
-      } finally {
-        conn.release();
       }
     }
+    conn.release();
 
     return total == OIDs.length;
   }
