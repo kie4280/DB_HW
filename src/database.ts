@@ -58,7 +58,7 @@ export class Database {
   database: mysql.Pool;
   constructor() {
     this.database = mysql.createPool({
-      host: "eecsvm1.westeurope.cloudapp.azure.com",
+      host: "localhost",
       user: "mask",
       password: "mask",
       database: "maskDB",
@@ -670,42 +670,54 @@ export class Database {
     return true;
   }
 
-  public async cancelOrder(account: string, OIDs: string[]): Promise<boolean> {
+  public async cancelOrder(account: string, OIDs: number[]): Promise<boolean> {
     const conn = await this.database.promise().getConnection();
-    let escaped = new Array<string>();
-    OIDs.forEach((val) => {
-      escaped = escaped.concat([mysql.escape(val)]);
-    });
-    let total = 0;
-    for (let i = 0; i <= Math.floor(escaped.length / 10); ++i) {
-      let cur = escaped.slice(10 * i, 10 * (i + 1));
-      let joined = "(" + cur.join(", ") + ")";
-      await conn.beginTransaction();
 
+    let total = 0;
+    for (let i = 0; i <= Math.floor(OIDs.length / 10); ++i) {
       try {
-        let [va, _1] = (await conn.query(`
+        let cur = OIDs.slice(10 * i, 10 * (i + 1));
+        let joined = "(" + cur.join(", ") + ")";
+        await conn.beginTransaction();
+
+        let [va, _1] = (await conn.execute(`
         WITH 
-          old AS (SELECT * FROM 
-            (SELECT OID, SID, amount FROM orders FOR UPDATE
-            WHERE status = 'p' AND OID in ${joined}) NATURAL JOIN
-            (SELECT SID, mask_amount FROM shop))
-          
-        UPDATE shop SET mask_amount = old.mask_amount + old.amount
-        WHERE SID = old.SID`)) as [mysql.RowDataPacket[], any];
-        total += va.length;
-        let uo = new Array<string>();
-        va.forEach((val) => {
-          uo = uo.concat([val.OID]);
-        });
-        // let [uc, _2] = await conn.query(`WITH SELECT`);
+          old(OID, SID, amount, mask_amount) AS 
+          (SELECT aa.OID, aa.SID, aa.amount, bb.mask_amount
+            FROM orders AS aa NATURAL JOIN
+          (SELECT SID, mask_amount FROM shop FOR UPDATE) AS bb
+            WHERE status = 'p' AND OID IN ${joined} FOR UPDATE) 
+        UPDATE shop NATURAL JOIN old
+        SET shop.mask_amount = old.mask_amount + old.amount;`)) as [
+          mysql.OkPacket,
+          any
+        ];
+        let date_ = formatTime(new Date());
+        let [uc, _2] = (await conn.query(
+          `
+        UPDATE orders SET status = 'c', finish_time = ?,
+        UID_finish = (SELECT UID FROM user WHERE account = ?)
+        WHERE OID IN ${joined} AND (
+          (UID_create IN (SELECT UID FROM user WHERE account = ?)) OR
+          (SID IN (SELECT SID FROM role NATURAL JOIN user WHERE account = ?))          
+        );`,
+          [date_, account, account, account]
+        )) as [mysql.OkPacket, any];
+
+        if (va.affectedRows != uc.affectedRows) {
+          throw new Error("shop update and order update mismatch");
+        }
+        total += va.affectedRows;
+        await conn.commit();
       } catch (error) {
         await conn.rollback();
+        console.log(error);
         return false;
       } finally {
         conn.release();
       }
     }
 
-    return total == escaped.length;
+    return total == OIDs.length;
   }
 }

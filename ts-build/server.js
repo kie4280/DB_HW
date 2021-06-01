@@ -106,7 +106,18 @@ app.post("/cancel-order", (req, res) => {
     // setTimeout(function () {
     //   res.status(200).send({ status: true });
     // }, 1000);
-    let co = db.cancelOrder(req.session.account, req.body);
+    let oids_s = req.body.oid;
+    let oids = new Array();
+    oids_s.forEach((val) => {
+        let conv = Number.parseInt(val);
+        if (Number.isNaN(conv)) {
+            res.status(200).send({ status: false });
+            console.log("someone is trying to hack this system!!");
+            return;
+        }
+        oids = oids.concat([conv]);
+    });
+    let co = db.cancelOrder(req.session.account, oids);
     co.then((r) => {
         res.status(200).send({ status: r });
     });
