@@ -8,6 +8,7 @@ function clearInput(i) {
       $("#sho input[type=checkbox]").prop("checked", false);
       $("#sho select").val("All");
       $("#table1 input").val(0);
+      $("#sho").trigger("submit");
       break;
     case 2:
       $("#mys input:not([disabled])").val("");
@@ -18,9 +19,11 @@ function clearInput(i) {
       break;
     case 3:
       $("#mor select").val("All");
+      $("#mor").trigger("submit");
       break;
     case 4:
       $("#sor select").val("All");
+      $("#sor").trigger("submit");
       break;
     default:
       break;
@@ -79,6 +82,7 @@ function placeOrder() {
 
 function searchMyOrder(event) {
   event.preventDefault();
+  morSelected = [];
 
   $("#mor2 span").css("display", "inline-block");
   let posting = $.post("/search-my-order", $("#mor").serialize());
@@ -106,19 +110,9 @@ function cancelOrder() {
   });
 }
 
-function cancelSelectedOrder() {
-  let table = $(this).parents(".tab-pane").find("table");
-  let array = [];
-
-  for (let i = 1; i <= table.find("tbody tr").length; i++) {
-    let tr = table.find(`tbody tr:nth-child(${i})`);
-    if (tr.find("td:first-child input").prop("checked")) {
-      tr.find("button:last-child span").css("display", "inline-block");
-      array.push(tr.children("td:nth-child(2)").html());
-    }
-  }
-
-  let posting = $.post("/cancel-order", { oid: array });
+function morCancelSelectedOrder() {
+  if (morSelected.length == 0) return;
+  let posting = $.post("/cancel-order", { oid: morSelected });
   posting.done(function (data) {
     if (!data.status) {
       window.alert("Cancel selected order failed!");
@@ -126,6 +120,21 @@ function cancelSelectedOrder() {
       window.location.replace("/main");
     }
   });
+}
+
+var morSelected = [];
+function morOnSelected() {
+  let oid = $(this).parents("tr").children("td:nth-child(2)").html();
+  if ($(this).is(":checked")) {
+    morSelected.push(oid);
+  } else {
+    let index = morSelected.indexOf(oid);
+    if (index >= 0) {
+      morSelected.splice(index, 1);
+    }
+  }
+  // console.log("morSelectd");
+  // console.log(morSelected);
 }
 
 $(document).ready(function () {
@@ -205,10 +214,11 @@ $(document).ready(function () {
   $("#tab5").click(logout);
   $("#sho").submit(searchShop);
   $("#mor").submit(searchMyOrder);
-  $("#mor3").click(cancelSelectedOrder);
+  $("#mor3").click(morCancelSelectedOrder);
 
   $("#table1").on("click", "button", placeOrder);
   $("#table3").on("click", "button", cancelOrder);
+  $("#table3").on("click", "input[type=checkbox]", morOnSelected);
 
   $("#sho").trigger("submit");
   $("#mor").trigger("submit");

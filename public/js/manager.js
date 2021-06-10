@@ -73,6 +73,7 @@ function deleteClerk() {
 
 function searchShopOrder(event) {
   event.preventDefault();
+  sorSelected = [];
 
   $("#sor3 span").css("display", "inline-block");
   let posting = $.post("/search-shop-order", $("#sor").serialize());
@@ -101,21 +102,23 @@ function finishOrder() {
 }
 
 function finishSelectedOrder() {
-  let table = $(this).parents(".tab-pane").find("table");
-  let array = [];
-
-  for (let i = 1; i <= table.find("tbody tr").length; i++) {
-    let tr = table.find(`tbody tr:nth-child(${i})`);
-    if (tr.find("td:first-child input").prop("checked")) {
-      tr.find("button:first-child span").css("display", "inline-block");
-      array.push(tr.children("td:nth-child(2)").html());
-    }
-  }
-
-  let posting = $.post("/finish-order", { oid: array });
+  if (sorSelected.length == 0) return;
+  let posting = $.post("/finish-order", { oid: sorSelected });
   posting.done(function (data) {
     if (!data.status) {
       window.alert("Finish selected order failed!");
+    } else {
+      window.location.replace("/main");
+    }
+  });
+}
+
+function sorCancelSelectedOrder() {
+  if (sorSelected.length == 0) return;
+  let posting = $.post("/cancel-order", { oid: sorSelected });
+  posting.done(function (data) {
+    if (!data.status) {
+      window.alert("Cancel selected order failed!");
     } else {
       window.location.replace("/main");
     }
@@ -130,6 +133,21 @@ function getWorkAt() {
       $("#sor1").append(`<option>${shop}</option>`);
     });
   });
+}
+
+var sorSelected = [];
+function sorOnSelected() {
+  let oid = $(this).parents("tr").children("td:nth-child(2)").html();
+  if ($(this).is(":checked")) {
+    sorSelected.push(oid);
+  } else {
+    let index = sorSelected.indexOf(oid);
+    if (index >= 0) {
+      sorSelected.splice(index, 1);
+    }
+  }
+  // console.log("sorSelectd");
+  // console.log(sorSelected);
 }
 
 $(document).ready(function () {
@@ -211,11 +229,12 @@ $(document).ready(function () {
 
   $("#sor").submit(searchShopOrder);
   $("#sor4").click(finishSelectedOrder);
-  $("#sor5").click(cancelSelectedOrder);
+  $("#sor5").click(sorCancelSelectedOrder);
 
   $("#table2").on("click", "button", deleteClerk);
   $("#table4").on("click", "button:first-child", finishOrder);
   $("#table4").on("click", "button:last-child", cancelOrder);
+  $("#table4").on("click", "input[type=checkbox]", sorOnSelected);
 
   $("#sor").trigger("submit");
 
